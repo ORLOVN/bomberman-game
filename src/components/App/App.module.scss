@@ -1,0 +1,15 @@
+.app {
+    text-align: center;
+}
+.icon {
+    background-image: url('~images/test2.png');
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    background-size: contain;
+}
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

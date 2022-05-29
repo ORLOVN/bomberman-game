@@ -1,0 +1,49 @@
+{
+  "name": "novosib-game",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.9",
+    "@types/react-dom": "^18.0.5",
+    "autoprefixer": "^10.4.7",
+    "css-loader": "^6.7.1",
+    "html-webpack-plugin": "^5.5.0",
+    "mini-css-extract-plugin": "^2.6.0",
+    "node-sass": "^7.0.1",
+    "postcss-loader": "^7.0.0",
+    "sass": "^1.52.1",
+    "sass-loader": "^13.0.0",
+    "style-loader": "^3.3.1",
+    "ts-loader": "^9.3.0",
+    "typescript": "^4.7.2",
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.9.0",
+    "webpack-merge": "^5.8.0"
+  },
+  "scripts": {
+    "dev": "webpack serve --open --config webpack/webpack.dev.js",
+    "build": "webpack --config webpack/webpack.prod.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Novosib-game/code.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Novosib-game/code/issues"
+  },
+  "engines": {
+    "node": ">=14.8.0",
+    "npm": ">=8.5.0"
+  },
+  "browserslist": [
+    "> 1%", "last 4 versions"
+  ],
+  "homepage": "https://github.com/Novosib-game/code#readme"
+}
