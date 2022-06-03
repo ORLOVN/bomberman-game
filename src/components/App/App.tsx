@@ -1,11 +1,16 @@
 import React from 'react';
 import {ChakraProvider} from '@chakra-ui/react';
-import MaterialExample from '@/components/MaterialExample';
+import {ReactNotifications} from 'react-notifications-component';
+import {ErrorBoundary} from '@/components/ErrorHandler/ErrorBoundary';
+import ShowcaseComponent from '@/components/ShowcaseComponent';
 
 export default function App() {
   return (
     <ChakraProvider>
-      <MaterialExample/>
+      <ReactNotifications />
+      <ErrorBoundary>
+        <ShowcaseComponent/>
+      </ErrorBoundary>
     </ChakraProvider>
   );
 }
