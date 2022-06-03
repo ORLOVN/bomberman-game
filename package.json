@@ -2,9 +2,19 @@
   "name": "novosib-game",
   "version": "1.0.0",
   "description": "",
+  "scripts": {
+    "dev": "webpack serve --open --config webpack/webpack.dev.js",
+    "build": "webpack --config webpack/webpack.prod.js"
+  },
   "dependencies": {
+    "@chakra-ui/react": "^2.1.2",
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "formik": "^2.2.9",
+    "framer-motion": "^6.3.6",
     "react": "^18.1.0",
-    "react-dom": "^18.1.0"
+    "react-dom": "^18.1.0",
+    "react-icons": "^4.4.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.9",
@@ -25,10 +35,6 @@
     "webpack-dev-server": "^4.9.0",
     "webpack-merge": "^5.8.0"
   },
-  "scripts": {
-    "dev": "webpack serve --open --config webpack/webpack.dev.js",
-    "build": "webpack --config webpack/webpack.prod.js"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Novosib-game/code.git"
@@ -43,7 +49,8 @@
     "npm": ">=8.5.0"
   },
   "browserslist": [
-    "> 1%", "last 4 versions"
+    "> 1%",
+    "last 4 versions"
   ],
   "homepage": "https://github.com/Novosib-game/code#readme"
 }
