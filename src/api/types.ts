@@ -3,10 +3,10 @@ export type ErrorResponse = {
 };
 
 export enum Methods {
-  GET = 'GET',
-  PUT = 'PUT',
-  POST = 'POST',
-  DELETE = 'DELETE',
+  GET = "GET",
+  PUT = "PUT",
+  POST = "POST",
+  DELETE = "DELETE",
 }
 
 export type IFormData = Record<string, unknown> | FormData;

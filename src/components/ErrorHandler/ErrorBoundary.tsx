@@ -1,6 +1,6 @@
-import React from 'react';
-import {MyProps, MyState} from '@/components/ErrorHandler/type';
-import ErrorFallback from '@/components/ErrorHandler/ErrorFallback';
+import React from "react";
+import { MyProps, MyState } from "@/components/ErrorHandler/type";
+import ErrorFallback from "@/components/ErrorHandler/ErrorFallback";
 
 export class ErrorBoundary extends React.Component<MyProps, MyState> {
   state: MyState = {
@@ -9,8 +9,8 @@ export class ErrorBoundary extends React.Component<MyProps, MyState> {
 
   componentDidCatch(error: Error) {
     this.setState({
-      error: error,
-    })
+      error,
+    });
   }
 
   render() {
@@ -18,9 +18,7 @@ export class ErrorBoundary extends React.Component<MyProps, MyState> {
     const { error } = this.state;
 
     if (error) {
-      return (
-        <ErrorFallback error={error}/>
-      );
+      return <ErrorFallback error={error} />;
     }
     return children;
   }

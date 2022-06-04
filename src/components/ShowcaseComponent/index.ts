@@ -1,1 +1,1 @@
-export { default } from './ShowcaseComponent';
+export { default } from "./ShowcaseComponent";
