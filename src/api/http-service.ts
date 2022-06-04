@@ -1,6 +1,6 @@
-import AuthError from '@/api/auth-error-service';
-import {IFormData, Methods} from '@/api/types';
-import queryStringify from '@/api/utils';
+import AuthError from "@/api/auth-error-service";
+import { IFormData, Methods } from "@/api/types";
+import queryStringify from "@/api/utils";
 
 export default class Http {
   private readonly baseUrl: string;
@@ -11,17 +11,29 @@ export default class Http {
     this.timeout = timeout;
   }
 
-  public get<T>(url: string, body?: Record<string, unknown>, options?: RequestInit): Promise<T | null> {
+  public get<T>(
+    url: string,
+    body?: Record<string, unknown>,
+    options?: RequestInit
+  ): Promise<T | null> {
     const processedUrl = body ? url + queryStringify(body) : url;
 
     return this.request<T>(processedUrl, undefined, options);
   }
 
-  public put<T>(url: string, body?: IFormData, options?: RequestInit): Promise<T | null> {
+  public put<T>(
+    url: string,
+    body?: IFormData,
+    options?: RequestInit
+  ): Promise<T | null> {
     return this.request<T>(url, body, options, Methods.PUT);
   }
 
-  public post<T>(url: string, body?: IFormData, options?: RequestInit): Promise<T | null> {
+  public post<T>(
+    url: string,
+    body?: IFormData,
+    options?: RequestInit
+  ): Promise<T | null> {
     return this.request<T>(url, body, options, Methods.POST);
   }
 
@@ -33,18 +45,21 @@ export default class Http {
     url: string,
     body?: IFormData,
     options: RequestInit = {},
-    method: Methods = Methods.GET,
+    method: Methods = Methods.GET
   ): Promise<T | null> {
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), this.timeout);
 
-    options.headers = {
-      ...options.headers || {},
-      ...getContentTypeForRequest(body),
+    const optionParams = {
+      ...options,
+      headers: {
+        ...(options.headers || {}),
+        ...getContentTypeForRequest(body),
+      },
     };
 
     const response = await fetch(`${this.baseUrl}${url}`, {
-      ...options,
+      ...optionParams,
       body: body ? prepareBodyForRequest(body) : null,
       method,
       signal: controller.signal,
@@ -53,7 +68,7 @@ export default class Http {
     clearTimeout(id);
 
     if (response.status === 401) {
-      throw new AuthError('Unauthorized');
+      throw new AuthError("Unauthorized");
     }
 
     if (!isResponseJson(response)) {
@@ -70,7 +85,7 @@ function getContentTypeForRequest(body?: IFormData): Record<string, string> {
   }
 
   return {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   };
 }
 
@@ -79,7 +94,7 @@ function prepareBodyForRequest(body: IFormData): FormData | string {
 }
 
 function isResponseJson(response: Response): boolean {
-  const contentType = response.headers.get('content-type');
+  const contentType = response.headers.get("content-type");
 
-  return Boolean(contentType?.includes('application/json'));
+  return Boolean(contentType?.includes("application/json"));
 }
