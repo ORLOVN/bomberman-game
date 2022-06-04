@@ -6,7 +6,8 @@
     "dev": "webpack serve --open --config webpack/webpack.dev.js",
     "build": "webpack --config webpack/webpack.prod.js",
     "lint:fix": "node_modules/.bin/eslint \"**/*.ts{x,}\" --fix && npx stylelint \"**/*.scss\" --fix",
-    "format:write": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|tsx|jsx|json)\""
+    "format:write": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|tsx|jsx|json)\"",
+    "start": "node server/server.js"
   },
   "dependencies": {
     "@chakra-ui/react": "2.1.2",
@@ -14,6 +15,7 @@
     "@emotion/styled": "11.8.1",
     "formik": "2.2.9",
     "framer-motion": "6.3.6",
+    "express": "^4.18.1",
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-icons": "4.4.0",
