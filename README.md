@@ -1,7 +1,7 @@
 # Bomberman game
 
 
-## Scritps
+## Scripts
 * dev - start app in development mode
 * build - building the app for production
 * lint:fix - applying lint for all .ts, .tsx, .scss files with fixing
