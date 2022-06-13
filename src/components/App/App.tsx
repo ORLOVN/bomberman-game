@@ -8,6 +8,8 @@ import SignInPage from "@/pages/SignIn";
 import SignUpPage from "@/pages/SignUp";
 import ProfilePage from "@/pages/Profile";
 import ForumPage from "@/pages/Forum";
+import CreateTopicPage from "@/pages/Forum/pages/CreateTopic";
+import TopicPage from "@/pages/Forum/pages/Topic/_id";
 import { AuthProvider } from "@/hooks";
 import ProtectedLayout from "@/layouts/helpers/components/ProtectedLayout";
 import GuestLayout from "@/layouts/GuestLayout";
@@ -48,7 +50,12 @@ export default function App() {
               >
                 <Route index element={<HomePage />} />
                 <Route path={RoutePaths.profile} element={<ProfilePage />} />
-                <Route path={RoutePaths.forum} element={<ForumPage />} />
+                <Route path={RoutePaths.forum}>
+                  <Route index element={<ForumPage />} />
+                  <Route path={RoutePaths.createTopic} element={<CreateTopicPage />} />
+                  <Route path={RoutePaths.topicId} element={<TopicPage />} />
+                  <Route path="*" element={<Navigate to={RoutePaths.forum} replace />} />
+                </Route>
                 <Route path="*" element={<Navigate to={RoutePaths.home} replace />} />
               </Route>
               <Route path="*" element={<Navigate to={RoutePaths.home} replace />} />
