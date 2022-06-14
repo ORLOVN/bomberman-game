@@ -9,7 +9,7 @@ import { CreateTopicFormType } from './types';
 
 export default function CreateTopic() {
     return (
-        <Box mt={4} w={1000}>
+        <Box mt={4} w={1000} px="6" py="5">
             <Heading as='h2' size='lg' mb={4}>
                 Create a new topic
             </Heading>

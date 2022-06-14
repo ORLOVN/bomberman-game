@@ -26,7 +26,7 @@ export default function UserLayout() {
   const { logout } = useAuth();
 
   return (
-    <>
+    <Flex direction="column" minHeight="100vh">
       <Flex w="100%" px="6" py="5" justify="center" pos="relative">
         <Navbar routes={routes} />
         <Box pos="absolute" top="3" right="3">
@@ -36,9 +36,9 @@ export default function UserLayout() {
         </Box>
       </Flex>
       <Divider />
-      <Flex w="100%" px="6" py="5" justify="center">
+      <Flex flex="1" justify="center">
         <Outlet />
       </Flex>
-    </>
+    </Flex>
   );
 }

@@ -56,7 +56,6 @@ export default function TopicPreview({
                     <Heading
                         as='h4' size='xs'
                         ml={2}
-                        onClick={() => goToTopic(id)}
                     >
                         { author }
                     </Heading>

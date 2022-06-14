@@ -36,7 +36,7 @@ export default function Topic() {
     const { author, avatar, title, body, date, comments } = data;
 
     return (
-        <Box mt={4} w={1000}>
+        <Box mt={4} w={1000} px="6" py="5">
             {
                 isLoadingMain
                     ?   <Flex justifyContent="center">

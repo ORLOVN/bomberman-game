@@ -13,7 +13,7 @@ export default function Forum() {
   const goToTopic = (id: number) => navigate(`/forum/topic/${id}`);
 
   return (
-    <Box mt={4} w={1000}>
+    <Box mt={4} w={1000} px="6" py="5">
       <Flex mb={8} justifyContent="space-between">
         <Heading as='h2' size='lg'>
           Forum
