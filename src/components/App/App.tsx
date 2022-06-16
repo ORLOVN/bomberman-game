@@ -15,6 +15,7 @@ import ProtectedLayout from "@/layouts/helpers/components/ProtectedLayout";
 import GuestLayout from "@/layouts/GuestLayout";
 import { Roles, RoutePaths } from "@/enums";
 import UserLayout from "@/layouts/UserLayout";
+import GameBootstrap from '@/components/GameBootstrap';
 
 export default function App() {
   return (
@@ -49,6 +50,7 @@ export default function App() {
                 }
               >
                 <Route index element={<HomePage />} />
+                <Route path={RoutePaths.game} element={<GameBootstrap />} />
                 <Route path={RoutePaths.profile} element={<ProfilePage />} />
                 <Route path={RoutePaths.forum}>
                   <Route index element={<ForumPage />} />

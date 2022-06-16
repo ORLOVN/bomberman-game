@@ -1,16 +1,20 @@
 import React from "react";
-import { Box, Button, Divider, Flex, Icon } from "@chakra-ui/react";
-import { Outlet } from "react-router-dom";
-import { FaSignOutAlt } from "react-icons/fa";
-import { useAuth } from "@/hooks";
+import {Box, Button, Divider, Flex, Icon} from "@chakra-ui/react";
+import {Outlet} from "react-router-dom";
+import {FaSignOutAlt} from "react-icons/fa";
+import {useAuth} from "@/hooks";
 import Navbar from "@/components/Navbar/Navbar";
-import { Route } from "@/types";
-import { RoutePaths } from "@/enums";
+import {Route} from "@/types";
+import {RoutePaths} from "@/enums";
 
 const routes: Route[] = [
   {
     name: "Home",
     path: `${RoutePaths.home}`,
+  },
+  {
+    name: "Game",
+    path: `/${RoutePaths.game}`,
   },
   {
     name: "Profile",

@@ -12,10 +12,19 @@
         "extensions": [".ts", ".tsx"]
       }
     ],
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "selector": "interface",
+        "format": ["PascalCase"],
+        "prefix": ["I"]
+      }
+    ],
     "import/prefer-default-export": 0,
     "class-methods-use-this": 0,
     "react/state-in-constructor": 0,
     "@typescript-eslint/no-use-before-define": 0,
+    "@typescript-eslint/dot-notation": 0,
     "@typescript-eslint/lines-between-class-members": 0,
     "react/jsx-props-no-spreading": "off"
   },
