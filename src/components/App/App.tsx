@@ -1,5 +1,5 @@
 import React from "react";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, CircularProgress, Flex } from "@chakra-ui/react";
 import { ReactNotifications } from "react-notifications-component";
 import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
 import { ErrorBoundary } from "@/components/ErrorHandler/ErrorBoundary";
@@ -10,17 +10,26 @@ import ProfilePage from "@/pages/Profile";
 import ForumPage from "@/pages/Forum";
 import CreateTopicPage from "@/pages/Forum/pages/CreateTopic";
 import TopicPage from "@/pages/Forum/pages/Topic/_id";
-import { AuthProvider } from "@/hooks";
 import ProtectedLayout from "@/layouts/helpers/components/ProtectedLayout";
 import GuestLayout from "@/layouts/GuestLayout";
 import { Roles, RoutePaths } from "@/enums";
 import UserLayout from "@/layouts/UserLayout";
+import { authApiService } from "@/store";
 import GameBootstrap from '@/components/GameBootstrap';
 
 export default function App() {
+  const { isLoading } = authApiService.useGetUserInfoQuery();
+
+  if (isLoading) {
+    return (
+      <Flex justify="center" align="center" minHeight="100vh">
+        <CircularProgress isIndeterminate color="teal" />
+      </Flex>
+    );
+  }
+
   return (
     <ChakraProvider>
-      <AuthProvider>
         <ReactNotifications />
         <ErrorBoundary>
           <Router>
@@ -64,7 +73,6 @@ export default function App() {
             </Routes>
           </Router>
         </ErrorBoundary>
-      </AuthProvider>
     </ChakraProvider>
   );
 }

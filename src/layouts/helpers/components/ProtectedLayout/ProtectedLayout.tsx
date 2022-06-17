@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { Roles } from "@/enums";
-import { useAuth } from "@/hooks";
+import { useAppSelector } from "@/hooks";
 
 export default function ProtectedLayout({
   layout: Layout,
@@ -12,7 +12,7 @@ export default function ProtectedLayout({
   allowedRoles: Array<Roles[keyof Roles]>;
   fallbackPath: string;
 }) {
-  const { role } = useAuth();
+  const role = useAppSelector(store => store.auth.role);
 
   if (!allowedRoles.includes(role)) {
     return <Navigate to={fallbackPath} replace />;

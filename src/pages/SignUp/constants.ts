@@ -30,7 +30,7 @@ export const fields = [
     },
     {
         name: "repeat_password",
-        placeholder: "Repeat password name",
+        placeholder: "Repeat password",
         secure: true
     },
 ];

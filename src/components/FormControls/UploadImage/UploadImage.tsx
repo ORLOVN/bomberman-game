@@ -4,8 +4,6 @@ import { Avatar, FormControl, FormLabel, Icon, InputRightElement } from '@chakra
 import { FaPlus } from 'react-icons/fa';
 import { Field, FieldProps } from 'formik';
 
-import { host } from '@/constants';
-
 import { ShapeType, Props } from './types';
 
 export default function UploadImage<T extends ShapeType>({
@@ -18,7 +16,7 @@ export default function UploadImage<T extends ShapeType>({
         if (image instanceof File) {
             setImageUrl(URL.createObjectURL(image));
         } else if (typeof image === 'string') {
-            setImageUrl(`${host}${image}`);
+            setImageUrl(`${process.env.HOST}${image}`);
         }
     }, [image]);
 
