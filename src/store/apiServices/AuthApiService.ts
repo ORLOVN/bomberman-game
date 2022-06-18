@@ -23,7 +23,7 @@ const authApiService = createApi({
                 body: credentials,
                 responseHandler: 'text'
             }),
-            invalidatesTags: ['Auth']
+            invalidatesTags: (result, _error, _id) => result ? ['Auth'] : []
         }),
         signOut: build.mutation<void, void>({
             query: () => ({

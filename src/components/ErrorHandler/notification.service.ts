@@ -9,7 +9,8 @@ class NotificationService {
     this.notify(message, "Success", "success");
   }
 
-  notifyError(message: string): void {
+  notifyError(error: unknown): void {
+    const message = error instanceof Error ? error.message : String(error);
     this.notify(message, "Error", "danger");
   }
 

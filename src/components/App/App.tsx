@@ -1,5 +1,5 @@
 import React from "react";
-import { ChakraProvider, CircularProgress, Flex } from "@chakra-ui/react";
+import { CircularProgress, Flex } from "@chakra-ui/react";
 import { ReactNotifications } from "react-notifications-component";
 import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
 import { ErrorBoundary } from "@/components/ErrorHandler/ErrorBoundary";
@@ -29,7 +29,7 @@ export default function App() {
   }
 
   return (
-    <ChakraProvider>
+      <>
         <ReactNotifications />
         <ErrorBoundary>
           <Router>
@@ -73,6 +73,6 @@ export default function App() {
             </Routes>
           </Router>
         </ErrorBoundary>
-    </ChakraProvider>
+      </>
   );
 }

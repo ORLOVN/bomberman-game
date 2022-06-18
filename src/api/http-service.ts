@@ -1,6 +1,6 @@
-import AuthError from "@/api/auth-error-service";
 import { IFormData, Methods } from "@/api/types";
 import queryStringify from "@/api/utils";
+
 
 export default class Http {
   private readonly baseUrl: string;
@@ -67,15 +67,13 @@ export default class Http {
 
     clearTimeout(id);
 
-    if (response.status === 401) {
-      throw new AuthError("Unauthorized");
+    const responseBody = isResponseJson(response) ? response.json() : Promise.resolve(null);
+
+    if (response.status > 299 || response.status < 200) {
+      throw new Error((await responseBody).reason);
     }
 
-    if (!isResponseJson(response)) {
-      return Promise.resolve(null);
-    }
-
-    return response.json();
+    return responseBody;
   }
 }
 
