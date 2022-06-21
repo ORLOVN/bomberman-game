@@ -1,6 +1,7 @@
 import {IEntity} from '@/game/engine/interfaces/IEntity';
 import {loadImageFromUrl} from '@/game/utils';
 import bgImage from '@/assets/images/sprites/bg.png';
+import {entityManager} from '@/game/engine/EntityManager';
 
 export class GameMap implements IEntity {
   public readonly id = Symbol('id');
@@ -27,5 +28,9 @@ export class GameMap implements IEntity {
         context.drawImage(this.tileImage, x * tileSize, y * tileSize, tileSize, tileSize);
       }
     }
+  }
+
+  public die(): void {
+    entityManager.removeEntity(this.id);
   }
 }

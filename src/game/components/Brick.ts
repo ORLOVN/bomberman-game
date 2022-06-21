@@ -4,6 +4,7 @@ import brickImage from '@/assets/images/sprites/brick.png';
 import {ICollidable} from '@/game/engine/collision/interfaces/ICollidable';
 import {ICollisionBox} from '@/game/engine/collision/interfaces/ICollisionBox';
 import {IEntity} from '@/game/engine/interfaces/IEntity';
+import {entityManager} from '@/game/engine/EntityManager';
 
 
 export class Brick implements ICollidable, IEntity {
@@ -36,5 +37,9 @@ export class Brick implements ICollidable, IEntity {
       width: this.width,
       height: this.height
     };
+  }
+
+  public die(): void {
+    entityManager.removeEntity(this.id);
   }
 }

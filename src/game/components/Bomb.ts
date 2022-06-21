@@ -2,8 +2,9 @@ import { loadImageFromUrl } from "@/game/utils";
 import { SpriteSheet } from "@/game/engine/SpriteSheet";
 import { SpriteSheetSprite } from "@/game/engine/SpriteSheetSprite";
 import { IEntity } from "@/game/engine/interfaces/IEntity";
-import bombSheet from "@/assets/images/sprites/bomb.png";
 import { KeyListener } from "@/game/engine/KeyListener";
+import {entityManager} from '@/game/engine/EntityManager';
+import bombSheet from "@/assets/images/sprites/bomb.png";
 
 export class Bomb implements IEntity {
   public readonly id = Symbol("id");
@@ -35,7 +36,7 @@ export class Bomb implements IEntity {
     return Promise.resolve();
   }
 
-  public subscribeToRemoveBomb(callback: () => void): void {
+  public afterRemoval(callback: () => void): void {
     this.callback = callback;
   }
 
@@ -44,10 +45,6 @@ export class Bomb implements IEntity {
     _: KeyListener,
     delta: number
   ): void {
-    if (!this.sprite) {
-      return;
-    }
-
     this.timeBeforeExplosionMS -= delta * 1000;
     this.currBlinkTimeMS -= delta * 1000;
 
@@ -57,6 +54,7 @@ export class Bomb implements IEntity {
 
     if (this.timeBeforeExplosionMS <= 0) {
       this.callback();
+      this.die();
     }
 
     this.sprite.render(
@@ -68,6 +66,10 @@ export class Bomb implements IEntity {
       Bomb.height,
       { opacity: this.getOpacity() }
     );
+  }
+
+  public die(): void {
+    entityManager.removeEntity(this.id);
   }
 
   private getOpacity(): number {

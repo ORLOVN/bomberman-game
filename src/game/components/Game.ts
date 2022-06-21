@@ -7,6 +7,7 @@ import {IEntity} from "@/game/engine/interfaces/IEntity";
 import {entityManager} from "@/game/engine/EntityManager";
 import {brickManager} from '@/game/engine/BrickManager';
 import {collisionHandler} from '@/game/engine/collision/CollisionHandler';
+import {bombManager} from '@/game/engine/BombManager';
 import FullscreenService from '@/services/fullscreen-service';
 
 export class Game {
@@ -55,6 +56,7 @@ export class Game {
     window.cancelAnimationFrame(this.unsubscriptionLoop);
     entityManager.clear();
     collisionHandler.clear();
+    bombManager.clear();
   }
 
   private async setup(): Promise<void> {

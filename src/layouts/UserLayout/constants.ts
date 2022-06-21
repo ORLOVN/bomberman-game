@@ -7,6 +7,10 @@ export const routes: Route[] = [
         path: `${RoutePaths.home}`,
     },
     {
+        name: "Game",
+        path: `/${RoutePaths.game}`,
+    },
+    {
         name: "Profile",
         path: `/${RoutePaths.profile}`,
     },

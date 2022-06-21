@@ -9,9 +9,10 @@ import {SpriteSheetSprite} from "@/game/engine/SpriteSheetSprite";
 import playerSpriteSheet from "@/assets/images/sprites/player_spritesheet.png";
 import {IEntity} from "@/game/engine/interfaces/IEntity";
 import {ICollisionBox} from "@/game/engine/collision/interfaces/ICollisionBox";
-import {entityManager} from "@/game/engine/EntityManager";
 import {Bomb} from "@/game/components/Bomb";
+import {entityManager} from "@/game/engine/EntityManager";
 import {collisionHandler} from '@/game/engine/collision/CollisionHandler';
+import {bombManager} from '@/game/engine/BombManager';
 
 export class Player implements IEntity {
   public readonly id = Symbol("id");
@@ -22,7 +23,6 @@ export class Player implements IEntity {
   private yPos = 0;
   private width = 64;
   private height = 128;
-  private bombCount = 0;
 
   private speed = 150;
   private velX = 0;
@@ -60,6 +60,10 @@ export class Player implements IEntity {
     );
   }
 
+  public die(): void {
+    entityManager.removeEntity(this.id);
+  }
+
   private updatePositions(keyListener: KeyListener, delta: number): void {
     this.velX = 0;
     this.velY = 0;
@@ -82,19 +86,11 @@ export class Player implements IEntity {
     }
 
     if (keyListener.isAnyKeyPressed(["e", "Enter"])) {
-      if (this.bombCount < 3) {
-        this.bombCount += 1;
-        const bomb = new Bomb(
+      if (bombManager.bombCount < 3) {
+        bombManager.addBomb(
           this.xPos + (this.width / 2) - (Bomb.width / 2),
           this.yPos + this.height - Bomb.width
         );
-        bomb.setup().then(() => {
-          entityManager.addEntity(bomb);
-          bomb.subscribeToRemoveBomb(() => {
-            entityManager.removeEntity(bomb.id);
-            this.bombCount -= 1;
-          });
-        });
         keyListener.resetKeysManually(["e", "Enter"]);
       }
     }
