@@ -11,7 +11,7 @@ import {Form, Formik, FormikHelpers} from "formik";
 import fields from "@/constants/sign-in-page-const";
 import {TextFormControl} from "@/components/FormControls";
 import PasswordInput from "@/components/PasswordInput";
-import {notificationService} from "@/components/ErrorHandler";
+import {NotificationService} from "@/components/ErrorHandler";
 
 import { SignInSchema } from "./schemas";
 
@@ -33,7 +33,7 @@ export default function SignIn() {
 
     signIn(data)
       .unwrap()
-      .catch((error) => notificationService.notifyError(JSON.parse(error.data).reason))
+      .catch((error) => NotificationService.notifyError(JSON.parse(error.data).reason))
       .finally(() => setSubmitting(false))
 
   };

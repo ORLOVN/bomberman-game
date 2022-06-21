@@ -65,23 +65,23 @@ export class Player implements IEntity {
     this.velY = 0;
     this.currentSprite = this.sprites.idle;
 
-    if (keyListener.isKeyRight) {
+    if (keyListener.isAnyKeyPressed(["d", "ArrowRight"])) {
       this.velX = this.speed * delta;
       this.currentSprite = this.sprites.right;
-    } else if (keyListener.isKeyLeft) {
+    } else if (keyListener.isAnyKeyPressed(["a", "ArrowLeft"])) {
       this.velX = -(this.speed * delta);
       this.currentSprite = this.sprites.left;
     }
 
-    if (keyListener.isKeyBottom) {
+    if (keyListener.isAnyKeyPressed(["s", "ArrowDown"])) {
       this.velY = this.speed * delta;
       this.currentSprite = this.sprites.forward;
-    } else if (keyListener.isKeyTop) {
+    } else if (keyListener.isAnyKeyPressed(["w", "ArrowUp"])) {
       this.velY = -(this.speed * delta);
       this.currentSprite = this.sprites.backward;
     }
 
-    if (keyListener.isKeyEnter) {
+    if (keyListener.isAnyKeyPressed(["e", "Enter"])) {
       if (this.bombCount < 3) {
         this.bombCount += 1;
         const bomb = new Bomb(
@@ -95,8 +95,7 @@ export class Player implements IEntity {
             this.bombCount -= 1;
           });
         });
-        keyListener.resetKeyManually("Enter");
-        keyListener.resetKeyManually("e");
+        keyListener.resetKeysManually(["e", "Enter"]);
       }
     }
 

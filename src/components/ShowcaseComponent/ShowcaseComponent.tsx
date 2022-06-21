@@ -3,7 +3,7 @@ import { Box, Button, Heading, Icon, Image, Stack } from "@chakra-ui/react";
 import { FaReact } from "react-icons/fa";
 import url from "@/assets/images/test.jpg";
 import styles from "./ShowcaseComponent.module.scss";
-import { notificationService } from "@/components/ErrorHandler";
+import { NotificationService } from "@/components/ErrorHandler";
 
 export default function ShowcaseComponent() {
   const initialState = { error: { message: "" } };
@@ -13,7 +13,7 @@ export default function ShowcaseComponent() {
     try {
       throw new Error("Something has just happened because of ...");
     } catch (error: unknown) {
-      notificationService.notifyError(
+      NotificationService.notifyError(
         error instanceof Error ? error.message : String(error)
       );
     }

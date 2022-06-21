@@ -7,12 +7,14 @@ import {IEntity} from "@/game/engine/interfaces/IEntity";
 import {entityManager} from "@/game/engine/EntityManager";
 import {brickManager} from '@/game/engine/BrickManager';
 import {collisionHandler} from '@/game/engine/collision/CollisionHandler';
+import FullscreenService from '@/services/fullscreen-service';
 
 export class Game {
-  private readonly context!: CanvasRenderingContext2D;
-  private readonly width!: number;
-  private readonly height!: number;
-  private readonly keyListener!: KeyListener;
+  private readonly context: CanvasRenderingContext2D;
+  private readonly canvasElement: HTMLCanvasElement;
+  private readonly width: number;
+  private readonly height: number;
+  private readonly keyListener: KeyListener;
   private unsubscriptionLoop!: number;
 
   private lastTime!: number;
@@ -25,6 +27,7 @@ export class Game {
     }
 
     this.context = context;
+    this.canvasElement = canvasRef.current;
     this.width = canvasRef.current.width;
     this.height = canvasRef.current.height;
     this.keyListener = new KeyListener(canvasRef.current);
@@ -65,6 +68,11 @@ export class Game {
   private loop(currentTime: number): void {
     const delta = (currentTime - this.lastTime) / 1000;
     this.lastTime = currentTime;
+
+    if (this.keyListener.isAnyKeyPressed(["q"])) {
+      FullscreenService.toggle(this.canvasElement);
+      this.keyListener.resetKeysManually(["q"]);
+    }
 
     entityManager.renderEntities(this.context, this.keyListener, delta);
     this.unsubscriptionLoop = window.requestAnimationFrame(this.loop.bind(this));

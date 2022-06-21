@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from "react";
-import {Box} from '@chakra-ui/react';
+import { Box } from "@chakra-ui/react";
 import { isRefCurrent } from "@/game/utils";
 import { Game } from "@/game/components/Game";
 import styles from "./GameBootstrap.module.scss";
+import { NotificationService } from "@/components/ErrorHandler";
 
 export default function GameBootstrap() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -18,8 +19,20 @@ export default function GameBootstrap() {
 
     game.run();
 
+    NotificationService.notifyInfo(
+      "Press the 'q' key to open fullscreen mode",
+      {
+        dismiss: {
+          duration: 0,
+          showIcon: true
+        },
+        onRemoval: () => canvasRef.current.focus()
+      }
+    );
+
     return () => {
       game.unsubscribe();
+      NotificationService.removeAllNotifications();
     };
   }, []);
 

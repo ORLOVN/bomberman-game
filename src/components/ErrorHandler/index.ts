@@ -1,2 +1,2 @@
 export { default } from "./ErrorFallback";
-export { notificationService } from "./notification.service";
+export { NotificationService } from "./notification.service";

@@ -11,24 +11,8 @@ export class KeyListener {
     this.node.addEventListener("keyup", this.resetKey.bind(this));
   }
 
-  public get isKeyLeft(): boolean {
-    return Boolean(this.keyStates["a"]) || Boolean(this.keyStates["ArrowLeft"]);
-  }
-
-  public get isKeyRight(): boolean {
-    return Boolean(this.keyStates["d"]) || Boolean(this.keyStates["ArrowRight"]);
-  }
-
-  public get isKeyTop(): boolean {
-    return Boolean(this.keyStates["w"]) || Boolean(this.keyStates["ArrowUp"]);
-  }
-
-  public get isKeyBottom(): boolean {
-    return Boolean(this.keyStates["s"]) || Boolean(this.keyStates["ArrowDown"]);
-  }
-
-  public get isKeyEnter(): boolean {
-    return Boolean(this.keyStates["Enter"]) || Boolean(this.keyStates["e"]);
+  public isAnyKeyPressed(keys: string[]): boolean {
+    return keys.some((key) => Boolean(this.keyStates[key]));
   }
 
   public unsubscribe(): void {
@@ -37,8 +21,10 @@ export class KeyListener {
     this.keyStates = {};
   }
 
-  public resetKeyManually(keyName: string): void {
-    this.keyStates[keyName] = false;
+  public resetKeysManually(keyNames: string[]): void {
+    keyNames.forEach((keyName) => {
+      this.keyStates[keyName] = false;
+    })
   }
 
   private setKey(e: KeyboardEvent): void {

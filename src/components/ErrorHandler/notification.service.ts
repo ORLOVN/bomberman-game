@@ -1,44 +1,46 @@
-import { NOTIFICATION_TYPE, Store } from "react-notifications-component";
+import {iNotification, NOTIFICATION_TYPE, Store } from "react-notifications-component";
 
-class NotificationService {
-  notifyInfo(message: string): void {
-    this.notify(message, "Info", "info");
+export class NotificationService {
+  public static notifyInfo(message: string, options?: Partial<iNotification>): void {
+    NotificationService.notify(message, "Info", "info", options);
   }
 
-  notifySuccess(message: string): void {
-    this.notify(message, "Success", "success");
+  public static notifySuccess(message: string, options?: Partial<iNotification>): void {
+    NotificationService.notify(message, "Success", "success", options);
   }
 
-  notifyError(error: unknown): void {
+  public static notifyError(error: unknown, options?: Partial<iNotification>): void {
     const message = error instanceof Error ? error.message : String(error);
-    this.notify(message, "Error", "danger");
+    NotificationService.notify(message, "Error", "danger", options);
   }
 
-  notifyWarning(message: string): void {
-    this.notify(message, "Warning", "warning");
+  public static notifyWarning(message: string, options?: Partial<iNotification>): void {
+    NotificationService.notify(message, "Warning", "warning", options);
   }
 
-  private notify(
-    message: string,
-    title: string,
-    type: NOTIFICATION_TYPE
-  ): void {
-    Store.addNotification({
-      title,
-      message,
-      type,
-      container: "bottom-left",
-      dismiss: {
-        duration: 5000,
-        pauseOnHover: true,
-        onScreen: true,
-      },
-    });
-  }
-
-  removeAllNotifications(): void {
+  public static removeAllNotifications(): void {
     Store.removeAllNotifications();
   }
-}
 
-export const notificationService = new NotificationService();
+  private static notify(
+    message: string,
+    title: string,
+    type: NOTIFICATION_TYPE,
+    options: Partial<iNotification> = {}
+  ): void {
+    Store.addNotification(
+      {
+        title,
+        message,
+        type,
+        container: "bottom-left",
+        dismiss: {
+          duration: 5000,
+          pauseOnHover: true,
+          onScreen: true,
+        },
+        ...options
+      }
+    );
+  }
+}
