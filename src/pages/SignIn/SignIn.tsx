@@ -6,18 +6,20 @@ import {
   Input,
 } from "@chakra-ui/react";
 
-
 import {Form, Formik, FormikHelpers} from "formik";
-import fields from "@/constants/sign-in-page-const";
+
+import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
+
 import {TextFormControl} from "@/components/FormControls";
 import PasswordInput from "@/components/PasswordInput";
 import {NotificationService} from "@/components/ErrorHandler";
 
+import fields from './constants';
 import { SignInSchema } from "./schemas";
-
 import {SignInFormType} from "./types";
 
 import { authApiService } from "@/store";
+import { ErrorResponse } from "@/types";
 
 export default function SignIn() {
 
@@ -33,7 +35,10 @@ export default function SignIn() {
 
     signIn(data)
       .unwrap()
-      .catch((error) => NotificationService.notifyError(JSON.parse(error.data).reason))
+      .catch(
+        (error: FetchBaseQueryError) => NotificationService
+          .notifyError((error.data as ErrorResponse).reason)
+      )
       .finally(() => setSubmitting(false))
 
   };

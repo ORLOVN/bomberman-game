@@ -1,24 +1,34 @@
 import React from 'react';
 import { Form, Formik, FormikHelpers } from 'formik';
-
 import { Box, Button, Flex, Input } from '@chakra-ui/react';
-import UploadAvatar from '@/components/FormControls/UploadImage';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
+import { ErrorResponse } from "@/types";
 
+import UploadAvatar from '@/components/FormControls/UploadImage';
 import { TextFormControl } from '@/components/FormControls';
+import { NotificationService } from '@/components/ErrorHandler';
+
+import { profileApiService } from '@/store';
+import { UpdateUserResponse } from '@/store/apiServices/profile';
+
 import { fields } from './constants';
 import { ProfileEditFormType, Props, UserInfoForm } from './types';
 import { ProfileEditSchema } from './schemas';
 
 export default function ProfileEditForm({ user }: Props) {
 
+  const [updateAvatar] = profileApiService.useUpdateAvatarMutation();
+  const [updateProfile] = profileApiService.useUpdateProfileMutation();
+
   const submitHanlder =  (
     values: UserInfoForm,
     { setSubmitting }: FormikHelpers<UserInfoForm>
   ) => {
-      const promises: Array<Promise<UserInfoForm[keyof UserInfoForm]>> = [];
+      const promises: Array<Promise<UpdateUserResponse>> = [];
 
-      const hasProfileDataBeenChanged = (
-          Object
+      const hasProfileDataBeenChanged = 
+          (
+            Object
               .entries(values.profile) as Array<
               [
                   keyof typeof values.profile,
@@ -27,31 +37,27 @@ export default function ProfileEditForm({ user }: Props) {
           >
       ).some(([key, value]) => (user[key] || '') !== value);
 
-      const mockRequest = (
-          value: UserInfoForm[keyof UserInfoForm]
-      ): Promise<UserInfoForm[keyof UserInfoForm]> => new Promise((resolve) => {
-          setTimeout(() => {
-              resolve(value)
-          }, 1000)
-      });
 
       if (values.avatar instanceof File) {
-          promises.push(mockRequest(values.avatar));
+          const data = new FormData();
+          data.append('avatar', values.avatar);
+
+          promises.push(updateAvatar(data).unwrap());
       }
 
       if (hasProfileDataBeenChanged) {
-          promises.push(mockRequest(values.profile));
+          promises.push(updateProfile(values.profile).unwrap());
       }
 
       setSubmitting(true);
 
       Promise
           .all(promises)
-          .then((response) => {
-              console.log(response);
+          .then(() => {
+            NotificationService.notifySuccess('User info has been updated successfully!');
           })
-          .catch((e) => {
-              console.log('Error while updating profile', e);
+          .catch((error: FetchBaseQueryError) => {
+            NotificationService.notifyError((error.data as ErrorResponse).reason)
           })
           .finally(() => {
               setSubmitting(false);
@@ -60,6 +66,7 @@ export default function ProfileEditForm({ user }: Props) {
 
   return (
     <Formik<UserInfoForm>
+      enableReinitialize
       initialValues={
         {
           profile: {

@@ -2,7 +2,7 @@ import { InferType } from "yup";
 import { User } from "@/types";
 import { ProfileEditSchema } from "./schemas";
 
-export interface Props {
+export type Props = {
     user: User;
 }
 

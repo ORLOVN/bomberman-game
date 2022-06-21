@@ -1,6 +1,6 @@
 import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { Roles } from "@/enums";
-import { authApiService } from "../apiServices";
+import { authApiService, profileApiService } from "../apiServices";
 import { User } from "@/types";
 
 const initialState = {
@@ -25,6 +25,15 @@ const authSlice = createSlice({
             )
             .addMatcher(
                 authApiService.endpoints.getUserInfo.matchFulfilled,
+                (state, { payload }) => {
+                    state.user = payload
+                }
+            )
+            .addMatcher(
+                isAnyOf(
+                    profileApiService.endpoints.updateAvatar.matchFulfilled,
+                    profileApiService.endpoints.updateProfile.matchFulfilled,
+                ),
                 (state, { payload }) => {
                     state.user = payload
                 }

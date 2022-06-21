@@ -5,9 +5,11 @@ import { FaKey, FaUserEdit } from "react-icons/fa";
 import ProfileEditForm from "./components/ProfileEditForm";
 import PasswordEditForm from "./components/PasswordEditForm";
 
-import { user } from "./constants";
+import { useAppSelector } from "@/hooks";
 
 export default function Profile() {
+  const user = useAppSelector(state => state.auth.user);
+
   return (
     <Box w={1000}>
       <Tabs isFitted size="lg">

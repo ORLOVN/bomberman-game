@@ -20,59 +20,62 @@ import GameBootstrap from '@/components/GameBootstrap';
 export default function App() {
   const { isLoading } = authApiService.useGetUserInfoQuery();
 
-  if (isLoading) {
-    return (
-      <Flex justify="center" align="center" minHeight="100vh">
-        <CircularProgress isIndeterminate color="teal" />
-      </Flex>
-    );
-  }
+  const preloader = (
+    <Flex justify="center" align="center" minHeight="100vh">
+      <CircularProgress isIndeterminate color="teal" />
+    </Flex>
+  );
 
   return (
       <>
         <ReactNotifications />
-        <ErrorBoundary>
-          <Router>
-            <Routes>
-              <Route
-                element={
-                  <ProtectedLayout
-                    layout={GuestLayout}
-                    allowedRoles={[Roles.guest]}
-                    fallbackPath={RoutePaths.home}
-                  />
-                }
-              >
-                <Route path={`/${RoutePaths.signIn}`} element={<SignInPage />} />
-                <Route path={`/${RoutePaths.signUp}`} element={<SignUpPage />} />
-                <Route path="*" element={<Navigate to={`/${RoutePaths.signIn}`} replace />} />
-              </Route>
+        { isLoading
+          ? preloader
+          : (
+              <ErrorBoundary>
+                <Router>
+                  <Routes>
+                    <Route
+                      element={
+                        <ProtectedLayout
+                          layout={GuestLayout}
+                          allowedRoles={[Roles.guest]}
+                          fallbackPath={RoutePaths.home}
+                        />
+                      }
+                    >
+                      <Route path={`/${RoutePaths.signIn}`} element={<SignInPage />} />
+                      <Route path={`/${RoutePaths.signUp}`} element={<SignUpPage />} />
+                      <Route path="*" element={<Navigate to={`/${RoutePaths.signIn}`} replace />} />
+                    </Route>
 
-              <Route
-                path={RoutePaths.home}
-                element={
-                  <ProtectedLayout
-                    layout={UserLayout}
-                    allowedRoles={[Roles.user]}
-                    fallbackPath={`/${RoutePaths.signIn}`}
-                  />
-                }
-              >
-                <Route index element={<HomePage />} />
-                <Route path={RoutePaths.game} element={<GameBootstrap />} />
-                <Route path={RoutePaths.profile} element={<ProfilePage />} />
-                <Route path={RoutePaths.forum}>
-                  <Route index element={<ForumPage />} />
-                  <Route path={RoutePaths.createTopic} element={<CreateTopicPage />} />
-                  <Route path={RoutePaths.topicId} element={<TopicPage />} />
-                  <Route path="*" element={<Navigate to={RoutePaths.forum} replace />} />
-                </Route>
-                <Route path="*" element={<Navigate to={RoutePaths.home} replace />} />
-              </Route>
-              <Route path="*" element={<Navigate to={RoutePaths.home} replace />} />
-            </Routes>
-          </Router>
-        </ErrorBoundary>
+                    <Route
+                      path={RoutePaths.home}
+                      element={
+                        <ProtectedLayout
+                          layout={UserLayout}
+                          allowedRoles={[Roles.user]}
+                          fallbackPath={`/${RoutePaths.signIn}`}
+                        />
+                      }
+                    >
+                      <Route index element={<HomePage />} />
+                      <Route path={RoutePaths.game} element={<GameBootstrap />} />
+                      <Route path={RoutePaths.profile} element={<ProfilePage />} />
+                      <Route path={RoutePaths.forum}>
+                        <Route index element={<ForumPage />} />
+                        <Route path={RoutePaths.createTopic} element={<CreateTopicPage />} />
+                        <Route path={RoutePaths.topicId} element={<TopicPage />} />
+                        <Route path="*" element={<Navigate to={RoutePaths.forum} replace />} />
+                      </Route>
+                      <Route path="*" element={<Navigate to={RoutePaths.home} replace />} />
+                    </Route>
+                    <Route path="*" element={<Navigate to={RoutePaths.home} replace />} />
+                  </Routes>
+                </Router>
+              </ErrorBoundary>
+            )
+        }
       </>
   );
 }

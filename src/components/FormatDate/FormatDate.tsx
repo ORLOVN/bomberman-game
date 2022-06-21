@@ -1,10 +1,7 @@
 import React from 'react';
 import dateFormat from "dateformat";
 
-interface Props {
-    value: number;
-    mask?: string;
-}
+import { Props } from './types';
 
 FormatDate.defaultProps = {
     mask: "dddd, mmmm dS, yyyy"

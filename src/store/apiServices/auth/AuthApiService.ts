@@ -5,7 +5,7 @@ import { SignInRequest } from './types';
 const authApiService = createApi({
     reducerPath: 'authApiService',
     baseQuery: fetchBaseQuery({
-        baseUrl: `${process.env.HOST}/api/v2/auth`,
+        baseUrl: `${process.env.HOST}/auth`,
         credentials: 'include'
     }),
     tagTypes: ['Auth'],
@@ -21,15 +21,23 @@ const authApiService = createApi({
                 url: '/signin',
                 method: 'POST',
                 body: credentials,
-                responseHandler: 'text'
+                responseHandler: (response) => (
+                    response.ok
+                        ? response.text()
+                        : response.json()
+                ),
             }),
-            invalidatesTags: (result, _error, _id) => result ? ['Auth'] : []
+            invalidatesTags: (result) => result ? ['Auth'] : []
         }),
         signOut: build.mutation<void, void>({
             query: () => ({
                 url: '/logout',
                 method: 'POST',
-                responseHandler: 'text'
+                responseHandler: (response) => (
+                    response.ok
+                        ? response.text()
+                        : response.json()
+                ),
             })
         })
     })

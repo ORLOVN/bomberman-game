@@ -1,4 +1,4 @@
-export default interface Route {
+export type Route = {
   path: string;
   name: string;
-}
+};

@@ -13,8 +13,8 @@ type ShapeType = TypeOfShape<ObjectShape>;
 export default function PasswordInput(
     props: FieldInputProps<ShapeType[keyof ShapeType]>
 ) {
-    const [show, setShow] = React.useState(false)
-    const handleClick = () => setShow(!show)
+    const [show, setShow] = React.useState(false);
+    const handleClick = () => setShow(!show);
 
     return (
         <InputGroup size='md'>
@@ -22,7 +22,6 @@ export default function PasswordInput(
                 {...props}
                 pr='4.5rem'
                 type={show ? 'text' : 'password'}
-                placeholder='Enter password'
             />
             <InputRightElement width='4.5rem'>
                 <Button h='1.75rem' size='sm' onClick={handleClick}>

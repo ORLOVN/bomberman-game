@@ -1,10 +1,10 @@
 export const fields = [{
-    name: "old_password",
+    name: "oldPassword",
     placeholder: "Old password",
 }, {
-    name: "new_password",
+    name: "newPassword",
     placeholder: "New password",
 }, {
-    name: "new_password_repeat",
+    name: "newPasswordRepeat",
     placeholder: "Repeat new password",
 }];

@@ -16,7 +16,7 @@ export default function UploadImage<T extends ShapeType>({
         if (image instanceof File) {
             setImageUrl(URL.createObjectURL(image));
         } else if (typeof image === 'string') {
-            setImageUrl(`${process.env.HOST}${image}`);
+            setImageUrl(`${process.env.HOST}/resources${image}`);
         }
     }, [image]);
 

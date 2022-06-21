@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Formik, FormikHelpers } from "formik";
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 
 import { Button } from '@chakra-ui/react';
 
@@ -9,19 +10,34 @@ import PasswordInput from '@/components/PasswordInput';
 import { fields } from './constants';
 import { PasswordEditSchema } from './schemas';
 import { PasswordEditFormType } from './types';
+import { profileApiService } from '@/store';
+import { NotificationService } from '@/components/ErrorHandler';
+import { ErrorResponse } from '@/types';
 
 export default function PasswordEditForm() {
+  const [ updatePassword ] = profileApiService.useUpdatePasswordMutation();
+
   const submitHanlder = (
 		values: PasswordEditFormType,
-		{ setSubmitting }: FormikHelpers<PasswordEditFormType>
+		{ setSubmitting, resetForm }: FormikHelpers<PasswordEditFormType>
 	) => {
 		setSubmitting(true);
 
-
-		setTimeout(() => {
-			console.log(values);
-			setSubmitting(false);
-		}, 1000);
+    updatePassword({
+        oldPassword: values.oldPassword,
+        newPassword: values.newPassword
+      })
+      .unwrap()
+      .then(() => {
+        resetForm();
+        NotificationService.notifySuccess('Password has been updated successfully!');
+      })
+      .catch((error: FetchBaseQueryError) => {
+        NotificationService.notifyError((error.data as ErrorResponse).reason)
+      })
+      .finally(() => {
+        setSubmitting(false);
+      })
 	};
 
   return (
@@ -32,10 +48,7 @@ export default function PasswordEditForm() {
 			>
         {
           ({ dirty, isSubmitting, handleSubmit, isValid }) => (
-            <Form
-              className="profile-form"
-              onSubmit={handleSubmit}
-            >
+            <Form onSubmit={handleSubmit}>
               {
                 fields.map(
                   ({ name, placeholder }) => (
