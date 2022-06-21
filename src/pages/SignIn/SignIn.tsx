@@ -22,8 +22,7 @@ import { authApiService } from "@/store";
 import { ErrorResponse } from "@/types";
 
 export default function SignIn() {
-
-  const [signIn] = authApiService.useSignInMutation();
+  const [ signIn ] = authApiService.useSignInMutation();
 
   const submitHandler = (
     values: SignInFormType,
@@ -44,37 +43,37 @@ export default function SignIn() {
   };
 
   return (
-  <Box mt={4} w={400}>
-    <Formik
-      initialValues={SignInSchema.getDefault()}
-      validationSchema={SignInSchema}
-      onSubmit={ submitHandler }
-    >
-      {
-        ({ dirty, isSubmitting, handleSubmit, isValid }) => (
-          <Form onSubmit={handleSubmit}>
-            {fields.map(({ name, placeholder, secure }) => (
-              <TextFormControl<SignInFormType>
-                key={name}
-                name={name}
-                label={placeholder}
-                placeholder={placeholder}
-                component={secure ? PasswordInput : Input}
-              />
-            ))}
-            <Button
-              mt={4}
-              type="submit"
-              colorScheme="teal"
-              isLoading={isSubmitting}
-              disabled={!dirty || (dirty && !isValid) || isSubmitting}
-            >
-              Sign in
-            </Button>
-          </Form>
-        )
-      }
-    </Formik>
-  </Box>
+    <Box mt={4} w={400}>
+      <Formik
+        initialValues={SignInSchema.getDefault()}
+        validationSchema={SignInSchema}
+        onSubmit={ submitHandler }
+      >
+        {
+          ({ dirty, isSubmitting, handleSubmit, isValid }) => (
+            <Form onSubmit={handleSubmit}>
+              {fields.map(({ name, placeholder, secure }) => (
+                <TextFormControl<SignInFormType>
+                  key={name}
+                  name={name}
+                  label={placeholder}
+                  placeholder={placeholder}
+                  component={secure ? PasswordInput : Input}
+                />
+              ))}
+              <Button
+                mt={4}
+                type="submit"
+                colorScheme="teal"
+                isLoading={isSubmitting}
+                disabled={!dirty || (dirty && !isValid) || isSubmitting}
+              >
+                Sign in
+              </Button>
+            </Form>
+          )
+        }
+      </Formik>
+    </Box>
   );
 }

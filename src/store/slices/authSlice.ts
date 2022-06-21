@@ -5,7 +5,7 @@ import { User } from "@/types";
 
 const initialState = {
     role: Roles.guest,
-    user: {} as User
+    user: {} as User,
 }
 
 const authSlice = createSlice({
@@ -15,16 +15,17 @@ const authSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addMatcher(
-                isAnyOf(
-                    authApiService.endpoints.signIn.matchFulfilled,
-                    authApiService.endpoints.getUserInfo.matchFulfilled,
-                ),
-                (state) => {
+                authApiService.endpoints.getUserInfo.matchFulfilled,
+                (state, { payload }) => {
+                    state.user = payload;
                     state.role = Roles.user
                 }
             )
             .addMatcher(
-                authApiService.endpoints.getUserInfo.matchFulfilled,
+                isAnyOf(
+                    profileApiService.endpoints.updateAvatar.matchFulfilled,
+                    profileApiService.endpoints.updateProfile.matchFulfilled,
+                ),
                 (state, { payload }) => {
                     state.user = payload
                 }
@@ -41,7 +42,8 @@ const authSlice = createSlice({
             .addMatcher(
                 authApiService.endpoints.signOut.matchFulfilled,
                 (state) => {
-                    state.role = Roles.guest
+                    state.role = Roles.guest;
+                    state.user = {} as User;
                 }
             )
     },

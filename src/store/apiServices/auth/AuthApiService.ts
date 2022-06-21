@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { User } from '@/types';
+import { SignUpFormType } from '@/pages/SignUp/types';
 import { SignInRequest } from './types';
 
 const authApiService = createApi({
@@ -19,6 +20,19 @@ const authApiService = createApi({
         signIn: build.mutation<void, SignInRequest>({
             query: (credentials) => ({
                 url: '/signin',
+                method: 'POST',
+                body: credentials,
+                responseHandler: (response) => (
+                    response.ok
+                        ? response.text()
+                        : response.json()
+                ),
+            }),
+            invalidatesTags: (result) => result ? ['Auth'] : []
+        }),
+        signUp: build.mutation<void, Omit<SignUpFormType, 'repeat_password'>>({
+            query: (credentials) => ({
+                url: '/signup',
                 method: 'POST',
                 body: credentials,
                 responseHandler: (response) => (
