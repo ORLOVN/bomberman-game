@@ -18,4 +18,8 @@ export const routes: Route[] = [
         name: "Forum",
         path: `/${RoutePaths.forum}`,
     },
+    {
+        name: "Leaderboard",
+        path: `/${RoutePaths.leaderboard}`,
+    },
 ];

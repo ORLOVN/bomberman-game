@@ -7,6 +7,7 @@ import HomePage from "@/pages/Home";
 import SignInPage from "@/pages/SignIn";
 import SignUpPage from "@/pages/SignUp";
 import ProfilePage from "@/pages/Profile";
+import LeaderboardPage from "@/pages/Leaderboard";
 import ForumPage from "@/pages/Forum";
 import CreateTopicPage from "@/pages/Forum/pages/CreateTopic";
 import TopicPage from "@/pages/Forum/pages/Topic/_id";
@@ -62,6 +63,7 @@ export default function App() {
                       <Route index element={<HomePage />} />
                       <Route path={RoutePaths.game} element={<GameBootstrap />} />
                       <Route path={RoutePaths.profile} element={<ProfilePage />} />
+                      <Route path={RoutePaths.leaderboard} element={<LeaderboardPage />} />
                       <Route path={RoutePaths.forum}>
                         <Route index element={<ForumPage />} />
                         <Route path={RoutePaths.createTopic} element={<CreateTopicPage />} />

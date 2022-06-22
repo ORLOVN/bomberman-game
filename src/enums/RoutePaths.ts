@@ -7,6 +7,7 @@ enum RoutePaths {
     createTopic = "create-topic",
     topicId = "topic/:id",
     game = "game",
+    leaderboard = "leaderboard",
 }
 
 export default RoutePaths;
