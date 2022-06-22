@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { authApiService, profileApiService } from "./apiServices";
+import { unauthenticatedMiddleware } from "./middlewares";
 import { authSlice } from "./slices";
 
 const store = configureStore({
@@ -9,6 +10,7 @@ const store = configureStore({
         [profileApiService.reducerPath]: profileApiService.reducer
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(
+        unauthenticatedMiddleware,
         authApiService.middleware,
         profileApiService.middleware
     )

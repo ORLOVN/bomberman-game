@@ -2,6 +2,7 @@ import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { Roles } from "@/enums";
 import { authApiService, profileApiService } from "../apiServices";
 import { User } from "@/types";
+import { userActions } from "../actions";
 
 const initialState = {
     role: Roles.guest,
@@ -14,11 +15,17 @@ const authSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+            .addCase(
+                userActions.logout,
+                (state) => {
+                    state.role = Roles.guest;
+                }
+            )
             .addMatcher(
                 authApiService.endpoints.getUserInfo.matchFulfilled,
                 (state, { payload }) => {
                     state.user = payload;
-                    state.role = Roles.user
+                    state.role = Roles.user;
                 }
             )
             .addMatcher(
@@ -27,16 +34,7 @@ const authSlice = createSlice({
                     profileApiService.endpoints.updateProfile.matchFulfilled,
                 ),
                 (state, { payload }) => {
-                    state.user = payload
-                }
-            )
-            .addMatcher(
-                isAnyOf(
-                    profileApiService.endpoints.updateAvatar.matchFulfilled,
-                    profileApiService.endpoints.updateProfile.matchFulfilled,
-                ),
-                (state, { payload }) => {
-                    state.user = payload
+                    state.user = payload;
                 }
             )
             .addMatcher(
