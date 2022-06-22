@@ -13,7 +13,7 @@ class EntityManager {
     return this.entities;
   }
 
-  public setupEntities(): Promise<void[]> {
+  public async setupEntities(): Promise<void[]> {
     const promises = this.getEntities().map((e) => e.setup());
     return Promise.all(promises);
   }

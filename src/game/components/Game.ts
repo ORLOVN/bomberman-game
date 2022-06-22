@@ -9,18 +9,23 @@ import {brickManager} from '@/game/engine/BrickManager';
 import {collisionHandler} from '@/game/engine/collision/CollisionHandler';
 import {bombManager} from '@/game/engine/BombManager';
 import FullscreenService from '@/services/fullscreen-service';
+import { LevelGenerator } from "@/game/engine/LevelGenerator/LevelGenerator";
 
 export class Game {
   private readonly context: CanvasRenderingContext2D;
   private readonly canvasElement: HTMLCanvasElement;
   private readonly width: number;
   private readonly height: number;
+  private readonly tileSize: number;
   private readonly keyListener: KeyListener;
   private unsubscriptionLoop!: number;
 
   private lastTime!: number;
 
-  constructor(canvasRef: MutableRefObject<HTMLCanvasElement>) {
+  constructor(
+    canvasRef: MutableRefObject<HTMLCanvasElement>,
+    tileSize: number,
+  ) {
     const context = canvasRef.current.getContext("2d");
 
     if (!isCanvasElement(context)) {
@@ -31,6 +36,7 @@ export class Game {
     this.canvasElement = canvasRef.current;
     this.width = canvasRef.current.width;
     this.height = canvasRef.current.height;
+    this.tileSize = tileSize;
     this.keyListener = new KeyListener(canvasRef.current);
   }
 
@@ -62,8 +68,13 @@ export class Game {
   private async setup(): Promise<void> {
     this.keyListener.setup();
 
-    this.addEntity(new GameMap(this.width, this.height));
-    brickManager.addCurbBricks(this.width, this.height, this.addEntity.bind(this));
+    this.addEntity(new GameMap(this.width, this.height, this.tileSize));
+    brickManager.addCurbBricks(
+      this.width,
+      this.height,
+      this.addEntity.bind(this)
+    );
+    await LevelGenerator.generate(1, this.tileSize);
     this.addEntity(new Player());
   }
 
@@ -77,6 +88,8 @@ export class Game {
     }
 
     entityManager.renderEntities(this.context, this.keyListener, delta);
-    this.unsubscriptionLoop = window.requestAnimationFrame(this.loop.bind(this));
+    this.unsubscriptionLoop = window.requestAnimationFrame(
+      this.loop.bind(this)
+    );
   }
 }

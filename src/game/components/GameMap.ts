@@ -4,14 +4,20 @@ import bgImage from '@/assets/images/sprites/bg.png';
 import {entityManager} from '@/game/engine/EntityManager';
 
 export class GameMap implements IEntity {
-  public readonly id = Symbol('id');
+  public readonly id = Symbol("id");
   private tileImage!: HTMLImageElement;
   private readonly width: number;
   private readonly height: number;
+  private readonly tileSize: number;
 
-  constructor(width: number, height: number) {
+  constructor(
+    width: number,
+    height: number,
+    tileSize: number,
+  ) {
     this.width = width;
     this.height = height;
+    this.tileSize = tileSize;
   }
 
   public async setup() {
@@ -19,13 +25,18 @@ export class GameMap implements IEntity {
   }
 
   public render(context: CanvasRenderingContext2D): void {
-    const tileSize = 64;
-    const tileCountX = Math.ceil(this.width / tileSize);
-    const tileCountY = Math.ceil(this.height / tileSize);
+    const tileCountX = Math.ceil(this.width / this.tileSize);
+    const tileCountY = Math.ceil(this.height / this.tileSize);
 
     for (let y = 0; y < tileCountY; y += 1) {
       for (let x = 0; x < tileCountX; x += 1) {
-        context.drawImage(this.tileImage, x * tileSize, y * tileSize, tileSize, tileSize);
+        context.drawImage(
+          this.tileImage,
+          x * this.tileSize,
+          y * this.tileSize,
+          this.tileSize,
+          this.tileSize
+        );
       }
     }
   }

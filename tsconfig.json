@@ -13,6 +13,7 @@
     "strict": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
     "declaration": false,
     "sourceMap": false,
