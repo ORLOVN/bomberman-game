@@ -7,8 +7,8 @@ export class KeyListener {
   }
 
   public setup(): void {
-    this.node.addEventListener("keydown", this.setKey.bind(this));
-    this.node.addEventListener("keyup", this.resetKey.bind(this));
+    this.node.addEventListener("keydown", this.setKey);
+    this.node.addEventListener("keyup", this.resetKey);
   }
 
   public isAnyKeyPressed(keys: string[]): boolean {
@@ -16,8 +16,8 @@ export class KeyListener {
   }
 
   public unsubscribe(): void {
-    this.node.removeEventListener("keydown", this.setKey.bind(this));
-    this.node.removeEventListener("keyup", this.resetKey.bind(this));
+    this.node.removeEventListener("keydown", this.setKey);
+    this.node.removeEventListener("keyup", this.resetKey);
     this.keyStates = {};
   }
 
@@ -27,12 +27,12 @@ export class KeyListener {
     })
   }
 
-  private setKey(e: KeyboardEvent): void {
+  private setKey = (e: KeyboardEvent): void =>  {
     e.preventDefault();
     this.keyStates[e.key] = true;
   }
 
-  private resetKey(e: KeyboardEvent): void {
+  private resetKey = (e: KeyboardEvent): void => {
     e.preventDefault();
     this.keyStates[e.key] = false;
   }

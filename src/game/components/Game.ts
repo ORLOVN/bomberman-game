@@ -1,13 +1,14 @@
-import {MutableRefObject} from "react";
-import {isCanvasElement, isCollidable} from "@/game/utils";
-import {GameMap} from "@/game/components/GameMap";
-import {Player} from "@/game/components/Player";
-import {KeyListener} from "@/game/engine/KeyListener";
-import {IEntity} from "@/game/engine/interfaces/IEntity";
-import {entityManager} from "@/game/engine/EntityManager";
-import {brickManager} from '@/game/engine/BrickManager';
-import {collisionHandler} from '@/game/engine/collision/CollisionHandler';
-import {bombManager} from '@/game/engine/BombManager';
+import { MutableRefObject } from "react";
+import { isCanvasElement, isCollidable } from "@/game/utils";
+import { GameMap } from "@/game/components/GameMap";
+import { Player } from "@/game/components/Player";
+import { InitialScreen } from "@/game/components/InitialScreen";
+import { KeyListener } from "@/game/engine/KeyListener";
+import { IEntity } from "@/game/engine/interfaces/IEntity";
+import { entityManager } from "@/game/engine/EntityManager";
+import { brickManager } from "@/game/engine/BrickManager";
+import { collisionHandler } from "@/game/engine/collision/CollisionHandler";
+import { bombManager } from '@/game/engine/BombManager';
 import FullscreenService from '@/services/fullscreen-service';
 import { LevelGenerator } from "@/game/engine/LevelGenerator/LevelGenerator";
 
@@ -40,8 +41,29 @@ export class Game {
     this.keyListener = new KeyListener(canvasRef.current);
   }
 
-  public async run(): Promise<void> {
-    await this.setup();
+  public async runInitialScreen(): Promise<void> {
+    this.unsubscribe();
+
+    this.keyListener.setup();
+
+    this.addEntity(
+      new InitialScreen(this.context).addOnStartHandler(() => {
+        this.run(1);
+      })
+    );
+
+    await entityManager.setupEntities();
+
+    this.lastTime = performance.now();
+
+    this.loop(performance.now());
+  }
+
+  public async run(level: number): Promise<void> {
+    this.unsubscribe();
+
+    await this.setup(level);
+
     await entityManager.setupEntities();
 
     this.lastTime = performance.now();
@@ -65,7 +87,7 @@ export class Game {
     bombManager.clear();
   }
 
-  private async setup(): Promise<void> {
+  private async setup(level: number): Promise<void> {
     this.keyListener.setup();
 
     this.addEntity(new GameMap(this.width, this.height, this.tileSize));
@@ -74,8 +96,11 @@ export class Game {
       this.height,
       this.addEntity.bind(this)
     );
-    await LevelGenerator.generate(1, this.tileSize);
+
+    await LevelGenerator.generate(level, this.tileSize);
+
     this.addEntity(new Player());
+
   }
 
   private loop(currentTime: number): void {

@@ -19,7 +19,7 @@ export default function GameBootstrap() {
 
     const game = new Game(canvasRef, tileSize);
 
-    game.run();
+    game.runInitialScreen();
 
     NotificationService.notifyInfo(
       "Press the 'q' key to open fullscreen mode",
@@ -28,7 +28,7 @@ export default function GameBootstrap() {
           duration: 0,
           showIcon: true
         },
-        onRemoval: () => canvasRef.current.focus()
+        onRemoval: () => canvasRef?.current?.focus()
       }
     );
 

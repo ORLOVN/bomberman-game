@@ -33,6 +33,9 @@ class EntityManager {
   }
 
   public clear(): void {
+    this.entities.forEach((entity) => {
+      entity.unsubscribe && entity.unsubscribe();
+    })
     this.entities = [];
   }
 }
