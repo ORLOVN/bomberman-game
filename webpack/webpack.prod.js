@@ -1,14 +1,31 @@
 const { merge } = require("webpack-merge");
 const common = require("./webpack.common");
+const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const WorkboxPlugin = require('workbox-webpack-plugin');
 
 module.exports = merge(common, {
   mode: "production",
+  output: {
+    filename: '[name].[contenthash].js',
+  },
+  optimization: {
+    moduleIds: 'deterministic',
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+        },
+      },
+    },
+  },
   devtool: "source-map",
   module: {
     rules: [
       {
-        test: /\.module\.s(a|c)ss$/,
+        test: /\.module\.s[ac]ss$/,
         use: [
           MiniCssExtractPlugin.loader,
           {
@@ -35,8 +52,8 @@ module.exports = merge(common, {
         ],
       },
       {
-        test: /\.s(a|c)ss$/,
-        exclude: /\.module.(s(a|c)ss)$/,
+        test: /\.s[ac]ss$/,
+        exclude: /\.module.(s[ac]ss)$/,
         use: [
           MiniCssExtractPlugin.loader,
           "css-loader",
@@ -60,8 +77,23 @@ module.exports = merge(common, {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "[name].[hash].css",
-      chunkFilename: "[id].[hash].css",
+      filename: "[name].[contenthash].css",
+      chunkFilename: "[id].[contenthash].css",
     }),
+    new WorkboxPlugin.GenerateSW({
+      clientsClaim: true,
+      skipWaiting: true,
+      navigateFallback: 'index.html',
+      runtimeCaching: [{
+        urlPattern: ({_, url}) => url.hostname === 'ya-praktikum.tech',
+        handler: "NetworkFirst",
+        options: {
+          cacheName: 'requests',
+        },
+      }]
+    }),
+    new webpack.DefinePlugin({
+      PRODUCTION: JSON.stringify(true),
+    })
   ],
 });

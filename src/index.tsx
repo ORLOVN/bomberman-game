@@ -7,6 +7,9 @@ import { Provider } from "react-redux";
 import App from "@/components/App";
 
 import store from "./store";
+import { ServiceWorkersService } from "@/services/service-workers-service";
+
+ServiceWorkersService.start();
 
 const root = createRoot(document.getElementById("root") as HTMLElement);
 root.render(

@@ -1,5 +1,6 @@
 /dist
 /node_modules
+/webpack
 .idea
 .github
 package-lock.json

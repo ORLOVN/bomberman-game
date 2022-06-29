@@ -1,8 +1,8 @@
 const { merge } = require("webpack-merge");
-const path = require("path");
 const common = require("./webpack.common");
+const path = require("path");
+const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const autoprefixer = require("autoprefixer");
 
 module.exports = merge(common, {
   mode: "development",
@@ -18,7 +18,7 @@ module.exports = merge(common, {
   module: {
     rules: [
       {
-        test: /\.module\.s(a|c)ss$/,
+        test: /\.module\.s[ac]ss$/,
         use: [
           "style-loader",
           {
@@ -45,8 +45,8 @@ module.exports = merge(common, {
         ],
       },
       {
-        test: /\.s(a|c)ss$/,
-        exclude: /\.module.(s(a|c)ss)$/,
+        test: /\.s[ac]ss$/,
+        exclude: /\.module.(s[ac]ss)$/,
         use: [
           "style-loader",
           {
@@ -79,5 +79,8 @@ module.exports = merge(common, {
       filename: "[name].css",
       chunkFilename: "[id].css",
     }),
+    new webpack.DefinePlugin({
+      PRODUCTION: JSON.stringify(false),
+    })
   ],
 });

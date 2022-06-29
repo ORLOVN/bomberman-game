@@ -1,3 +1,4 @@
+declare const PRODUCTION: boolean;
 declare module "*.jpg";
 declare module "*.png";
 declare module "*.jpeg";
