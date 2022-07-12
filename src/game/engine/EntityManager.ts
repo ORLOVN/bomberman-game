@@ -1,7 +1,6 @@
 import { IEntity } from "@/game/engine/interfaces/IEntity";
 import { KeyListener } from "@/game/engine/KeyListener";
 
-
 class EntityManager {
   private entities: IEntity[] = [];
 
@@ -27,15 +26,13 @@ class EntityManager {
     keyListener: KeyListener,
     delta: number
   ): void {
-    this.getEntities().forEach((e) =>
-      e.render(context, keyListener, delta)
-    );
+    this.getEntities().forEach((e) => e.render(context, keyListener, delta));
   }
 
   public clear(): void {
     this.entities.forEach((entity) => {
-      entity.unsubscribe && entity.unsubscribe();
-    })
+      entity.unsubscribe?.();
+    });
     this.entities = [];
   }
 }

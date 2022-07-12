@@ -5,7 +5,7 @@ import { IEntity } from "@/game/engine/interfaces/IEntity";
 import { Button } from "@/game/components/Button";
 import { IControl } from "@/game/engine/interfaces/IControl";
 import { KeyListener } from "@/game/engine/KeyListener";
-import {entityManager} from "@/game/engine/EntityManager";
+import { entityManager } from "@/game/engine/EntityManager";
 
 export class InitialScreen implements IEntity {
   public readonly id = Symbol("id");
@@ -25,11 +25,11 @@ export class InitialScreen implements IEntity {
     this.controls.push(new Button("LEADER BOARD", 100, 600, this.context));
   }
 
-  private onStart() {};
+  private onStart() {}
 
   public addOnStartHandler(onStartHandler: () => void): InitialScreen {
     this.onStart = onStartHandler;
-    return this
+    return this;
   }
 
   public async setup(): Promise<void> {
@@ -42,7 +42,15 @@ export class InitialScreen implements IEntity {
     keyListener: KeyListener,
     delta: number
   ): void {
-    this.sheet.render(context, 0, 0, 0, 0, this.width, this.height);
+    this.sheet.render(
+      context,
+      0,
+      0,
+      this.width / 2,
+      this.height / 2,
+      this.width,
+      this.height
+    );
     this.controls.forEach((control) => control.render(delta));
   }
 

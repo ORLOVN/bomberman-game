@@ -1,4 +1,4 @@
-import {IRenderImageOptions} from '@/game/engine/interfaces/IRenderImageOptions';
+import { IRenderImageOptions } from "@/game/engine/interfaces/IRenderImageOptions";
 
 export interface ISprite {
   render(

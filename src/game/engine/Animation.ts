@@ -1,5 +1,6 @@
 import { SpriteSheet } from "@/game/engine/SpriteSheet";
-import {ISprite} from '@/game/engine/interfaces/ISprite';
+import { ISprite } from "@/game/engine/interfaces/ISprite";
+import { IRenderImageOptions } from "@/game/engine/interfaces/IRenderImageOptions";
 
 type Frame = [number, number];
 
@@ -7,7 +8,7 @@ export class Animation implements ISprite {
   private spriteSheet: SpriteSheet;
   private readonly frames: Frame[];
   private readonly msPerFrame: number;
-  private readonly flippedX: boolean;
+  private readonly renderImageOptions: IRenderImageOptions;
 
   private currentFrameIndex: number = 0;
   private msInCurrentFrame: number = 0;
@@ -15,13 +16,13 @@ export class Animation implements ISprite {
   constructor(
     spriteSheet: SpriteSheet,
     frames: Frame[],
-    msPerFrame = 100,
-    { flippedX = false }: { flippedX?: boolean } = {}
+    msPerFrame: number = 100,
+    renderImageOptions: IRenderImageOptions = {}
   ) {
     this.spriteSheet = spriteSheet;
     this.frames = frames;
     this.msPerFrame = msPerFrame;
-    this.flippedX = flippedX;
+    this.renderImageOptions = renderImageOptions;
   }
 
   render(
@@ -43,7 +44,7 @@ export class Animation implements ISprite {
       y,
       width,
       height,
-      { flippedX: this.flippedX }
+      this.renderImageOptions
     );
   }
 

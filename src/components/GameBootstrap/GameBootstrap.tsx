@@ -15,9 +15,7 @@ export default function GameBootstrap() {
 
     canvasRef.current.focus();
 
-    const tileSize = 64;
-
-    const game = new Game(canvasRef, tileSize);
+    const game = new Game(canvasRef);
 
     game.runInitialScreen();
 

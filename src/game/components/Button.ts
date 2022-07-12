@@ -34,8 +34,8 @@ export class Button implements IControl {
     context: CanvasRenderingContext2D
   ) {
     this.geometry = {
-      x: x,
-      y: y,
+      x,
+      y,
       width: 0,
       height: 0,
     };
@@ -52,10 +52,7 @@ export class Button implements IControl {
     this.canvas = context.canvas;
 
     this.canvas.addEventListener("click", this.ButtonClickHandler);
-    this.canvas.addEventListener(
-      "mousemove",
-      this.ButtonHoverHandler
-    );
+    this.canvas.addEventListener("mousemove", this.ButtonHoverHandler);
   }
 
   private ButtonClickHandler = (event: MouseEvent) => {
@@ -63,7 +60,7 @@ export class Button implements IControl {
     if (this.isInside(mousePos, this.geometry)) {
       this.onClick();
     }
-  }
+  };
 
   private ButtonHoverHandler = (event: MouseEvent) => {
     const mousePos = this.getMousePos(this.canvas, event);
@@ -74,20 +71,15 @@ export class Button implements IControl {
         this.mouseIn = true;
       }
       this.onHover();
-    } else {
-      if (this.mouseIn) {
-        this.onMouseOut();
-        this.mouseIn = false;
-      }
+    } else if (this.mouseIn) {
+      this.onMouseOut();
+      this.mouseIn = false;
     }
-  }
+  };
 
   public unsubscribe() {
     this.canvas.removeEventListener("click", this.ButtonClickHandler);
-    this.canvas.removeEventListener(
-      "mousemove",
-      this.ButtonHoverHandler
-    );
+    this.canvas.removeEventListener("mousemove", this.ButtonHoverHandler);
   }
 
   public onClick() {}
@@ -114,7 +106,7 @@ export class Button implements IControl {
     );
   }
 
-  public render(delta: number): void {
+  public render(): void {
     const hover = this.mouseIn;
 
     const ctx = this.context;

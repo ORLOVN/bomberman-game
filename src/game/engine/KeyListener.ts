@@ -24,16 +24,16 @@ export class KeyListener {
   public resetKeysManually(keyNames: string[]): void {
     keyNames.forEach((keyName) => {
       this.keyStates[keyName] = false;
-    })
+    });
   }
 
-  private setKey = (e: KeyboardEvent): void =>  {
+  private setKey = (e: KeyboardEvent): void => {
     e.preventDefault();
     this.keyStates[e.key] = true;
-  }
+  };
 
   private resetKey = (e: KeyboardEvent): void => {
     e.preventDefault();
     this.keyStates[e.key] = false;
-  }
+  };
 }

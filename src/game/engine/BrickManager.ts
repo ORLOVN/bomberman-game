@@ -1,5 +1,5 @@
-import {Brick} from '@/game/components/Brick';
-import {IEntity} from '@/game/engine/interfaces/IEntity';
+import { Brick } from "@/game/components/Brick";
+import { IEntity } from "@/game/engine/interfaces/IEntity";
 
 class BrickManager {
   public addCurbBricks(
@@ -19,7 +19,9 @@ class BrickManager {
           x === 0 ||
           x === tileCountX - 1
         ) {
-          addEntity(new Brick(x * tileSize, y * tileSize));
+          addEntity(
+            new Brick(tileSize / 2 + x * tileSize, tileSize / 2 + y * tileSize)
+          );
         }
       }
     }

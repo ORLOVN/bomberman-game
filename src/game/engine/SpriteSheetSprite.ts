@@ -1,6 +1,6 @@
 import { SpriteSheet } from "@/game/engine/SpriteSheet";
-import {ISprite} from '@/game/engine/interfaces/ISprite';
-import {IRenderImageOptions} from '@/game/engine/interfaces/IRenderImageOptions';
+import { ISprite } from "@/game/engine/interfaces/ISprite";
+import { IRenderImageOptions } from "@/game/engine/interfaces/IRenderImageOptions";
 
 export class SpriteSheetSprite implements ISprite {
   private readonly spriteSheet: SpriteSheet;
@@ -37,7 +37,7 @@ export class SpriteSheetSprite implements ISprite {
       y,
       width,
       height,
-      {flippedX: this.flippedX, ...renderImageOptions}
+      { flippedX: this.flippedX, ...renderImageOptions }
     );
   }
 }

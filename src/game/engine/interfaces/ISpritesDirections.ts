@@ -1,4 +1,4 @@
-import {ISprite} from '@/game/engine/interfaces/ISprite';
+import { ISprite } from "@/game/engine/interfaces/ISprite";
 
 export interface ISpritesDirections {
   idle: ISprite;

@@ -1,11 +1,16 @@
-import {IRenderImageOptions} from '@/game/engine/interfaces/IRenderImageOptions';
+import { IRenderImageOptions } from "@/game/engine/interfaces/IRenderImageOptions";
+import { developmentOptions } from "@/game/constants/gameConstants";
 
 export class SpriteSheet {
   private readonly image: HTMLImageElement;
   private readonly spriteWidth: number;
   private readonly spriteHeight: number;
 
-  constructor(image: HTMLImageElement, spriteWidth: number, spriteHeight: number) {
+  constructor(
+    image: HTMLImageElement,
+    spriteWidth: number,
+    spriteHeight: number
+  ) {
     this.image = image;
     this.spriteWidth = spriteWidth;
     this.spriteHeight = spriteHeight;
@@ -19,18 +24,22 @@ export class SpriteSheet {
     y: number,
     width: number,
     height: number,
-    {flippedX = false, opacity}: IRenderImageOptions = {}
+    renderImageOptions: IRenderImageOptions = {}
   ): void {
-    let renderedX = x;
+    context.save();
 
-    if (flippedX) {
-      context.save();
+    context.translate(x, y);
+
+    if (renderImageOptions.flippedX) {
       context.scale(-1, 1);
-      renderedX = -(x + width);
     }
 
-    if (opacity) {
-      context.globalAlpha = opacity;
+    if (renderImageOptions.rotated) {
+      context.rotate((renderImageOptions.rotated * Math.PI) / 180);
+    }
+
+    if (renderImageOptions.opacity) {
+      context.globalAlpha = renderImageOptions.opacity;
     }
 
     context.drawImage(
@@ -39,18 +48,21 @@ export class SpriteSheet {
       yCount * this.spriteHeight,
       this.spriteWidth,
       this.spriteHeight,
-      renderedX,
-      y,
+      -width / 2,
+      -height / 2,
       width,
       height
     );
 
-    if (opacity) {
-      context.globalAlpha = 1;
+    if (developmentOptions.showEntityCenter) {
+      context.beginPath();
+      context.lineWidth = 6;
+      context.strokeStyle = "red";
+      context.rect(-1, -1, 2, 2);
+      context.stroke();
+      context.fill();
     }
 
-    if (flippedX) {
-      context.restore();
-    }
+    context.restore();
   }
 }

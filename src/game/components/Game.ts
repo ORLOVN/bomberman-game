@@ -1,5 +1,5 @@
 import { MutableRefObject } from "react";
-import { isCanvasElement, isCollidable } from "@/game/utils";
+import { isCanvasElement } from "@/game/utils";
 import { GameMap } from "@/game/components/GameMap";
 import { Player } from "@/game/components/Player";
 import { InitialScreen } from "@/game/components/InitialScreen";
@@ -8,25 +8,23 @@ import { IEntity } from "@/game/engine/interfaces/IEntity";
 import { entityManager } from "@/game/engine/EntityManager";
 import { brickManager } from "@/game/engine/BrickManager";
 import { collisionHandler } from "@/game/engine/collision/CollisionHandler";
-import { bombManager } from '@/game/engine/BombManager';
-import FullscreenService from '@/services/fullscreen-service';
+import FullscreenService from "@/services/fullscreen-service";
 import { LevelGenerator } from "@/game/engine/LevelGenerator/LevelGenerator";
+import { entityFactory } from "@/game/engine/EntityFactory";
+import { Brick } from "@/game/components/Brick";
+import { TILE_SIZE } from "@/game/constants/gameConstants";
 
 export class Game {
   private readonly context: CanvasRenderingContext2D;
   private readonly canvasElement: HTMLCanvasElement;
   private readonly width: number;
   private readonly height: number;
-  private readonly tileSize: number;
   private readonly keyListener: KeyListener;
   private unsubscriptionLoop!: number;
 
   private lastTime!: number;
 
-  constructor(
-    canvasRef: MutableRefObject<HTMLCanvasElement>,
-    tileSize: number,
-  ) {
+  constructor(canvasRef: MutableRefObject<HTMLCanvasElement>) {
     const context = canvasRef.current.getContext("2d");
 
     if (!isCanvasElement(context)) {
@@ -37,7 +35,6 @@ export class Game {
     this.canvasElement = canvasRef.current;
     this.width = canvasRef.current.width;
     this.height = canvasRef.current.height;
-    this.tileSize = tileSize;
     this.keyListener = new KeyListener(canvasRef.current);
   }
 
@@ -59,13 +56,37 @@ export class Game {
     this.loop(performance.now());
   }
 
+  public async runTestLevel(): Promise<void> {
+    this.unsubscribe();
+
+    this.keyListener.setup();
+
+    this.addEntity(new GameMap(this.width, this.height, TILE_SIZE));
+
+    this.addEntity(new Brick(100, 100));
+
+    this.addEntity(new Brick(100, 164));
+
+    this.addEntity(new Player());
+
+    await entityFactory.setup();
+
+    await entityManager.setupEntities();
+
+    collisionHandler.debugMode(this.context);
+
+    this.lastTime = performance.now();
+
+    this.loop(performance.now());
+  }
+
   public async run(level: number): Promise<void> {
     this.unsubscribe();
 
     await this.setup(level);
 
     await entityManager.setupEntities();
-
+    collisionHandler.debugMode(this.context);
     this.lastTime = performance.now();
 
     this.loop(performance.now());
@@ -73,10 +94,6 @@ export class Game {
 
   public addEntity(entity: IEntity) {
     entityManager.addEntity(entity);
-
-    if (isCollidable(entity)) {
-      collisionHandler.addCollidable(entity);
-    }
   }
 
   public unsubscribe(): void {
@@ -84,23 +101,21 @@ export class Game {
     window.cancelAnimationFrame(this.unsubscriptionLoop);
     entityManager.clear();
     collisionHandler.clear();
-    bombManager.clear();
   }
 
   private async setup(level: number): Promise<void> {
     this.keyListener.setup();
-
-    this.addEntity(new GameMap(this.width, this.height, this.tileSize));
+    this.addEntity(new GameMap(this.width, this.height, TILE_SIZE));
+    await entityFactory.setup();
     brickManager.addCurbBricks(
       this.width,
       this.height,
       this.addEntity.bind(this)
     );
 
-    await LevelGenerator.generate(level, this.tileSize);
+    await LevelGenerator.generate(level, TILE_SIZE);
 
     this.addEntity(new Player());
-
   }
 
   private loop(currentTime: number): void {

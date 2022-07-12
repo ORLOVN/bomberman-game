@@ -1,7 +1,7 @@
-import {IEntity} from '@/game/engine/interfaces/IEntity';
-import {loadImageFromUrl} from '@/game/utils';
-import bgImage from '@/assets/images/sprites/bg.png';
-import {entityManager} from '@/game/engine/EntityManager';
+import { IEntity } from "@/game/engine/interfaces/IEntity";
+import { loadImageFromUrl } from "@/game/utils";
+import bgImage from "@/assets/images/sprites/bg.png";
+import { entityManager } from "@/game/engine/EntityManager";
 
 export class GameMap implements IEntity {
   public readonly id = Symbol("id");
@@ -10,11 +10,7 @@ export class GameMap implements IEntity {
   private readonly height: number;
   private readonly tileSize: number;
 
-  constructor(
-    width: number,
-    height: number,
-    tileSize: number,
-  ) {
+  constructor(width: number, height: number, tileSize: number) {
     this.width = width;
     this.height = height;
     this.tileSize = tileSize;
@@ -32,6 +28,7 @@ export class GameMap implements IEntity {
       for (let x = 0; x < tileCountX; x += 1) {
         context.drawImage(
           this.tileImage,
+
           x * this.tileSize,
           y * this.tileSize,
           this.tileSize,
