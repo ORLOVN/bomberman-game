@@ -1,2 +1,2 @@
 export { default } from './Textarea';
-export { SendMessageFormType } from './types';
+export type { SendMessageFormType } from './types';

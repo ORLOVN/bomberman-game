@@ -1,2 +1,2 @@
 export { default } from './PasswordEditForm';
-export { PasswordEditFormType } from './types';
+export type { PasswordEditFormType } from './types';

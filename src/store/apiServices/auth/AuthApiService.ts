@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import fetch from 'isomorphic-fetch';
 import { User } from '@/types';
 import { SignUpFormType } from '@/pages/SignUp/types';
 import { SignInRequest } from './types';
@@ -7,7 +8,8 @@ const authApiService = createApi({
     reducerPath: 'authApiService',
     baseQuery: fetchBaseQuery({
         baseUrl: `${process.env.HOST}/auth`,
-        credentials: 'include'
+        credentials: 'include',
+        fetchFn: fetch,
     }),
     tagTypes: ['Auth'],
     endpoints: (build) => ({

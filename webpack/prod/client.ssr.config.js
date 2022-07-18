@@ -1,13 +1,28 @@
 const { merge } = require("webpack-merge");
-const common = require("./webpack.common");
+const common = require("../webpack.common");
+const path = require("path");
 const webpack = require("webpack");
+
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const WorkboxPlugin = require('workbox-webpack-plugin');
 
 module.exports = merge(common, {
+  target: "web",
   mode: "production",
+  entry: path.resolve(__dirname, "../../", "src/index.tsx"),
   output: {
-    filename: '[name].[contenthash].js',
+    path: path.resolve(__dirname, "../..", "dist/server"),
+    filename: "[name].[contenthash].js",
+    publicPath: '/'
+  },
+  resolve: {
+    extensions: [".tsx", ".ts", ".js", ".scss"],
+    alias: {
+      "@": path.resolve(__dirname, "../..", "src"),
+      images: path.resolve(__dirname, "../..", "src/assets/images"),
+    },
   },
   optimization: {
     moduleIds: 'deterministic',
@@ -21,7 +36,6 @@ module.exports = merge(common, {
       },
     },
   },
-  devtool: "source-map",
   module: {
     rules: [
       {
@@ -76,6 +90,9 @@ module.exports = merge(common, {
     ],
   },
   plugins: [
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, "../..", "www/index.html"),
+    }),
     new MiniCssExtractPlugin({
       filename: "[name].[contenthash].css",
       chunkFilename: "[id].[contenthash].css",
@@ -95,5 +112,5 @@ module.exports = merge(common, {
     new webpack.DefinePlugin({
       PRODUCTION: JSON.stringify(true),
     })
-  ],
+  ]
 });

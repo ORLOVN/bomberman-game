@@ -1,7 +1,7 @@
 import React from "react";
-import { CircularProgress, Flex } from "@chakra-ui/react";
+import { CircularProgress, Flex, ChakraProvider } from "@chakra-ui/react";
 import { ReactNotifications } from "react-notifications-component";
-import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { ErrorBoundary } from "@/components/ErrorHandler/ErrorBoundary";
 import HomePage from "@/pages/Home";
 import SignInPage from "@/pages/SignIn";
@@ -28,56 +28,54 @@ export default function App() {
   );
 
   return (
-      <>
+      <ChakraProvider>
         <ReactNotifications />
         { isLoading
           ? preloader
           : (
               <ErrorBoundary>
-                <Router>
-                  <Routes>
-                    <Route
-                      element={
-                        <ProtectedLayout
-                          layout={GuestLayout}
-                          allowedRoles={[Roles.guest]}
-                          fallbackPath={RoutePaths.home}
-                        />
-                      }
-                    >
-                      <Route path={`/${RoutePaths.signIn}`} element={<SignInPage />} />
-                      <Route path={`/${RoutePaths.signUp}`} element={<SignUpPage />} />
-                      <Route path="*" element={<Navigate to={`/${RoutePaths.signIn}`} replace />} />
-                    </Route>
+                <Routes>
+                  <Route
+                    element={
+                      <ProtectedLayout
+                        layout={GuestLayout}
+                        allowedRoles={[Roles.guest]}
+                        fallbackPath={RoutePaths.home}
+                      />
+                    }
+                  >
+                    <Route path={`/${RoutePaths.signIn}`} element={<SignInPage />} />
+                    <Route path={`/${RoutePaths.signUp}`} element={<SignUpPage />} />
+                    <Route path="*" element={<Navigate to={`/${RoutePaths.signIn}`} replace />} />
+                  </Route>
 
-                    <Route
-                      path={RoutePaths.home}
-                      element={
-                        <ProtectedLayout
-                          layout={UserLayout}
-                          allowedRoles={[Roles.user]}
-                          fallbackPath={`/${RoutePaths.signIn}`}
-                        />
-                      }
-                    >
-                      <Route index element={<HomePage />} />
-                      <Route path={RoutePaths.game} element={<GameBootstrap />} />
-                      <Route path={RoutePaths.profile} element={<ProfilePage />} />
-                      <Route path={RoutePaths.leaderboard} element={<LeaderboardPage />} />
-                      <Route path={RoutePaths.forum}>
-                        <Route index element={<ForumPage />} />
-                        <Route path={RoutePaths.createTopic} element={<CreateTopicPage />} />
-                        <Route path={RoutePaths.topicId} element={<TopicPage />} />
-                        <Route path="*" element={<Navigate to={RoutePaths.forum} replace />} />
-                      </Route>
-                      <Route path="*" element={<Navigate to={RoutePaths.home} replace />} />
+                  <Route
+                    path={RoutePaths.home}
+                    element={
+                      <ProtectedLayout
+                        layout={UserLayout}
+                        allowedRoles={[Roles.user]}
+                        fallbackPath={`/${RoutePaths.signIn}`}
+                      />
+                    }
+                  >
+                    <Route index element={<HomePage />} />
+                    <Route path={RoutePaths.game} element={<GameBootstrap />} />
+                    <Route path={RoutePaths.profile} element={<ProfilePage />} />
+                    <Route path={RoutePaths.leaderboard} element={<LeaderboardPage />} />
+                    <Route path={RoutePaths.forum}>
+                      <Route index element={<ForumPage />} />
+                      <Route path={RoutePaths.createTopic} element={<CreateTopicPage />} />
+                      <Route path={RoutePaths.topicId} element={<TopicPage />} />
+                      <Route path="*" element={<Navigate to={RoutePaths.forum} replace />} />
                     </Route>
                     <Route path="*" element={<Navigate to={RoutePaths.home} replace />} />
-                  </Routes>
-                </Router>
+                  </Route>
+                  <Route path="*" element={<Navigate to={RoutePaths.home} replace />} />
+                </Routes>
               </ErrorBoundary>
             )
         }
-      </>
+      </ChakraProvider>
   );
 }

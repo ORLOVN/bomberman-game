@@ -3,7 +3,7 @@ import { authApiService, profileApiService } from "./apiServices";
 import { unauthenticatedMiddleware } from "./middlewares";
 import { authSlice } from "./slices";
 
-const store = configureStore({
+const createStore = () => configureStore({
     reducer: {
         [authSlice.name]: authSlice.reducer,
         [authApiService.reducerPath]: authApiService.reducer,
@@ -16,4 +16,4 @@ const store = configureStore({
     )
 });
 
-export default store;
+export default createStore;

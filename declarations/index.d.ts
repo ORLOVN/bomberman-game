@@ -5,3 +5,5 @@ declare module "*.jpeg";
 declare module "*.gif";
 declare module "*.svg";
 declare module "*.scss";
+declare module "date-format";
+declare module "@gatsbyjs/webpack-hot-middleware";

@@ -1,21 +1,25 @@
 import React from "react";
-import { createRoot } from "react-dom/client";
+import { hydrateRoot } from 'react-dom/client';
+
+import { BrowserRouter } from "react-router-dom";
+
 import "@/assets/styles/global.scss";
 
-import { ChakraProvider } from "@chakra-ui/react";
 import { Provider } from "react-redux";
 import App from "@/components/App";
 
-import store from "./store";
+import createStore from "./store";
 import { ServiceWorkersService } from "@/services/service-workers-service";
 
 ServiceWorkersService.start();
 
-const root = createRoot(document.getElementById("root") as HTMLElement);
-root.render(
-    <Provider store={store}>
-        <ChakraProvider>
-            <App />
-        </ChakraProvider>
-    </Provider>
+const store = createStore();
+
+hydrateRoot(
+  document.getElementById("root") as HTMLElement,
+  <Provider store={store}>
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>
+  </Provider>
 );

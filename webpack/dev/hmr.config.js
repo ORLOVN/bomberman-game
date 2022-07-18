@@ -1,22 +1,46 @@
 const { merge } = require("webpack-merge");
-const common = require("./webpack.common");
+const common = require("../webpack.common");
 const path = require("path");
 const webpack = require("webpack");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+
+const ReactRefreshPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const ReactRefreshTypescript = require('react-refresh-typescript');
 
 module.exports = merge(common, {
+  target: "web",
   mode: "development",
   devtool: "inline-source-map",
-  devServer: {
-    static: {
-      directory: path.join(__dirname, "..", "dist"),
+  entry: [
+    '@gatsbyjs/webpack-hot-middleware/client?path=/__webpack_hmr',
+    path.resolve(__dirname, "../..", "src/index.tsx"),
+  ],
+  output: {
+    path: path.resolve(__dirname, "../..", "dist/server"),
+    filename: "hmr.bundle.js",
+    publicPath: "/",
+  },
+  resolve: {
+    extensions: [".tsx", ".ts", ".js", ".scss"],
+    alias: {
+      "@": path.resolve(__dirname, "../..", "src"),
+      images: path.resolve(__dirname, "../..", "src/assets/images"),
     },
-    historyApiFallback: true,
-    compress: true,
-    port: 3000,
   },
   module: {
     rules: [
+      {
+        test: /\.tsx?$/,
+        loader: "ts-loader",
+        exclude: /node_modules/,
+        options: {
+            getCustomTransformers: () => ({
+                before: [ReactRefreshTypescript()]
+            }),
+            transpileOnly: true
+        }
+      },
       {
         test: /\.module\.s[ac]ss$/,
         use: [
@@ -75,12 +99,15 @@ module.exports = merge(common, {
     ],
   },
   plugins: [
-    new MiniCssExtractPlugin({
-      filename: "[name].css",
-      chunkFilename: "[id].css",
-    }),
     new webpack.DefinePlugin({
       PRODUCTION: JSON.stringify(false),
-    })
+    }),
+    new webpack.HotModuleReplacementPlugin(),
+    new ReactRefreshPlugin({
+      overlay: {
+        sockIntegration: "whm"
+      }
+    }),
+    new ForkTsCheckerWebpackPlugin()
   ],
 });

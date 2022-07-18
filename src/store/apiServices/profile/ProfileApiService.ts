@@ -1,5 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+import fetch from 'isomorphic-fetch';
+
 import { UserInfoForm } from '@/pages/Profile/components/ProfileEditForm/types';
 import { PasswordEditFormType } from '@/pages/Profile/components/PasswordEditForm';
 
@@ -10,6 +12,7 @@ const profileApiService = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: `${process.env.HOST}/user`,
         credentials: 'include',
+        fetchFn: fetch,
     }),
     endpoints: (build) => ({
         updateAvatar: build.mutation<UpdateUserResponse, FormData>({

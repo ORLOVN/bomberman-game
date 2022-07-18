@@ -1,16 +1,16 @@
 import React from 'react';
-import dateFormat from "dateformat";
+import dateFormat from "date-format";
 
 import { Props } from './types';
 
 FormatDate.defaultProps = {
-    mask: "dddd, mmmm dS, yyyy"
+    mask: "dd.MM.yyyy hh:mm:ss"
 }
 
 function FormatDate({ value, mask }: Props) {
     return (
         <>
-            { dateFormat(value, mask) }
+            { dateFormat(mask, new Date(value)) }
         </>
     );
 }
