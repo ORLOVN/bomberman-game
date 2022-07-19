@@ -13,6 +13,8 @@ import { ICollision } from "@/game/engine/collision/interfaces/ICollision";
 import { ICollisionGeometry } from "@/game/engine/collision/interfaces/ICollisionGeometry";
 import EntityTypes from "@/game/engine/enums/EntityTypes";
 import { Collidable } from "@/game/engine/collision/Collidable";
+import {gameManager} from '@/game/engine/GameManager/GameManager';
+import {EScoreTypes} from '@/game/engine/GameManager/types';
 
 export class CreepEnemy implements IEntity {
   public readonly id = Symbol("id");
@@ -75,6 +77,7 @@ export class CreepEnemy implements IEntity {
   public die(): void {
     entityManager.removeEntity(this.id);
     this.collisionBox.remove();
+    gameManager.addScore(EScoreTypes.CREEP);
   }
 
   private getCollisionGeometry(): ICollisionGeometry {

@@ -1,4 +1,5 @@
-import { IEntity } from "@/game/engine/interfaces/IEntity";
+import {IEntity, IEntityWithType} from "@/game/engine/interfaces/IEntity";
+import EntityTypes from '@/game/engine/enums/EntityTypes';
 import { KeyListener } from "@/game/engine/KeyListener";
 
 class EntityManager {
@@ -10,6 +11,10 @@ class EntityManager {
 
   public getEntities(): IEntity[] {
     return this.entities;
+  }
+
+  public getEntityByType(type: EntityTypes): IEntity | undefined {
+    return this.entities.find(entity => (entity as IEntityWithType).type === type);
   }
 
   public async setupEntities(): Promise<void[]> {

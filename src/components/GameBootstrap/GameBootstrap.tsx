@@ -4,9 +4,12 @@ import { isRefCurrent } from "@/game/utils";
 import { Game } from "@/game/components/Game";
 import styles from "./GameBootstrap.module.scss";
 import { NotificationService } from "@/components/ErrorHandler";
+import { useAppSelector } from "@/hooks";
+import ScoringPanel from "@/components/ScoringPanel/ScoringPanel";
 
 export default function GameBootstrap() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const isGamePanelShown = useAppSelector((store) => store.game.showPanel);
 
   useEffect(() => {
     if (!isRefCurrent(canvasRef)) {
@@ -24,9 +27,9 @@ export default function GameBootstrap() {
       {
         dismiss: {
           duration: 0,
-          showIcon: true
+          showIcon: true,
         },
-        onRemoval: () => canvasRef?.current?.focus()
+        onRemoval: () => canvasRef?.current?.focus(),
       }
     );
 
@@ -38,6 +41,7 @@ export default function GameBootstrap() {
 
   return (
     <Box>
+      {isGamePanelShown && <ScoringPanel />}
       <canvas
         className={styles.canvas}
         ref={canvasRef}

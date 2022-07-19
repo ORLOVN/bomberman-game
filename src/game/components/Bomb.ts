@@ -10,6 +10,7 @@ import { ICollisionGeometry } from "@/game/engine/collision/interfaces/ICollisio
 import { TILE_SIZE } from "@/game/constants/gameConstants";
 import { Collidable } from "@/game/engine/collision/Collidable";
 import { entityFactory } from "@/game";
+import {BlinkManager} from '@/game/engine/BlinkManager';
 
 type Resources =
   | {
@@ -29,10 +30,8 @@ export class Bomb implements IEntity {
   private readonly xPos!: number;
   private readonly yPos!: number;
 
+  private blinkManager: BlinkManager;
   private timeBeforeExplosionMS = 3000;
-  private minBlinkOpacity = 0.6;
-  private blinkTimeMS = 300;
-  private currBlinkTimeMS!: number;
   // @ts-ignore
   private collisionBox: Collidable = new Collidable(this, EntityTypes.bomb)
     .addGetGeometry(this.getCollisionGeometry.bind(this))
@@ -42,7 +41,7 @@ export class Bomb implements IEntity {
     const { x, y } = calcTileCenter(TILE_SIZE, xPos, yPos);
     this.xPos = x;
     this.yPos = y;
-    this.currBlinkTimeMS = this.blinkTimeMS;
+    this.blinkManager = new BlinkManager();
   }
 
   public async setup(): Promise<void> {
@@ -82,11 +81,8 @@ export class Bomb implements IEntity {
     delta: number
   ): void {
     this.timeBeforeExplosionMS -= delta * 1000;
-    this.currBlinkTimeMS -= delta * 1000;
 
-    if (this.currBlinkTimeMS <= -this.blinkTimeMS) {
-      this.currBlinkTimeMS = this.blinkTimeMS;
-    }
+    this.blinkManager.updateCurrentBlinkTime(delta);
 
     if (this.timeBeforeExplosionMS <= 0) {
       entityFactory.produceFlame(this.xPos, this.yPos, "all", 2);
@@ -100,7 +96,7 @@ export class Bomb implements IEntity {
       this.yPos,
       this.width,
       this.height,
-      { opacity: this.getOpacity() }
+      { opacity: this.blinkManager.getOpacity() }
     );
   }
 
@@ -108,13 +104,6 @@ export class Bomb implements IEntity {
     this.onRemoval();
     entityManager.removeEntity(this.id);
     this.collisionBox.remove();
-  }
-
-  private getOpacity(): number {
-    const opacityVariance = 1 - this.minBlinkOpacity;
-    const opacityValue =
-      (Math.abs(this.currBlinkTimeMS) / this.blinkTimeMS) * opacityVariance;
-    return this.minBlinkOpacity + opacityValue;
   }
 
   public getCollisionGeometry(): ICollisionGeometry {

@@ -1,4 +1,5 @@
 import { KeyListener } from "@/game/engine/KeyListener";
+import EntityTypes from '@/game/engine/enums/EntityTypes';
 
 export interface IEntity {
   readonly id: Symbol;
@@ -10,4 +11,8 @@ export interface IEntity {
   ): void;
   die(): void;
   unsubscribe?: () => void;
+}
+
+export interface IEntityWithType extends IEntity {
+  type: EntityTypes;
 }

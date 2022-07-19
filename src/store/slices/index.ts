@@ -1,1 +1,11 @@
-export { default as authSlice } from './authSlice';
+export { default as authSlice } from "./authSlice";
+export {
+  default as gameSlice,
+  showGamePanel,
+  reduceLeftLives,
+  resetNumberOfLives,
+  addScore,
+  resetScore,
+  addTime,
+  resetTime,
+} from "./gameSlice";

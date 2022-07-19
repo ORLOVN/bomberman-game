@@ -57,4 +57,8 @@ export class InitialScreen implements IEntity {
   public die(): void {
     entityManager.removeEntity(this.id);
   }
+
+  public unsubscribe(): void {
+    this.controls.forEach((control) => control.unsubscribe());
+  }
 }

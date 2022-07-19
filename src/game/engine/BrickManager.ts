@@ -1,5 +1,6 @@
 import { Brick } from "@/game/components/Brick";
 import { IEntity } from "@/game/engine/interfaces/IEntity";
+import {TILE_SIZE} from '@/game/constants/gameConstants';
 
 class BrickManager {
   public addCurbBricks(
@@ -7,9 +8,8 @@ class BrickManager {
     mapHeight: number,
     addEntity: (entity: IEntity) => void
   ): void {
-    const tileSize = 64;
-    const tileCountX = Math.ceil(mapWidth / tileSize);
-    const tileCountY = Math.ceil(mapHeight / tileSize);
+    const tileCountX = Math.ceil(mapWidth / TILE_SIZE);
+    const tileCountY = Math.ceil(mapHeight / TILE_SIZE);
 
     for (let y = 0; y < tileCountY; y += 1) {
       for (let x = 0; x < tileCountX; x += 1) {
@@ -20,7 +20,7 @@ class BrickManager {
           x === tileCountX - 1
         ) {
           addEntity(
-            new Brick(tileSize / 2 + x * tileSize, tileSize / 2 + y * tileSize)
+            new Brick(TILE_SIZE / 2 + x * TILE_SIZE, TILE_SIZE / 2 + y * TILE_SIZE)
           );
         }
       }

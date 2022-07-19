@@ -14,12 +14,20 @@ import EntityTypes from "@/game/engine/enums/EntityTypes";
 import { Bomb } from "@/game/components/Bomb";
 import { Collidable } from "@/game/engine/collision/Collidable";
 import { ICollision } from "@/game/engine/collision/interfaces/ICollision";
+import {BlinkManager} from '@/game/engine/BlinkManager';
+import {IRenderImageOptions} from '@/game/engine/interfaces/IRenderImageOptions';
 
 export class Player implements IEntity {
   public readonly id = Symbol("id");
   public readonly type: EntityTypes = EntityTypes.player;
   private sprites!: ISpritesDirections;
   private currentSprite!: ISprite;
+  private callOnDie!: () => void;
+
+  private blinkManager!: BlinkManager;
+  private timeBeforeDieMS = 3000;
+  private alive = true;
+
 
   private xPos = 64 + 64 / 2;
   private yPos = 64 + 64 / 2;
@@ -55,6 +63,8 @@ export class Player implements IEntity {
         flippedX: true,
       }),
     };
+
+    this.blinkManager = new BlinkManager();
   }
 
   public render(
@@ -62,26 +72,45 @@ export class Player implements IEntity {
     keyListener: KeyListener,
     delta: number
   ): void {
-    this.updatePositions(keyListener, delta);
+    this.xVel = 0;
+    this.yVel = 0;
+    this.currentSprite = this.sprites.idle;
+    let renderOptions: IRenderImageOptions = {};
+
+    if (this.alive) {
+      this.updatePositions(keyListener, delta);
+    } else {
+      this.timeBeforeDieMS -= delta * 1000;
+
+      this.blinkManager.updateCurrentBlinkTime(delta);
+
+      if (this.timeBeforeDieMS <= 0) {
+        this.unsubscribe();
+      }
+
+      renderOptions = { opacity: this.blinkManager.getOpacity() };
+    }
+
     this.currentSprite.render(
       context,
       delta,
       this.xPos,
       this.yPos,
       this.width,
-      this.height
+      this.height,
+      renderOptions
     );
   }
 
   public die(): void {
-    entityManager.removeEntity(this.id);
+    this.alive = false;
+  }
+
+  public onDie(callback: () => void): void {
+    this.callOnDie = callback;
   }
 
   private updatePositions(keyListener: KeyListener, delta: number): void {
-    this.xVel = 0;
-    this.yVel = 0;
-    this.currentSprite = this.sprites.idle;
-
     if (keyListener.isAnyKeyPressed(["d", "ArrowRight"])) {
       this.xVel = this.speed * delta;
       this.currentSprite = this.sprites.right;
@@ -127,6 +156,13 @@ export class Player implements IEntity {
     };
   }
 
+  public unsubscribe(): void {
+    entityManager.removeEntity(this.id);
+    this.collisionBox.remove();
+
+    this.callOnDie?.();
+  }
+
   private collisionDetected(metCollidable: Collidable, collision: ICollision) {
     if (
       metCollidable.type === EntityTypes.brick ||
@@ -143,22 +179,10 @@ export class Player implements IEntity {
       this.xVel = collision.xOffset === 0 ? this.xVel : 0;
       this.yVel = collision.yOffset === 0 ? this.yVel : 0;
     }
-
-    if (metCollidable.type === EntityTypes.flame) {
-      this.die();
-    }
-
-    if (metCollidable.type === EntityTypes.enemy) {
-      this.die();
-    }
   }
 
   private collisionStarted(metCollidable: Collidable) {
-    if (metCollidable.type === EntityTypes.flame) {
-      this.die();
-    }
-
-    if (metCollidable.type === EntityTypes.enemy) {
+    if (metCollidable.type === EntityTypes.flame || metCollidable.type === EntityTypes.enemy) {
       this.die();
     }
   }
