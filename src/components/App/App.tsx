@@ -19,7 +19,7 @@ import { authApiService } from "@/store";
 import GameBootstrap from '@/components/GameBootstrap';
 
 export default function App() {
-  const { isLoading } = authApiService.useGetUserInfoQuery();
+  const { isLoading } = authApiService.endpoints.getUserInfo.useQueryState(undefined);
 
   const preloader = (
     <Flex justify="center" align="center" minHeight="100vh">

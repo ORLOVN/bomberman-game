@@ -38,7 +38,7 @@ const ssrMiddleware = async (req: Request, res: Response) => {
     }
   );
 
-  const store = createStore(undefined, req);
+  const store = createStore(undefined);
 
 
   delete require.cache[
@@ -49,8 +49,7 @@ const ssrMiddleware = async (req: Request, res: Response) => {
   const App = require("../../dist/server/app.ssr.bundle.js").default;
 
   store.dispatch(authApiService.endpoints.getUserInfo.initiate())
-
-  await Promise.all(authApiService.util.getRunningOperationPromises())
+  await Promise.all(authApiService.util.getRunningOperationPromises());
 
   const reactHTML = renderToString(
     <Provider store={store}>
