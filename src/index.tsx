@@ -13,7 +13,12 @@ import { ServiceWorkersService } from "@/services/service-workers-service";
 
 ServiceWorkersService.start();
 
-const store = createStore();
+// @ts-ignore
+const initialState = window.__INITIAL_STATE__;
+// @ts-ignore
+delete window.__INITIAL_STATE__;
+
+const store = createStore(JSON.parse(initialState));
 
 hydrateRoot(
   document.getElementById("root") as HTMLElement,

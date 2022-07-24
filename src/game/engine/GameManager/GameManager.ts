@@ -7,8 +7,10 @@ import {
   resetTime,
   showGamePanel,
 } from "@/store/slices";
-import store from "@/store";
+import createStore from "@/store";
 import { EScoreTypes } from "@/game/engine/GameManager/types";
+
+const store = createStore();
 
 class GameManager {
   public isGameOver = false;

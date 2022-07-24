@@ -9,9 +9,11 @@ import fs from 'fs';
 import path from 'path';
 
 import { Provider } from 'react-redux';
-import createStore from '@/store';
+import createStore, {authApiService} from '@/store';
+import {renderObject} from "@/utils/renderObject";
 
-const ssrMiddleware = (req: Request, res: Response) => {
+
+const ssrMiddleware = async (req: Request, res: Response) => {
   let scriptBundleName = '';
 
   if (process.env.NODE_ENV === 'development') {
@@ -36,7 +38,8 @@ const ssrMiddleware = (req: Request, res: Response) => {
     }
   );
 
-  const store = createStore();
+  const store = createStore(undefined, req);
+
 
   delete require.cache[
     require.resolve("../../dist/server/app.ssr.bundle.js")
@@ -44,6 +47,10 @@ const ssrMiddleware = (req: Request, res: Response) => {
 
   // eslint-disable-next-line
   const App = require("../../dist/server/app.ssr.bundle.js").default;
+
+  store.dispatch(authApiService.endpoints.getUserInfo.initiate())
+
+  await Promise.all(authApiService.util.getRunningOperationPromises())
 
   const reactHTML = renderToString(
     <Provider store={store}>
@@ -53,6 +60,9 @@ const ssrMiddleware = (req: Request, res: Response) => {
     </Provider>
   );
 
+  const state = store.getState();
+
+
   const result = indexHTML.replace(
     '<div id="root"></div>',
     `
@@ -61,9 +71,9 @@ const ssrMiddleware = (req: Request, res: Response) => {
           ? `<script defer="defer" src="${scriptBundleName}"></script>`
           : ''
       }
+      <script>window.__INITIAL_STATE__ = ${renderObject(JSON.stringify(state))}</script>
     `
   );
-
   res.send(result);
 };
 

@@ -10,6 +10,15 @@ const authApiService = createApi({
         baseUrl: `${process.env.HOST}/auth`,
         credentials: 'include',
         fetchFn: fetch,
+        prepareHeaders: (headers, { extra }) => {
+        if (extra) {
+          console.log(extra)
+          // headers.set('authorization', `Bearer ${token}`)
+        }
+
+        return headers
+      },
+
     }),
     tagTypes: ['Auth'],
     endpoints: (build) => ({
