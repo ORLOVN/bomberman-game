@@ -7,8 +7,10 @@ import {
   resetTime,
   showGamePanel,
 } from "@/store/slices";
-import store from "@/store";
+import createStore from "@/store";
 import { EScoreTypes } from "@/game/engine/GameManager/types";
+
+const store = createStore();
 
 class GameManager {
   public isGameOver = false;
@@ -19,14 +21,11 @@ class GameManager {
   }
 
   public reduceLeftLives(): void {
-    const gameStore = store.getState().game;
-
-    if (gameStore.leftLives === 0) {
-      this.isGameOver = true;
-      return;
-    }
-
     store.dispatch(reduceLeftLives());
+    const gameStore = store.getState().game;
+    if (gameStore.leftLives <= 0) {
+      this.isGameOver = true;
+    }
   }
 
   public resetLeftLives(): void {
@@ -36,7 +35,10 @@ class GameManager {
   public addScore(type: EScoreTypes): void {
     store.dispatch(addScore(type));
   }
+  public getScore(): number {
+    return store.getState().game.score;
 
+  }
   public resetScore(): void {
     store.dispatch(resetScore());
   }
@@ -60,7 +62,7 @@ class GameManager {
     store.dispatch(resetTime());
   }
 
-  public unsubscribe(): void {
+  public reset(): void {
     this.isGameOver = false;
     this.resetLeftLives();
     this.resetScore();

@@ -17,7 +17,7 @@ class EntityManager {
     return this.entities.find(entity => (entity as IEntityWithType).type === type);
   }
 
-  public async setupEntities(): Promise<void[]> {
+  public setupEntities(): Promise<void[]> {
     const promises = this.getEntities().map((e) => e.setup());
     return Promise.all(promises);
   }

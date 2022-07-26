@@ -25,7 +25,7 @@ export class Flame implements IEntity {
   public readonly width = 48;
   public readonly height = 48;
 
-  private sprite!: ISprite;
+  private sprite?: ISprite;
 
   private readonly xPos!: number;
   private readonly yPos!: number;
@@ -36,7 +36,7 @@ export class Flame implements IEntity {
   private spreadTime: number = 0.1;
   private explosionDelay: number = 0.01;
 
-  private resources: Resources | undefined;
+  private resources?: Resources;
 
   private collisionBox: Collidable = new Collidable(this, EntityTypes.flame)
     .addGetGeometry(this.getCollisionGeometry.bind(this))
@@ -73,7 +73,7 @@ export class Flame implements IEntity {
     this.sprite = new Animation(spriteSheet, Range.rowRange(0, 4));
   }
 
-  public reuseResources(resources: Resources) {
+  public setResources(resources: Resources) {
     this.resources = resources;
     this.setup();
     return this;
@@ -92,7 +92,7 @@ export class Flame implements IEntity {
       this.probe.checkCollisions();
     } else {
       this.collisionBox.checkCollisions();
-      this.sprite.render(
+      this.sprite?.render(
         context,
         delta,
         this.xPos,

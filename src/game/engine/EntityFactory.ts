@@ -16,9 +16,7 @@ class EntityFactory {
   }
 
   public produceBomb(xPos: number, yPos: number) {
-    const bomb = new Bomb(xPos, yPos).reuseResources(
-      this.bomb.shareResources()
-    );
+    const bomb = new Bomb(xPos, yPos).setResources(this.bomb.shareResources());
     entityManager.addEntity(bomb);
     return bomb;
   }
@@ -29,7 +27,7 @@ class EntityFactory {
     direction: Direction,
     propagation: number
   ) {
-    const flame = new Flame(xPos, yPos, direction, propagation).reuseResources(
+    const flame = new Flame(xPos, yPos, direction, propagation).setResources(
       this.flame.shareResources()
     );
     entityManager.addEntity(flame);

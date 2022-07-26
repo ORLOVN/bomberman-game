@@ -42,7 +42,7 @@ export class InitialScreen implements IEntity {
     keyListener: KeyListener,
     delta: number
   ): void {
-    this.sheet.render(
+    this.sheet?.render(
       context,
       0,
       0,
@@ -51,7 +51,7 @@ export class InitialScreen implements IEntity {
       this.width,
       this.height
     );
-    this.controls.forEach((control) => control.render(delta));
+    this.controls.forEach((control) => control?.render(delta));
   }
 
   public die(): void {
@@ -59,6 +59,6 @@ export class InitialScreen implements IEntity {
   }
 
   public unsubscribe(): void {
-    this.controls.forEach((control) => control.unsubscribe());
+    this.controls.forEach((control) => control.unsubscribe?.());
   }
 }

@@ -1,4 +1,5 @@
 export interface IControl {
   render(delta: number): void;
-  unsubscribe(): void;
+  setup(): Promise<void>;
+  unsubscribe?: () => void;
 }

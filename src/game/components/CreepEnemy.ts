@@ -18,8 +18,8 @@ import {EScoreTypes} from '@/game/engine/GameManager/types';
 
 export class CreepEnemy implements IEntity {
   public readonly id = Symbol("id");
-  private sprites!: ISpritesDirections;
-  private currentSprite!: ISprite;
+  private sprites?: ISpritesDirections;
+  private currentSprite?: ISprite;
 
   private xPos = 64;
   private yPos = 0;
@@ -64,7 +64,7 @@ export class CreepEnemy implements IEntity {
   ): void {
     // TODO: update positions
 
-    this.currentSprite.render(
+    this.currentSprite?.render(
       context,
       delta,
       this.xPos,

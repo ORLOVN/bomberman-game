@@ -14,19 +14,18 @@ import EntityTypes from "@/game/engine/enums/EntityTypes";
 import { Bomb } from "@/game/components/Bomb";
 import { Collidable } from "@/game/engine/collision/Collidable";
 import { ICollision } from "@/game/engine/collision/interfaces/ICollision";
-import {BlinkManager} from '@/game/engine/BlinkManager';
-import {IRenderImageOptions} from '@/game/engine/interfaces/IRenderImageOptions';
+
+enum BehaviourMode {
+  normal,
+  dying,
+}
 
 export class Player implements IEntity {
   public readonly id = Symbol("id");
   public readonly type: EntityTypes = EntityTypes.player;
-  private sprites!: ISpritesDirections;
-  private currentSprite!: ISprite;
-  private callOnDie!: () => void;
-
-  private blinkManager!: BlinkManager;
-  private timeBeforeDieMS = 3000;
-  private alive = true;
+  private sprites?: ISpritesDirections;
+  private currentSprite?: ISprite;
+  private dieSprite?: ISprite;
 
 
   private xPos = 64 + 64 / 2;
@@ -34,6 +33,8 @@ export class Player implements IEntity {
   private width = 64;
   private height = 128;
   private bombCount = 3;
+
+  private behaviourMode: BehaviourMode = BehaviourMode.normal;
 
   private speed = 150;
   private xVel = 0;
@@ -45,6 +46,13 @@ export class Player implements IEntity {
     .addCollisionStarted(this.collisionStarted.bind(this))
     .addCollisionDetected(this.collisionDetected.bind(this))
     .addCollisionLeaved(this.collisionLeaved.bind(this));
+
+  private onDie?: () => void;
+
+  public addOnDie(func: () => void) {
+    this.onDie = func;
+    return this;
+  }
 
   public async setup(): Promise<void> {
     const spriteSheetImage = await loadImageFromUrl(playerSpriteSheet);
@@ -63,8 +71,16 @@ export class Player implements IEntity {
         flippedX: true,
       }),
     };
+    this.dieSprite = new Animation(
+      spriteSheet,
+      Range.rowRange(3, 8),
+      100,
+      undefined,
+      false
+    ).addOnAnimationEnd(() => {
+      this.unsubscribe()
+    });
 
-    this.blinkManager = new BlinkManager();
   }
 
   public render(
@@ -72,45 +88,34 @@ export class Player implements IEntity {
     keyListener: KeyListener,
     delta: number
   ): void {
-    this.xVel = 0;
-    this.yVel = 0;
-    this.currentSprite = this.sprites.idle;
-    let renderOptions: IRenderImageOptions = {};
-
-    if (this.alive) {
+    if (this.behaviourMode === BehaviourMode.normal) {
       this.updatePositions(keyListener, delta);
-    } else {
-      this.timeBeforeDieMS -= delta * 1000;
-
-      this.blinkManager.updateCurrentBlinkTime(delta);
-
-      if (this.timeBeforeDieMS <= 0) {
-        this.unsubscribe();
-      }
-
-      renderOptions = { opacity: this.blinkManager.getOpacity() };
     }
 
-    this.currentSprite.render(
+    this.currentSprite?.render(
       context,
       delta,
       this.xPos,
       this.yPos,
       this.width,
       this.height,
-      renderOptions
     );
   }
 
   public die(): void {
-    this.alive = false;
+    this.behaviourMode = BehaviourMode.dying;
+    this.currentSprite = this.dieSprite;
   }
 
-  public onDie(callback: () => void): void {
-    this.callOnDie = callback;
-  }
 
   private updatePositions(keyListener: KeyListener, delta: number): void {
+    if (!this.sprites) {
+      return
+    }
+    this.xVel = 0;
+    this.yVel = 0;
+    this.currentSprite = this.sprites.idle;
+
     if (keyListener.isAnyKeyPressed(["d", "ArrowRight"])) {
       this.xVel = this.speed * delta;
       this.currentSprite = this.sprites.right;
@@ -159,8 +164,7 @@ export class Player implements IEntity {
   public unsubscribe(): void {
     entityManager.removeEntity(this.id);
     this.collisionBox.remove();
-
-    this.callOnDie?.();
+    this.onDie?.()
   }
 
   private collisionDetected(metCollidable: Collidable, collision: ICollision) {
@@ -179,6 +183,7 @@ export class Player implements IEntity {
       this.xVel = collision.xOffset === 0 ? this.xVel : 0;
       this.yVel = collision.yOffset === 0 ? this.yVel : 0;
     }
+
   }
 
   private collisionStarted(metCollidable: Collidable) {

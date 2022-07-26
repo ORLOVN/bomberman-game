@@ -10,9 +10,11 @@ import { brickManager } from "@/game/engine/BrickManager";
 import { collisionHandler } from "@/game/engine/collision/CollisionHandler";
 import FullscreenService from "@/services/fullscreen-service";
 import { LevelGenerator } from "@/game/engine/LevelGenerator/LevelGenerator";
+import { FinalScreen } from "@/game/components/FinalScreen";
 import { entityFactory } from "@/game/engine/EntityFactory";
-import { Brick } from "@/game/components/Brick";
 import { TILE_SIZE } from "@/game/constants/gameConstants";
+import { GameOverScreen } from "@/game/components/GameOverScreen";
+import { PreStageScreen } from "@/game/components/PreStageScreen";
 import { gameManager } from "@/game/engine/GameManager/GameManager";
 import { Timer } from "@/game/engine/Timer";
 import EntityTypes from "@/game/engine/enums/EntityTypes";
@@ -48,7 +50,6 @@ export class Game {
 
     gameManager.onTimeOver(() => {
       const player = entityManager.getEntityByType(EntityTypes.player);
-
       player?.die();
     });
   }
@@ -59,7 +60,9 @@ export class Game {
     this.keyListener.setup();
 
     this.addEntity(
-      new InitialScreen(this.context).addOnStartHandler(this.run.bind(this, 1))
+      new InitialScreen(this.context).addOnStartHandler(() => {
+        this.runPreStageScreen(1);
+      })
     );
 
     await entityManager.setupEntities();
@@ -67,62 +70,61 @@ export class Game {
     this.startLoop();
   }
 
-  public async runTestLevel(): Promise<void> {
+  public async runFinalScreen(): Promise<void> {
     this.unsubscribe();
 
     this.keyListener.setup();
 
-    this.addEntity(new GameMap(this.width, this.height, TILE_SIZE));
-
-    this.addEntity(new Brick(100, 100));
-
-    this.addEntity(new Brick(100, 164));
-
-    this.addEntity(new Player());
-
-    await entityFactory.setup();
-
-    await entityManager.setupEntities();
-
-    collisionHandler.debugMode(this.context);
+    this.addEntity(
+      new FinalScreen(this.context).addOnStartAgainHandler(() => {
+        this.runInitialScreen();
+      })
+    );
 
     this.startLoop();
+
+    this.loop(performance.now());
   }
 
-  public async run(level: number, continueGame = false): Promise<void> {
-    this.unsubscribe(continueGame);
+  public async runPreStageScreen(level: number): Promise<void> {
+    this.unsubscribe();
 
-    await this.setup(level);
-
-    await entityManager.setupEntities();
-    collisionHandler.debugMode(this.context);
-
-    gameManager.showGamePanel(true);
-
-    this.startLoop();
-  }
-
-  public addEntity(entity: IEntity) {
-    entityManager.addEntity(entity);
-  }
-
-  public unsubscribe(continueGame = false): void {
-    this.stopLoop();
-    this.keyListener.unsubscribe();
-    entityManager.clear();
-    collisionHandler.clear();
-
-    if (!continueGame) {
-      gameManager.unsubscribe();
-    }
-  }
-
-  private async setup(level: number): Promise<void> {
     this.keyListener.setup();
 
-    this.addEntity(new GameMap(this.width, this.height, TILE_SIZE));
+    this.addEntity(
+      new PreStageScreen(this.context, level).addOnDelayExpires(() => {
+        this.run(level);
+      })
+    );
 
-    await entityFactory.setup();
+    await entityManager.setupEntities();
+
+    this.startLoop();
+
+  }
+
+  public async runGameOverScreen(score: number): Promise<void> {
+    this.unsubscribe();
+
+    this.keyListener.setup();
+
+    this.addEntity(
+      new GameOverScreen(this.context, score).addOnStartAgainHandler(() => {
+        this.runInitialScreen();
+      })
+    );
+
+    await entityManager.setupEntities();
+
+    this.startLoop();
+
+  }
+
+  public async run(level: number): Promise<void> {
+
+    this.unsubscribe();
+
+    this.addEntity(new GameMap(this.width, this.height, TILE_SIZE));
 
     brickManager.addCurbBricks(
       this.width,
@@ -132,11 +134,37 @@ export class Game {
 
     await LevelGenerator.generate(level, TILE_SIZE);
 
-    const player = new Player();
+    this.addEntity(
+      new Player().addOnDie(this.onPLayerDie.bind(this, level))
+    )
 
-    this.addEntity(player);
+    await this.setup();
 
-    player.onDie(this.onPLayerDie.bind(this, level));
+    gameManager.showGamePanel(true);
+
+    this.startLoop();
+
+
+  }
+
+  public addEntity(entity: IEntity) {
+    entityManager.addEntity(entity);
+  }
+
+  public unsubscribe(): void {
+    this.stopLoop();
+    this.keyListener.unsubscribe();
+    entityManager.clear();
+    collisionHandler.clear();
+  }
+
+  private async setup(): Promise<void> {
+    this.keyListener.setup();
+
+    await entityFactory.setup();
+
+    await entityManager.setupEntities();
+
   }
 
   private onPLayerDie(level: number): void {
@@ -144,9 +172,10 @@ export class Game {
     gameManager.reduceLeftLives();
 
     if (!gameManager.isGameOver) {
-      this.run(level, true);
+      this.runPreStageScreen(level);
     } else {
-      this.runInitialScreen();
+      this.runGameOverScreen(gameManager.getScore());
+      gameManager.reset()
     }
   }
 
@@ -166,13 +195,17 @@ export class Game {
     }
 
     entityManager.renderEntities(this.context, this.keyListener, delta);
-    this.unsubscriptionLoop = window.requestAnimationFrame(
-      this.loop.bind(this)
-    );
+
+    collisionHandler.render(this.context);
+    if (!this.isLoopStopped) {
+      this.unsubscriptionLoop = window.requestAnimationFrame(
+        this.loop.bind(this)
+      );
+    }
   }
 
   private startLoop(): void {
-    gameManager.addTime(10);
+    gameManager.addTime(300);
 
     this.lastTime = performance.now();
 
@@ -181,6 +214,7 @@ export class Game {
     this.timer.start();
 
     this.loop(performance.now());
+
   }
 
   private stopLoop(): void {

@@ -79,15 +79,11 @@ export class CollisionHandler {
   public clear(): void {
     this.collidables = [];
   }
-  private drawCollisionBox({ xPos, yPos, width, height }: ICollisionGeometry) {
-    const ctx = this.context;
-    if (!developmentOptions.showCollisionEntities) return;
-    if (!ctx) {
-      console.log(
-        "Please provide canvas context to collisionHandler to see collision entities"
-      );
-      return;
-    }
+  private drawCollisionBox(
+    ctx: CanvasRenderingContext2D,
+    { xPos, yPos, width, height }: ICollisionGeometry,
+    color: string = "blue"
+  ) {
 
     ctx.save();
     ctx.translate(xPos, yPos);
@@ -97,12 +93,17 @@ export class CollisionHandler {
     ctx.rect(-width / 2, -height / 2, width, height);
     ctx.globalAlpha = 0.3;
     ctx.stroke();
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = color;
     ctx.fill();
     ctx.restore();
+
   }
 
-  public debugMode(context: CanvasRenderingContext2D | undefined = undefined) {
+  public render(context: CanvasRenderingContext2D) {
+    if (!developmentOptions.showCollisionEntities) return;
+    this.collidables.forEach((collidable) => {
+      this.drawCollisionBox(context, collidable.getGeometry())
+    })
     this.context = context;
   }
 
@@ -113,9 +114,8 @@ export class CollisionHandler {
     const currentGeometry = currentEntity.getGeometry();
     const relevantGeometry = relevantEntity.getGeometry();
 
-    if (this.context) {
-      this.drawCollisionBox(currentGeometry);
-      this.drawCollisionBox(relevantGeometry);
+    if (developmentOptions.showCollisionEntities && currentEntity.type === "probe" && this.context) {
+      this.drawCollisionBox(this.context, currentGeometry, "red");
     }
 
     const rl = relevantGeometry.xPos - relevantGeometry.width / 2; // relevant collidable left edge

@@ -14,7 +14,7 @@ export class Brick implements IEntity {
 
   private readonly xPos: number;
   private readonly yPos: number;
-  private sheet!: SpriteSheet;
+  private sheet?: SpriteSheet;
   // @ts-ignore
   private collisionBox: Collidable = new Collidable(
     this,
@@ -32,7 +32,7 @@ export class Brick implements IEntity {
   }
 
   public render(context: CanvasRenderingContext2D): void {
-    this.sheet.render(
+    this.sheet?.render(
       context,
       0,
       0,

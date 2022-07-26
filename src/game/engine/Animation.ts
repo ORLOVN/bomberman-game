@@ -9,7 +9,7 @@ export class Animation implements ISprite {
   private readonly frames: Frame[];
   private readonly msPerFrame: number;
   private readonly renderImageOptions: IRenderImageOptions;
-
+  private isLooping: boolean;
   private currentFrameIndex: number = 0;
   private msInCurrentFrame: number = 0;
 
@@ -17,12 +17,14 @@ export class Animation implements ISprite {
     spriteSheet: SpriteSheet,
     frames: Frame[],
     msPerFrame: number = 100,
-    renderImageOptions: IRenderImageOptions = {}
+    renderImageOptions: IRenderImageOptions = {},
+    isLooping: boolean = true
   ) {
     this.spriteSheet = spriteSheet;
     this.frames = frames;
     this.msPerFrame = msPerFrame;
     this.renderImageOptions = renderImageOptions;
+    this.isLooping = isLooping;
   }
 
   render(
@@ -36,7 +38,7 @@ export class Animation implements ISprite {
     this.updateFrame(delta);
 
     const currentFrame = this.frames[this.currentFrameIndex];
-    this.spriteSheet.render(
+    this.spriteSheet?.render(
       context,
       currentFrame[0],
       currentFrame[1],
@@ -47,15 +49,26 @@ export class Animation implements ISprite {
       this.renderImageOptions
     );
   }
+  private onAnimationEnd() {}
+
+  public addOnAnimationEnd(func: () => void) {
+    this.onAnimationEnd = func;
+    return this;
+  }
 
   private updateFrame(delta: number): void {
     this.msInCurrentFrame += delta * 1000;
 
     if (this.msInCurrentFrame >= this.msPerFrame) {
       this.msInCurrentFrame -= this.msPerFrame;
-      this.currentFrameIndex += 1;
-      if (this.currentFrameIndex >= this.frames.length) {
-        this.currentFrameIndex = 0;
+      if (this.currentFrameIndex < this.frames.length-1) {
+        this.currentFrameIndex += 1;
+      }
+      if (this.currentFrameIndex >= this.frames.length-1) {
+        if (this.isLooping) {
+          this.currentFrameIndex = 0;
+        }
+        this.onAnimationEnd();
       }
     }
   }
