@@ -17,11 +17,16 @@ import {TILE_SIZE} from "@/game/constants/gameConstants";
 import {Direction} from "@/game/types";
 import {gameManager} from '@/game/engine/GameManager/GameManager';
 import {EScoreTypes} from '@/game/engine/GameManager/types';
+import eventBus from "../engine/EventBus";
 
 export class CreepEnemy implements IEntity {
   public readonly id = Symbol("id");
+
+  public readonly type = EntityTypes.enemy;
+
   private sprites?: ISpritesDirections;
   private currentSprite?: ISprite;
+
 
   private xPos = 64;
   private yPos = 0;
@@ -96,6 +101,7 @@ export class CreepEnemy implements IEntity {
     entityManager.removeEntity(this.id);
     this.collisionBox.remove();
     gameManager.addScore(EScoreTypes.CREEP);
+    eventBus.emit('enemy-died');
   }
 
   private getCollisionGeometry(): ICollisionGeometry {

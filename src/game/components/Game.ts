@@ -15,6 +15,7 @@ import { entityFactory } from "@/game/engine/EntityFactory";
 import { TILE_SIZE } from "@/game/constants/gameConstants";
 import { GameOverScreen } from "@/game/components/GameOverScreen";
 import { PreStageScreen } from "@/game/components/PreStageScreen";
+import eventBus from "@/game/engine/EventBus";
 import { gameManager } from "@/game/engine/GameManager/GameManager";
 import { Timer } from "@/game/engine/Timer";
 import EntityTypes from "@/game/engine/enums/EntityTypes";
@@ -44,6 +45,8 @@ export class Game {
     this.height = canvasRef.current.height;
     this.keyListener = new KeyListener(canvasRef.current);
 
+    eventBus.on('levelCleared', this.runNextLevel.bind(this));
+
     this.timer = new Timer(() => {
       gameManager.addTime();
     }, 1000);
@@ -54,6 +57,16 @@ export class Game {
     });
   }
 
+  private runNextLevel() {
+    if (gameManager.currentLevel < gameManager.maxLevels) {
+      gameManager.setCurrentLevel(gameManager.currentLevel + 1);
+      this.runPreStageScreen(gameManager.currentLevel);
+    } else {
+      this.runFinalScreen(gameManager.getScore());
+      gameManager.reset()
+    }
+  }
+
   public async runInitialScreen(): Promise<void> {
     this.unsubscribe();
 
@@ -61,7 +74,7 @@ export class Game {
 
     this.addEntity(
       new InitialScreen(this.context).addOnStartHandler(() => {
-        this.runPreStageScreen(1);
+        this.runNextLevel();
       })
     );
 
@@ -70,18 +83,20 @@ export class Game {
     this.startLoop();
   }
 
-  public async runFinalScreen(): Promise<void> {
+  public async runFinalScreen(score: number): Promise<void> {
     this.unsubscribe();
 
     this.keyListener.setup();
 
     this.addEntity(
-      new FinalScreen(this.context).addOnStartAgainHandler(() => {
+      new FinalScreen(this.context, score).addOnStartAgainHandler(() => {
         this.runInitialScreen();
       })
     );
 
     this.startLoop();
+
+    await entityManager.setupEntities();
 
     this.loop(performance.now());
   }

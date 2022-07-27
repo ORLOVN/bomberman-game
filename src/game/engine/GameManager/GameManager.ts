@@ -16,6 +16,9 @@ class GameManager {
   public isGameOver = false;
   public callbackOnTimeOver!: () => void;
 
+  private levelsAmount = 1;
+  private currentLevelNumber = 0;
+
   public showGamePanel(toggle: boolean): void {
     store.dispatch(showGamePanel(toggle));
   }
@@ -68,6 +71,19 @@ class GameManager {
     this.resetScore();
     this.resetTime();
     store.dispatch(showGamePanel(false));
+    this.setCurrentLevel(0);
+  }
+
+  public get maxLevels() {
+    return this.levelsAmount;
+  }
+
+  public get currentLevel() {
+    return this.currentLevelNumber;
+  }
+
+  public setCurrentLevel(lvl: number) {
+    this.currentLevelNumber = lvl;
   }
 }
 

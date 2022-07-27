@@ -23,7 +23,7 @@ export class FinalScreen implements IEntity {
 
   private controls: Array<IControl> = [];
 
-  constructor(context: CanvasRenderingContext2D) {
+  constructor(context: CanvasRenderingContext2D, score: number) {
     this.context = context;
     this.startButton = new Button("START AGAIN", 300, 650, this.context);
     this.startButton.onClick = () => {
@@ -38,7 +38,7 @@ export class FinalScreen implements IEntity {
 
     this.scoreLabel = new PictureLabel(100, 400, scale, this.context);
 
-    this.scoreValue = new PictureText(600, 450, "132456", 130, this.context);
+    this.scoreValue = new PictureText(600, 450, score.toString(), 130, this.context);
 
     this.controls.push(
     this.startButton,
@@ -62,9 +62,9 @@ export class FinalScreen implements IEntity {
 
     this.theEndLabel.setResources({
       spriteImage: labelSprite,
-      x: 96,
+      x: 66,
       y: 1020,
-      width: 2808,
+      width: 2838,
       height: 484,
     });
 

@@ -30,7 +30,7 @@ const gameSlice = createSlice({
         case EScoreTypes.EBLOCK:
           return {...state, score: state.score + 100};
         case EScoreTypes.CREEP:
-          return {...state, score: state.score + 100};
+          return {...state, score: state.score + 500};
         default:
           return state;
       }
