@@ -118,7 +118,8 @@ export class CreepEnemy implements IEntity {
   private collisionDetected(metCollidable: Collidable, collision: ICollision) {
     if (
       metCollidable.type === EntityTypes.brick ||
-      metCollidable.type === EntityTypes.explodingBlock
+      metCollidable.type === EntityTypes.explodingBlock ||
+      metCollidable.type === EntityTypes.bomb
     ) {
       this.xVel = collision.xOffset === 0 ? this.xVel : 0;
       this.yVel = collision.yOffset === 0 ? this.yVel : 0;

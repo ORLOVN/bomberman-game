@@ -10,51 +10,50 @@ import {
 import createStore from "@/store";
 import { EScoreTypes } from "@/game/engine/GameManager/types";
 
-const store = createStore();
-
 class GameManager {
   public isGameOver = false;
   public callbackOnTimeOver!: () => void;
 
   private levelsAmount = 1;
   private currentLevelNumber = 0;
+  private store!: ReturnType<typeof createStore>
 
   public showGamePanel(toggle: boolean): void {
-    store.dispatch(showGamePanel(toggle));
+    this.store.dispatch(showGamePanel(toggle));
   }
 
   public reduceLeftLives(): void {
-    store.dispatch(reduceLeftLives());
-    const gameStore = store.getState().game;
+    this.store.dispatch(reduceLeftLives());
+    const gameStore = this.store.getState().game;
     if (gameStore.leftLives <= 0) {
       this.isGameOver = true;
     }
   }
 
   public resetLeftLives(): void {
-    store.dispatch(resetNumberOfLives());
+    this.store.dispatch(resetNumberOfLives());
   }
 
   public addScore(type: EScoreTypes): void {
-    store.dispatch(addScore(type));
+    this.store.dispatch(addScore(type));
   }
   public getScore(): number {
-    return store.getState().game.score;
+    return this.store.getState().game.score;
 
   }
   public resetScore(): void {
-    store.dispatch(resetScore());
+    this.store.dispatch(resetScore());
   }
 
   public addTime(leftTimeSecond?: number): void {
-    const gameStore = store.getState().game;
+    const gameStore = this.store.getState().game;
 
     if (gameStore.leftTimeSecond <= 0 && !leftTimeSecond) {
       this.callbackOnTimeOver?.();
       return;
     }
 
-    store.dispatch(addTime(leftTimeSecond));
+    this.store.dispatch(addTime(leftTimeSecond));
   }
 
   public onTimeOver(callback: () => void): void {
@@ -62,7 +61,7 @@ class GameManager {
   }
 
   public resetTime(): void {
-    store.dispatch(resetTime());
+    this.store.dispatch(resetTime());
   }
 
   public reset(): void {
@@ -70,7 +69,7 @@ class GameManager {
     this.resetLeftLives();
     this.resetScore();
     this.resetTime();
-    store.dispatch(showGamePanel(false));
+    this.store.dispatch(showGamePanel(false));
     this.setCurrentLevel(0);
   }
 
@@ -84,6 +83,9 @@ class GameManager {
 
   public setCurrentLevel(lvl: number) {
     this.currentLevelNumber = lvl;
+  }
+  public bindStore(store: ReturnType<typeof createStore>) {
+    this.store = store;
   }
 }
 

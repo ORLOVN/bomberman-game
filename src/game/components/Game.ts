@@ -19,6 +19,7 @@ import eventBus from "@/game/engine/EventBus";
 import { gameManager } from "@/game/engine/GameManager/GameManager";
 import { Timer } from "@/game/engine/Timer";
 import EntityTypes from "@/game/engine/enums/EntityTypes";
+import createStore from "@/store";
 
 export class Game {
   private readonly context: CanvasRenderingContext2D;
@@ -32,7 +33,10 @@ export class Game {
   private isLoopStopped = true;
   private timer: Timer;
 
-  constructor(canvasRef: MutableRefObject<HTMLCanvasElement>) {
+  constructor(
+    canvasRef: MutableRefObject<HTMLCanvasElement>,
+    store: ReturnType<typeof createStore>
+  ) {
     const context = canvasRef.current.getContext("2d");
 
     if (!isCanvasElement(context)) {
@@ -45,11 +49,11 @@ export class Game {
     this.height = canvasRef.current.height;
     this.keyListener = new KeyListener(canvasRef.current);
 
-    eventBus.on('levelCleared', this.runNextLevel.bind(this));
-
     this.timer = new Timer(() => {
       gameManager.addTime();
     }, 1000);
+
+    gameManager.bindStore(store);
 
     gameManager.onTimeOver(() => {
       const player = entityManager.getEntityByType(EntityTypes.player);
@@ -63,15 +67,16 @@ export class Game {
       this.runPreStageScreen(gameManager.currentLevel);
     } else {
       this.runFinalScreen(gameManager.getScore());
-      gameManager.reset()
     }
   }
 
   public async runInitialScreen(): Promise<void> {
     this.unsubscribe();
 
+    gameManager.reset();
+    
     this.keyListener.setup();
-
+    
     this.addEntity(
       new InitialScreen(this.context).addOnStartHandler(() => {
         this.runNextLevel();
@@ -94,11 +99,10 @@ export class Game {
       })
     );
 
-    this.startLoop();
-
     await entityManager.setupEntities();
 
-    this.loop(performance.now());
+    this.startLoop();
+    this.timer.stop();
   }
 
   public async runPreStageScreen(level: number): Promise<void> {
@@ -132,12 +136,13 @@ export class Game {
     await entityManager.setupEntities();
 
     this.startLoop();
-
+    this.timer.stop();
   }
 
   public async run(level: number): Promise<void> {
 
     this.unsubscribe();
+    gameManager.addTime(300);
 
     this.addEntity(new GameMap(this.width, this.height, TILE_SIZE));
 
@@ -182,15 +187,17 @@ export class Game {
 
   }
 
-  private onPLayerDie(level: number): void {
+  private onPLayerDie(level: number): void { 
     this.timer.stop();
+    if (this.isLoopStopped) {
+      return;
+    }
     gameManager.reduceLeftLives();
 
     if (!gameManager.isGameOver) {
       this.runPreStageScreen(level);
     } else {
       this.runGameOverScreen(gameManager.getScore());
-      gameManager.reset()
     }
   }
 
@@ -220,7 +227,7 @@ export class Game {
   }
 
   private startLoop(): void {
-    gameManager.addTime(300);
+    eventBus.on('levelCleared', this.runNextLevel.bind(this));
 
     this.lastTime = performance.now();
 
@@ -229,12 +236,12 @@ export class Game {
     this.timer.start();
 
     this.loop(performance.now());
-
   }
 
   private stopLoop(): void {
     window.cancelAnimationFrame(this.unsubscriptionLoop);
 
     this.isLoopStopped = true;
+    eventBus.reset('levelCleared');
   }
 }

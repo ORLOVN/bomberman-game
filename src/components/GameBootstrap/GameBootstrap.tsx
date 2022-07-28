@@ -1,15 +1,18 @@
 import React, { useEffect, useRef } from "react";
 import { Box } from "@chakra-ui/react";
+import { useStore } from "react-redux";
 import { isRefCurrent } from "@/game/utils";
 import { Game } from "@/game/components/Game";
 import styles from "./GameBootstrap.module.scss";
 import { NotificationService } from "@/components/ErrorHandler";
 import { useAppSelector } from "@/hooks";
 import ScoringPanel from "@/components/ScoringPanel/ScoringPanel";
+import createStore from "@/store";
 
 export default function GameBootstrap() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isGamePanelShown = useAppSelector((store) => store.game.showPanel);
+  const store: ReturnType<typeof createStore> = useStore();
 
   useEffect(() => {
     if (!isRefCurrent(canvasRef)) {
@@ -18,7 +21,7 @@ export default function GameBootstrap() {
 
     canvasRef.current.focus();
 
-    const game = new Game(canvasRef);
+    const game = new Game(canvasRef, store);
 
     game.runInitialScreen();
 

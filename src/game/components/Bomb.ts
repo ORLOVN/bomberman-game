@@ -112,8 +112,8 @@ export class Bomb implements IEntity {
       yPos: this.yPos,
       xVel: 0,
       yVel: 0,
-      width: this.width,
-      height: this.height,
+      width: TILE_SIZE,
+      height: TILE_SIZE,
     };
   }
   public collisionStarted(metCollidable: Collidable) {
