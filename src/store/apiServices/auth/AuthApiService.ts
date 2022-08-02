@@ -22,7 +22,16 @@ const authApiService = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: `${process.env.HOST}/auth`,
         credentials: 'include',
-        fetchFn: fetch
+        fetchFn: fetch,
+      prepareHeaders: (headers, { extra }) => {
+        if (extra) {
+          console.log(extra)
+          // headers.set('authorization', `Bearer ${token}`)
+        }
+
+        return headers
+      },
+
     }),
     tagTypes: ['Auth'],
     endpoints: (build) => ({

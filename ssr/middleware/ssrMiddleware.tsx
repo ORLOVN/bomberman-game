@@ -38,7 +38,7 @@ const ssrMiddleware = async (req: Request, res: Response) => {
     }
   );
 
-  const store = createStore(undefined);
+  const store = createStore(undefined, req);
 
 
   delete require.cache[
