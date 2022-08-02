@@ -20,8 +20,6 @@ delete window.__INITIAL_STATE__;
 
 const store = createStore(JSON.parse(initialState));
 
-// store.dispatch(authApiService.endpoints.getUserInfo.initiate());
-
 hydrateRoot(
   document.getElementById("root") as HTMLElement,
   <Provider store={store}>

@@ -25,7 +25,7 @@ const authApiService = createApi({
         fetchFn: fetch,
       prepareHeaders: (headers, { extra }) => {
         if (extra) {
-          console.log(extra)
+         // console.log(extra)
           // headers.set('authorization', `Bearer ${token}`)
         }
 
