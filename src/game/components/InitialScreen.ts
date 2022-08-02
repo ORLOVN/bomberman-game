@@ -22,13 +22,25 @@ export class InitialScreen implements IEntity {
       this.onStart();
     };
     this.controls.push(StartButton);
-    this.controls.push(new Button("LEADER BOARD", 100, 600, this.context));
+
+    const leaderBoard = new Button("LEADER BOARD", 100, 600, this.context);
+    leaderBoard.onClick = () => {
+      this.onLeaderboardClick();
+    };
+    this.controls.push(leaderBoard);
   }
 
   private onStart() {}
 
   public addOnStartHandler(onStartHandler: () => void): InitialScreen {
     this.onStart = onStartHandler;
+    return this;
+  }
+
+  private onLeaderboardClick() {}
+
+  public addOnLeaderboardClick(func: () => void) {
+    this.onLeaderboardClick = func;
     return this;
   }
 

@@ -9,3 +9,8 @@ export {
   addTime,
   resetTime,
 } from "./gameSlice";
+
+export {
+  default as leaderBoardSlice,
+  setNext
+} from "./leaderBoardSlice";

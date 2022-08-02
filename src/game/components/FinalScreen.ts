@@ -6,8 +6,8 @@ import pictureLabels from "@/assets/images/sprites/pictureLabels.png";
 import pictureFont from "@/assets/images/sprites/font.png";
 import { loadImageFromUrl } from "@/game/utils";
 import { PictureText } from "@/game/components/PictureText";
-import {IControl} from "@/game/engine/interfaces/IControl";
-import {KeyListener} from "@/game/engine/KeyListener";
+import { IControl } from "@/game/engine/interfaces/IControl";
+import { KeyListener } from "@/game/engine/KeyListener";
 
 export class FinalScreen implements IEntity {
   public readonly id = Symbol("id");
@@ -31,6 +31,9 @@ export class FinalScreen implements IEntity {
     };
 
     this.leaderBoard = new Button("LEADER BOARD", 800, 650, this.context);
+    this.leaderBoard.onClick = () => {
+      this.onLeaderboardClick();
+    };
 
     const scale = 0.5;
 
@@ -38,21 +41,34 @@ export class FinalScreen implements IEntity {
 
     this.scoreLabel = new PictureLabel(100, 400, scale, this.context);
 
-    this.scoreValue = new PictureText(600, 450, score.toString(), 130, this.context);
+    this.scoreValue = new PictureText(
+      600,
+      450,
+      score.toString(),
+      130,
+      this.context
+    );
 
     this.controls.push(
-    this.startButton,
-    this.leaderBoard,
-    this.theEndLabel,
-    this.scoreLabel,
-    this.scoreValue
-    )
+      this.startButton,
+      this.leaderBoard,
+      this.theEndLabel,
+      this.scoreLabel,
+      this.scoreValue
+    );
   }
 
   private onStartAgain() {}
 
-  public addOnStartAgainHandler(onStartAgainHandler: () => void): FinalScreen {
-    this.onStartAgain = onStartAgainHandler;
+  public addOnStartAgainHandler(func: () => void): FinalScreen {
+    this.onStartAgain = func;
+    return this;
+  }
+
+  private onLeaderboardClick() {}
+
+  public addOnLeaderboardClick(func: () => void): FinalScreen {
+    this.onLeaderboardClick = func;
     return this;
   }
 

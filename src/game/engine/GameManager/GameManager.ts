@@ -9,6 +9,8 @@ import {
 } from "@/store/slices";
 import createStore from "@/store";
 import { EScoreTypes } from "@/game/engine/GameManager/types";
+import leaderBoardApiService from "@/store/apiServices/leaderboard";
+import { TEAM_NAME } from "@/constants/common";
 
 class GameManager {
   public isGameOver = false;
@@ -16,7 +18,7 @@ class GameManager {
 
   private levelsAmount = 1;
   private currentLevelNumber = 0;
-  private store!: ReturnType<typeof createStore>
+  private store!: ReturnType<typeof createStore>;
 
   public showGamePanel(toggle: boolean): void {
     this.store.dispatch(showGamePanel(toggle));
@@ -39,7 +41,6 @@ class GameManager {
   }
   public getScore(): number {
     return this.store.getState().game.score;
-
   }
   public resetScore(): void {
     this.store.dispatch(resetScore());
@@ -62,6 +63,21 @@ class GameManager {
 
   public resetTime(): void {
     this.store.dispatch(resetTime());
+  }
+  public postScore(): void {
+    const { user } = this.store.getState().auth;
+    this.store.dispatch(
+      leaderBoardApiService.endpoints.postScoreEntry.initiate({
+        data: {
+          score: this.getScore(),
+          id: user.id,
+          avatar: user.avatar,
+          name: user.first_name,
+        },
+        ratingFieldName: "score",
+        teamName: TEAM_NAME,
+      })
+    );
   }
 
   public reset(): void {

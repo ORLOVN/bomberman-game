@@ -74,13 +74,17 @@ export class Game {
     this.unsubscribe();
 
     gameManager.reset();
-    
+
     this.keyListener.setup();
-    
+
     this.addEntity(
-      new InitialScreen(this.context).addOnStartHandler(() => {
-        this.runNextLevel();
-      })
+      new InitialScreen(this.context)
+        .addOnStartHandler(() => {
+          this.runNextLevel();
+        })
+        .addOnLeaderboardClick(() => {
+          eventBus.emit("goToLeaderboard");
+        })
     );
 
     await entityManager.setupEntities();
@@ -91,12 +95,18 @@ export class Game {
   public async runFinalScreen(score: number): Promise<void> {
     this.unsubscribe();
 
+    gameManager.postScore();
+
     this.keyListener.setup();
 
     this.addEntity(
-      new FinalScreen(this.context, score).addOnStartAgainHandler(() => {
-        this.runInitialScreen();
-      })
+      new FinalScreen(this.context, score)
+        .addOnStartAgainHandler(() => {
+          this.runInitialScreen();
+        })
+        .addOnLeaderboardClick(() => {
+          eventBus.emit("goToLeaderboard");
+        })
     );
 
     await entityManager.setupEntities();
@@ -119,18 +129,23 @@ export class Game {
     await entityManager.setupEntities();
 
     this.startLoop();
-
   }
 
   public async runGameOverScreen(score: number): Promise<void> {
     this.unsubscribe();
 
+    gameManager.postScore();
+
     this.keyListener.setup();
 
     this.addEntity(
-      new GameOverScreen(this.context, score).addOnStartAgainHandler(() => {
-        this.runInitialScreen();
-      })
+      new GameOverScreen(this.context, score)
+        .addOnStartAgainHandler(() => {
+          this.runInitialScreen();
+        })
+        .addOnLeaderboardClick(() => {
+          eventBus.emit("goToLeaderboard");
+        })
     );
 
     await entityManager.setupEntities();
@@ -140,7 +155,6 @@ export class Game {
   }
 
   public async run(level: number): Promise<void> {
-
     this.unsubscribe();
     gameManager.addTime(300);
 
@@ -154,17 +168,13 @@ export class Game {
 
     await LevelGenerator.generate(level, TILE_SIZE);
 
-    this.addEntity(
-      new Player().addOnDie(this.onPLayerDie.bind(this, level))
-    )
+    this.addEntity(new Player().addOnDie(this.onPLayerDie.bind(this, level)));
 
     await this.setup();
 
     gameManager.showGamePanel(true);
 
     this.startLoop();
-
-
   }
 
   public addEntity(entity: IEntity) {
@@ -184,10 +194,9 @@ export class Game {
     await entityFactory.setup();
 
     await entityManager.setupEntities();
-
   }
 
-  private onPLayerDie(level: number): void { 
+  private onPLayerDie(level: number): void {
     this.timer.stop();
     if (this.isLoopStopped) {
       return;
@@ -227,7 +236,7 @@ export class Game {
   }
 
   private startLoop(): void {
-    eventBus.on('levelCleared', this.runNextLevel.bind(this));
+    eventBus.on("levelCleared", this.runNextLevel.bind(this));
 
     this.lastTime = performance.now();
 
@@ -242,6 +251,6 @@ export class Game {
     window.cancelAnimationFrame(this.unsubscriptionLoop);
 
     this.isLoopStopped = true;
-    eventBus.reset('levelCleared');
+    eventBus.reset("levelCleared");
   }
 }
