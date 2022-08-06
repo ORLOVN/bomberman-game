@@ -1,5 +1,8 @@
 # Bomberman game
 
+## .env variables
+Please update HOST in .env with appropriate host of the cloud  while deploying the app.
+Keep "http://localhost:8080/y-api" when developing on local machine.
 
 ## Scripts
 * dev - start app in development mode
