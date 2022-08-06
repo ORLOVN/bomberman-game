@@ -9,7 +9,7 @@ import fetch from 'isomorphic-fetch';
 import { User } from '@/types';
 import { SignUpFormType } from '@/pages/SignUp/types';
 import { SignInRequest } from './types';
-
+import {prepareHeaders} from "@/utils/prepareHeaders";
 
 
 const createApi = buildCreateApi(
@@ -23,15 +23,7 @@ const authApiService = createApi({
         baseUrl: `${process.env.HOST}/auth`,
         credentials: 'include',
         fetchFn: fetch,
-      prepareHeaders: (headers, { extra }) => {
-        if (extra) {
-         // console.log(extra)
-          // headers.set('authorization', `Bearer ${token}`)
-        }
-
-        return headers
-      },
-
+        prepareHeaders,
     }),
     tagTypes: ['Auth'],
     endpoints: (build) => ({
@@ -39,7 +31,7 @@ const authApiService = createApi({
             query: () => ({
                 url: '/user'
             }),
-            providesTags: ['Auth']
+            providesTags: ['Auth'],
         }),
         signIn: build.mutation<void, SignInRequest>({
             query: (credentials) => ({

@@ -12,7 +12,6 @@ import { Provider } from 'react-redux';
 import createStore, {authApiService} from '@/store';
 import {renderObject} from "@/utils/renderObject";
 
-
 const ssrMiddleware = async (req: Request, res: Response) => {
   let scriptBundleName = '';
 
@@ -40,7 +39,6 @@ const ssrMiddleware = async (req: Request, res: Response) => {
 
   const store = createStore(undefined, req);
 
-
   delete require.cache[
     require.resolve("../../dist/server/app.ssr.bundle.js")
   ];
@@ -49,20 +47,17 @@ const ssrMiddleware = async (req: Request, res: Response) => {
   const App = require("../../dist/server/app.ssr.bundle.js").default;
 
   store.dispatch(authApiService.endpoints.getUserInfo.initiate())
-
   await Promise.all(authApiService.util.getRunningOperationPromises());
 
-  const reactHTML = renderToString(
+  const reactHTML = renderToString((
     <Provider store={store}>
       <StaticRouter location={location}>
         <App />
       </StaticRouter>
-    </Provider>
-  );
+    </Provider>))
 
   const state = store.getState();
 
-  console.log(state)
   const result = indexHTML.replace(
     '<div id="root"></div>',
     `

@@ -6,6 +6,7 @@ import { UserInfoForm } from '@/pages/Profile/components/ProfileEditForm/types';
 import { PasswordEditFormType } from '@/pages/Profile/components/PasswordEditForm';
 
 import { UpdateUserResponse } from './types';
+import {prepareHeaders} from "@/utils/prepareHeaders";
 
 const profileApiService = createApi({
     reducerPath: 'profileApiService',
@@ -13,6 +14,7 @@ const profileApiService = createApi({
         baseUrl: `${process.env.HOST}/user`,
         credentials: 'include',
         fetchFn: fetch,
+        prepareHeaders,
     }),
     endpoints: (build) => ({
         updateAvatar: build.mutation<UpdateUserResponse, FormData>({

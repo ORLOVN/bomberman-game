@@ -1,6 +1,7 @@
 import React from 'react';
-import dateFormat from "date-format";
+// import dateFormat from "date-format";
 
+import moment from 'moment';
 import { Props } from './types';
 
 FormatDate.defaultProps = {
@@ -10,7 +11,7 @@ FormatDate.defaultProps = {
 function FormatDate({ value, mask }: Props) {
     return (
         <>
-            { dateFormat(mask, new Date(value)) }
+          {moment(value).utcOffset(0).format(mask)}
         </>
     );
 }
