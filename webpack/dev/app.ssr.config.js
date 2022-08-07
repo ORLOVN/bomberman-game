@@ -59,7 +59,7 @@ module.exports = merge(common, {
         test: /\.s[ac]ss$/,
         exclude: /\.module.(s[ac]ss)$/,
         use: [
-          "style-loader",
+          MiniCssExtractPlugin.loader,
           {
             loader: "css-loader",
             options: {

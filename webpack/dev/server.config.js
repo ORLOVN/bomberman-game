@@ -16,8 +16,15 @@ module.exports = merge(common, {
   },
   module: {
     rules: [
-      { test: /\.css$/, loader: 'ignore-loader' }
-    ]
+      {
+        test: /\.css$/,
+        use: "null-loader"
+      },
+      {
+        test: /\.html$/,
+        use: "null-loader"
+      },
+    ],
   },
   plugins: [
     new webpack.DefinePlugin({
