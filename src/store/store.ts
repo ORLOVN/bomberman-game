@@ -8,8 +8,10 @@ import leaderBoardSlice from "@/store/slices/leaderBoardSlice";
 
 
 
-const createStore = (preloadedState: any = undefined, ssrRequest: Request | undefined = undefined) => configureStore({
-
+const createStore = (
+  preloadedState: any = undefined,
+  ssrRequest: Request | undefined = undefined
+) => configureStore({
     reducer: {
       [authSlice.name]: authSlice.reducer,
       [authApiService.reducerPath]: authApiService.reducer,

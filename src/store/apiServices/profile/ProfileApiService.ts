@@ -11,7 +11,7 @@ import {prepareHeaders} from "@/utils/prepareHeaders";
 const profileApiService = createApi({
     reducerPath: 'profileApiService',
     baseQuery: fetchBaseQuery({
-        baseUrl: `${process.env.HOST}/user`,
+        baseUrl: `${process.env.HOST}${process.env.PROXY_API_PATH}/user`,
         credentials: 'include',
         fetchFn: fetch,
         prepareHeaders,

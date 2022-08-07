@@ -20,7 +20,7 @@ const createApi = buildCreateApi(
 const authApiService = createApi({
     reducerPath: 'authApiService',
     baseQuery: fetchBaseQuery({
-        baseUrl: `${process.env.HOST}/auth`,
+        baseUrl: `${process.env.HOST}${process.env.PROXY_API_PATH}/auth`,
         credentials: 'include',
         fetchFn: fetch,
         prepareHeaders,

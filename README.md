@@ -2,7 +2,8 @@
 
 ## .env variables
 Please update HOST in .env with appropriate host of the cloud  while deploying the app.
-Keep "http://localhost:8080/y-api" when developing on local machine.
+Keep "http://localhost:3000" when developing on local machine.
+In case of utilizing https protocol, update value of variable PROXY_COOKIE_SECURE to 1
 
 ## Scripts
 * dev - start app in development mode

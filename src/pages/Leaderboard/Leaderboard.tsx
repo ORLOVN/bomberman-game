@@ -22,6 +22,7 @@ export default function Leaderboard() {
   const { activeNext, cursorPosition, step, leaderList } = useAppSelector(
     (state) => state.leaderBoard
   );
+
   const { isLoading } = leaderBoardApiService.useGetScoreEntriesQuery({
     ratingFieldName: "score",
     cursor: cursorPosition,

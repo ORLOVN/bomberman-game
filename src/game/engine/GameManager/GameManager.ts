@@ -12,8 +12,6 @@ import { EScoreTypes } from "@/game/engine/GameManager/types";
 import leaderBoardApiService from "@/store/apiServices/leaderboard";
 import { TEAM_NAME } from "@/constants/common";
 
-const store = createStore();
-
 class GameManager {
   public isGameOver = false;
   public callbackOnTimeOver!: () => void;
