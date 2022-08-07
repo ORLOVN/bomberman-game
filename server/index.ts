@@ -29,7 +29,7 @@ app.use(`${process.env.PROXY_API_PATH}`, createProxyMiddleware({
   })
 );
 
-app.use(express.static(__dirname));
+app.use(express.static(__dirname, {index: false}));
 
 app.get('/*', middleware);
 

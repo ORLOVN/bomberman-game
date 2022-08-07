@@ -1,21 +1,10 @@
-import {
-  fetchBaseQuery,
-  buildCreateApi,
-  coreModule,
-  reactHooksModule,
-} from '@reduxjs/toolkit/query/react';
+import { fetchBaseQuery, createApi } from '@reduxjs/toolkit/query/react';
 
 import fetch from 'isomorphic-fetch';
 import { User } from '@/types';
 import { SignUpFormType } from '@/pages/SignUp/types';
 import { SignInRequest } from './types';
 import {prepareHeaders} from "@/utils/prepareHeaders";
-
-
-const createApi = buildCreateApi(
-  coreModule(),
-  reactHooksModule({ unstable__sideEffectsInRender: true })
-)
 
 const authApiService = createApi({
     reducerPath: 'authApiService',

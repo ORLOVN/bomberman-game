@@ -102,7 +102,7 @@ module.exports = merge(common, {
       skipWaiting: true,
       navigateFallback: 'index.html',
       runtimeCaching: [{
-        urlPattern: ({_, url}) => url.hostname === 'ya-praktikum.tech',
+        urlPattern: ({_, url}) => url.hostname === new URL(process.env.HOST).hostname,
         handler: "NetworkFirst",
         options: {
           cacheName: 'requests',
