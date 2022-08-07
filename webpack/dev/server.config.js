@@ -14,6 +14,11 @@ module.exports = merge(common, {
     filename: "server.bundle.js",
     publicPath: '/',
   },
+  module: {
+    rules: [
+      { test: /\.css$/, loader: 'ignore-loader' }
+    ]
+  },
   plugins: [
     new webpack.DefinePlugin({
       PRODUCTION: JSON.stringify(false),

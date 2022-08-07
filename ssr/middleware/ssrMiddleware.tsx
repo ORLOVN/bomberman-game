@@ -47,6 +47,7 @@ const ssrMiddleware = async (req: Request, res: Response) => {
   const App = require("../../dist/server/app.ssr.bundle.js").default;
 
   store.dispatch(authApiService.endpoints.getUserInfo.initiate())
+
   await Promise.all(authApiService.util.getRunningOperationPromises());
 
   const reactHTML = renderToString((

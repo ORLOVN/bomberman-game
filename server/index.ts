@@ -1,9 +1,9 @@
 import {IncomingMessage} from "http";
 import express from 'express';
+
 import middleware from '../ssr';
 
 const { createProxyMiddleware } = require('http-proxy-middleware');
-
 
 const app = express();
 
