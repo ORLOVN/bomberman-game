@@ -3,6 +3,7 @@ import EntityTypes from '@/game/engine/enums/EntityTypes';
 
 export interface IEntity {
   readonly id: Symbol;
+  readonly type?: string;
   setup(): Promise<void>;
   render(
     context: CanvasRenderingContext2D,

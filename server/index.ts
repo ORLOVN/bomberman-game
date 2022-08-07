@@ -33,7 +33,7 @@ app.use(express.static(__dirname));
 
 app.get('/*', middleware);
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   // eslint-disable-next-line

@@ -1,4 +1,4 @@
 export enum EScoreTypes {
-  EBLOCK = 'explodingBlock',
-  CREEP = 'creepEnemy',
+  EBLOCK = "explodingBlock",
+  CREEP = "creepEnemy",
 }

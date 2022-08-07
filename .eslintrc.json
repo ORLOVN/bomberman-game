@@ -39,8 +39,10 @@
     "@typescript-eslint/no-empty-function": 0,
     "react/jsx-props-no-spreading": "off",
     "no-param-reassign": 0,
-    "import/no-cycle": 1,
+    "import/no-cycle": 0,
+    "no-plusplus": 0,
     "no-underscore-dangle": 0
+
   },
   "env": {
     "browser": true,

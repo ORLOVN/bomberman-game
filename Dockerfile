@@ -8,8 +8,6 @@ RUN npm ci
 
 COPY . .
 
-EXPOSE 8080
+EXPOSE 3000
 
-RUN npm run build
-
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "prod"]

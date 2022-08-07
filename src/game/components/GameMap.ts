@@ -5,7 +5,7 @@ import { entityManager } from "@/game/engine/EntityManager";
 
 export class GameMap implements IEntity {
   public readonly id = Symbol("id");
-  private tileImage!: HTMLImageElement;
+  private tileImage?: HTMLImageElement;
   private readonly width: number;
   private readonly height: number;
   private readonly tileSize: number;
@@ -21,6 +21,9 @@ export class GameMap implements IEntity {
   }
 
   public render(context: CanvasRenderingContext2D): void {
+    if (!this.tileImage) {
+      return
+    }
     const tileCountX = Math.ceil(this.width / this.tileSize);
     const tileCountY = Math.ceil(this.height / this.tileSize);
 

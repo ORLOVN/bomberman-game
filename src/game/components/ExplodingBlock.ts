@@ -16,7 +16,7 @@ export class ExplodingBlock implements IEntity {
 
   private readonly xPos: number;
   private readonly yPos: number;
-  private sheet!: SpriteSheet;
+  private sheet?: SpriteSheet;
   // @ts-ignore
   private collisionBox: Collidable = new Collidable(
     this,
@@ -36,7 +36,7 @@ export class ExplodingBlock implements IEntity {
   }
 
   public render(context: CanvasRenderingContext2D): void {
-    this.sheet.render(
+    this.sheet?.render(
       context,
       0,
       0,

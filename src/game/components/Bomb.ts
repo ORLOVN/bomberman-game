@@ -23,9 +23,9 @@ export class Bomb implements IEntity {
   private readonly width = 48;
   private readonly height = 48;
 
-  private sprite!: SpriteSheetSprite;
+  private sprite: SpriteSheetSprite | undefined;
 
-  private resources: Resources | undefined;
+  private resources?: Resources;
 
   private readonly xPos!: number;
   private readonly yPos!: number;
@@ -58,7 +58,7 @@ export class Bomb implements IEntity {
     return Promise.resolve();
   }
 
-  public reuseResources(resources: Resources) {
+  public setResources(resources: Resources) {
     this.resources = resources;
     this.setup();
     return this;
@@ -89,7 +89,7 @@ export class Bomb implements IEntity {
       this.die();
     }
 
-    this.sprite.render(
+    this.sprite?.render(
       context,
       0,
       this.xPos,
@@ -112,8 +112,8 @@ export class Bomb implements IEntity {
       yPos: this.yPos,
       xVel: 0,
       yVel: 0,
-      width: this.width,
-      height: this.height,
+      width: TILE_SIZE,
+      height: TILE_SIZE,
     };
   }
   public collisionStarted(metCollidable: Collidable) {

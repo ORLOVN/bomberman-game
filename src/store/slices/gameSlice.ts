@@ -20,30 +20,32 @@ const gameSlice = createSlice({
       state.showPanel = showPanelFlag;
     },
     reduceLeftLives(state) {
-      state.leftLives -= 1;
+      return {...state, leftLives: state.leftLives - 1};
     },
     resetNumberOfLives(state) {
-      state.leftLives = INITIAL_LEFT_LIVES;
+      return {...state, leftLives:INITIAL_LEFT_LIVES};
     },
     addScore(state, { payload: scoreType }: PayloadAction<EScoreTypes>) {
-      if (scoreType === EScoreTypes.EBLOCK) {
-        state.score += 100;
-      } else if (scoreType === EScoreTypes.CREEP) {
-        state.score += 500;
+      switch (scoreType) {
+        case EScoreTypes.EBLOCK:
+          return {...state, score: state.score + 100};
+        case EScoreTypes.CREEP:
+          return {...state, score: state.score + 500};
+        default:
+          return state;
       }
     },
     resetScore(state) {
-      state.score = INITIAL_SCORE;
+      return {...state, score:INITIAL_SCORE};
     },
     addTime(state, { payload: leftTimeSecond }: PayloadAction<number | undefined>) {
       if (leftTimeSecond) {
-        state.leftTimeSecond = leftTimeSecond;
-      } else {
-        state.leftTimeSecond -= 1;
+        return {...state, leftTimeSecond}
       }
+        return {...state, leftTimeSecond: state.leftTimeSecond-1};
     },
     resetTime(state) {
-      state.leftTimeSecond = INITIAL_lEFT_TIME_SECOND;
+      return {...state, leftTimeSecond: INITIAL_lEFT_TIME_SECOND}
     },
   },
 });
