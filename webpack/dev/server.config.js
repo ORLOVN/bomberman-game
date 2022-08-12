@@ -24,6 +24,10 @@ module.exports = merge(common, {
         test: /\.html$/,
         use: "null-loader"
       },
+      {
+        test: /\.ico$/,
+        use: "null-loader"
+      },
     ],
   },
   plugins: [

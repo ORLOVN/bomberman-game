@@ -14,3 +14,8 @@ export {
   default as leaderBoardSlice,
   setNext
 } from "./leaderBoardSlice";
+
+export {
+  default as ssrModeSlice,
+  setSSRMode, setClientMode
+} from "./ssrModeSlice";

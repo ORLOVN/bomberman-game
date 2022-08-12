@@ -1,5 +1,6 @@
 const path = require("path");
-const DotenvWebpackPlugin = require('dotenv-webpack');
+const DotenvWebpackPlugin = require("dotenv-webpack");
+const CopyWebpackPlugin = require("copy-webpack-plugin")
 
 module.exports = {
   resolve: {
@@ -23,5 +24,11 @@ module.exports = {
   },
   plugins: [
     new DotenvWebpackPlugin(),
+    new CopyWebpackPlugin({
+      patterns: [
+        // relative path is from src
+        { from: './www/favicon.ico' },
+      ]
+    })
   ],
 };

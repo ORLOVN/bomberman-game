@@ -11,6 +11,7 @@ import path from 'path';
 import { Provider } from 'react-redux';
 import createStore, {authApiService} from '@/store';
 import {renderObject} from "@/utils/renderObject";
+import {setSSRMode} from "@/store/slices";
 
 const ssrMiddleware = async (req: Request, res: Response) => {
   let scriptBundleName = '';
@@ -23,7 +24,8 @@ const ssrMiddleware = async (req: Request, res: Response) => {
     scriptBundleName = firstChunkName;
   }
 
-  const location = req.url;
+  const location = req.path;
+  console.log(req.path, req.url)
 
   const indexHTML = fs.readFileSync(
     path.resolve(
@@ -39,9 +41,15 @@ const ssrMiddleware = async (req: Request, res: Response) => {
 
   const store = createStore(undefined, req);
 
+  store.dispatch(setSSRMode())
+
+  console.log(scriptBundleName)
+
   delete require.cache[
     require.resolve("../../dist/server/app.ssr.bundle.js")
   ];
+
+
 
   // eslint-disable-next-line
   const App = require("../../dist/server/app.ssr.bundle.js").default;
@@ -50,12 +58,15 @@ const ssrMiddleware = async (req: Request, res: Response) => {
 
   await Promise.all(authApiService.util.getRunningOperationPromises());
 
+
+
   const reactHTML = renderToString((
     <Provider store={store}>
       <StaticRouter location={location}>
         <App />
       </StaticRouter>
-    </Provider>))
+    </Provider>
+      ))
 
   const state = store.getState();
 
@@ -64,7 +75,7 @@ const ssrMiddleware = async (req: Request, res: Response) => {
     `
       <div id="root">${reactHTML}</div>
       ${scriptBundleName
-          ? `<script defer="defer" src="${scriptBundleName}"></script>`
+          ? ''// `<script defer="defer" src="${scriptBundleName}"></script>`
           : ''
       }
       <script>window.__INITIAL_STATE__ = ${renderObject(JSON.stringify(state))}</script>

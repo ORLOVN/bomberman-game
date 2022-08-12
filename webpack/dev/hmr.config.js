@@ -18,7 +18,7 @@ module.exports = merge(common, {
   ],
   output: {
     path: path.resolve(__dirname, "../..", "dist/server"),
-    filename: "hmr.bundle.js",
+    filename: "hmr.[hash].bundle.js",
     publicPath: "/",
   },
   resolve: {

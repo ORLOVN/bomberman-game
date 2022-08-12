@@ -9,16 +9,19 @@ import { Provider } from "react-redux";
 import App from "@/components/App";
 
 import createStore from "./store";
-import { ServiceWorkersService } from "@/services/service-workers-service";
+import {setClientMode} from "@/store/slices";
+/* import { ServiceWorkersService } from "@/services/service-workers-service";
 
 ServiceWorkersService.start();
-
+*/
 // @ts-ignore
 const initialState = window.__INITIAL_STATE__;
 // @ts-ignore
 delete window.__INITIAL_STATE__;
 
 const store = createStore(JSON.parse(initialState));
+
+store.dispatch(setClientMode())
 
 hydrateRoot(
   document.getElementById("root") as HTMLElement,

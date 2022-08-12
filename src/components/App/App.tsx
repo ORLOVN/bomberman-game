@@ -1,7 +1,7 @@
 import React from "react";
 import { CircularProgress, Flex, ChakraProvider } from "@chakra-ui/react";
 import { ReactNotifications } from "react-notifications-component";
-import { Navigate, Route, Routes } from "react-router-dom";
+import {Route, Routes} from "react-router-dom";
 import { ErrorBoundary } from "@/components/ErrorHandler/ErrorBoundary";
 import HomePage from "@/pages/Home";
 import SignInPage from "@/pages/SignIn";
@@ -11,20 +11,50 @@ import LeaderboardPage from "@/pages/Leaderboard";
 import ForumPage from "@/pages/Forum";
 import CreateTopicPage from "@/pages/Forum/pages/CreateTopic";
 import TopicPage from "@/pages/Forum/pages/Topic/_id";
-import ProtectedLayout from "@/layouts/helpers/components/ProtectedLayout";
 import GuestLayout from "@/layouts/GuestLayout";
 import { Roles, RoutePaths } from "@/enums";
 import UserLayout from "@/layouts/UserLayout";
 import { authApiService } from "@/store";
 import GameBootstrap from '@/components/GameBootstrap';
+import SSRNavigate from "@/components/SSRNavigate";
+import {useAppSelector} from "@/hooks";
 
 export default function App() {
   const { isLoading } = authApiService.endpoints.getUserInfo.useQueryState(undefined);
+
+  const role = useAppSelector(store => store.auth.role);
 
   const preloader = (
     <Flex justify="center" align="center" minHeight="100vh">
       <CircularProgress isIndeterminate color="teal" />
     </Flex>
+  );
+
+  const forUserLayout = (
+    <Route element={<UserLayout/>}>
+      <Route index element={<HomePage />} />
+      <Route path={RoutePaths.game} element={<GameBootstrap />} />
+      <Route path={RoutePaths.profile} element={<ProfilePage />} />
+      <Route path={RoutePaths.leaderboard} element={<LeaderboardPage />} />
+      <Route path={RoutePaths.forum}>
+        <Route index element={<ForumPage />} />
+        <Route path={RoutePaths.createTopic} element={<CreateTopicPage />} />
+        <Route path={RoutePaths.topicId} element={<TopicPage />} />
+        <Route path="*" element={
+          <SSRNavigate to={RoutePaths.home} toComponent={HomePage} replace />
+        } />
+      </Route>
+      <Route path="*" element={<SSRNavigate to={RoutePaths.home} toComponent={HomePage} replace />} />
+    </Route>
+  );
+  const forGuestLayout = (
+    <Route element={<GuestLayout/>}>
+      <Route path={`/${RoutePaths.signIn}`} element={<SignInPage />} />
+      <Route index element={<SignInPage />} />
+      <Route path={`/${RoutePaths.signUp}`} element={<SignUpPage />} />
+      <Route path="*" element={
+        <SSRNavigate to={RoutePaths.signIn} toComponent={SignInPage} replace />} />
+    </Route>
   );
 
   return (
@@ -35,43 +65,10 @@ export default function App() {
           : (
               <ErrorBoundary>
                 <Routes>
-                  <Route
-                    element={
-                      <ProtectedLayout
-                        layout={GuestLayout}
-                        allowedRoles={[Roles.guest]}
-                        fallbackPath={RoutePaths.home}
-                      />
-                    }
-                  >
-                    <Route path={`/${RoutePaths.signIn}`} element={<SignInPage />} />
-                    <Route path={`/${RoutePaths.signUp}`} element={<SignUpPage />} />
-                    <Route path="*" element={<Navigate to={`/${RoutePaths.signIn}`} replace />} />
-                  </Route>
-
-                  <Route
-                    path={RoutePaths.home}
-                    element={
-                      <ProtectedLayout
-                        layout={UserLayout}
-                        allowedRoles={[Roles.user]}
-                        fallbackPath={`/${RoutePaths.signIn}`}
-                      />
-                    }
-                  >
-                    <Route index element={<HomePage />} />
-                    <Route path={RoutePaths.game} element={<GameBootstrap />} />
-                    <Route path={RoutePaths.profile} element={<ProfilePage />} />
-                    <Route path={RoutePaths.leaderboard} element={<LeaderboardPage />} />
-                    <Route path={RoutePaths.forum}>
-                      <Route index element={<ForumPage />} />
-                      <Route path={RoutePaths.createTopic} element={<CreateTopicPage />} />
-                      <Route path={RoutePaths.topicId} element={<TopicPage />} />
-                      <Route path="*" element={<Navigate to={RoutePaths.forum} replace />} />
-                    </Route>
-                    <Route path="*" element={<Navigate to={RoutePaths.home} replace />} />
-                  </Route>
-                  <Route path="*" element={<Navigate to={RoutePaths.home} replace />} />
+                  {
+                    role === Roles.user ? forUserLayout : forGuestLayout
+                  }
+                  <Route path="*" element={<SSRNavigate to={RoutePaths.home} toComponent={HomePage} replace />} />
                 </Routes>
               </ErrorBoundary>
             )

@@ -8,6 +8,7 @@ enum RoutePaths {
     topicId = "topic/:id",
     game = "game",
     leaderboard = "leaderboard",
+    error404 = "error404",
 }
 
 export default RoutePaths;
