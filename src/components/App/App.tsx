@@ -18,6 +18,7 @@ import { authApiService } from "@/store";
 import GameBootstrap from '@/components/GameBootstrap';
 import SSRNavigate from "@/components/SSRNavigate";
 import {useAppSelector} from "@/hooks";
+import Error404 from "@/pages/Error404";
 
 export default function App() {
   const { isLoading } = authApiService.endpoints.getUserInfo.useQueryState(undefined);
@@ -30,9 +31,11 @@ export default function App() {
     </Flex>
   );
 
-  const forUserLayout = (
+  const userPresentation = (
     <Route element={<UserLayout/>}>
       <Route index element={<HomePage />} />
+      <Route path={`/${RoutePaths.signIn}`} element={
+        <SSRNavigate to={RoutePaths.home} toComponent={HomePage} replace />} />
       <Route path={RoutePaths.game} element={<GameBootstrap />} />
       <Route path={RoutePaths.profile} element={<ProfilePage />} />
       <Route path={RoutePaths.leaderboard} element={<LeaderboardPage />} />
@@ -40,14 +43,10 @@ export default function App() {
         <Route index element={<ForumPage />} />
         <Route path={RoutePaths.createTopic} element={<CreateTopicPage />} />
         <Route path={RoutePaths.topicId} element={<TopicPage />} />
-        <Route path="*" element={
-          <SSRNavigate to={RoutePaths.home} toComponent={HomePage} replace />
-        } />
       </Route>
-      <Route path="*" element={<SSRNavigate to={RoutePaths.home} toComponent={HomePage} replace />} />
     </Route>
   );
-  const forGuestLayout = (
+  const guestPresentation = (
     <Route element={<GuestLayout/>}>
       <Route path={`/${RoutePaths.signIn}`} element={<SignInPage />} />
       <Route index element={<SignInPage />} />
@@ -66,9 +65,9 @@ export default function App() {
               <ErrorBoundary>
                 <Routes>
                   {
-                    role === Roles.user ? forUserLayout : forGuestLayout
+                    role === Roles.user ? userPresentation : guestPresentation
                   }
-                  <Route path="*" element={<SSRNavigate to={RoutePaths.home} toComponent={HomePage} replace />} />
+                  <Route path="*" element={<Error404/>} />
                 </Routes>
               </ErrorBoundary>
             )

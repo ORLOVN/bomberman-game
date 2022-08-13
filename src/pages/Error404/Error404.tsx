@@ -1,24 +1,24 @@
 import {
   Box,
-  Button,
-  Flex,
+  Button, Flex,
+  Text,
 
 } from "@chakra-ui/react";
 import React from "react";
+import {useNavigate} from "react-router-dom";
 
 export default function Error404() {
 
+  const navigate = useNavigate()
 
   return (
-    <Box mt={4} w={1000} px="6" py="5">
-      <Flex justify="center">
-        Error 404. Page is not found
+    <Box py={100}>
+      <Flex direction="column" align="center">
+        <Text>Error 404. Page is not found</Text>
         <Button
-          onClick={() => {
-            //
-          }}
+          onClick={() => navigate('/')}
         >
-          Go Back
+          Go to home page
         </Button>
       </Flex>
     </Box>

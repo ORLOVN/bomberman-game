@@ -7,7 +7,7 @@ module.exports = {
     extensions: [".tsx", ".ts", ".js", ".json", ".scss"],
     alias: {
       "@": path.resolve(__dirname, "..", "src"),
-      images: path.resolve(__dirname, "..", "src/assets/images"),
+      "@images": path.resolve(__dirname, "..", "src/assets/images"),
     },
   },
   module: {
@@ -19,6 +19,10 @@ module.exports = {
       {
         test: /\.(png|svg|jpg|jpeg|gif|json)$/i,
         type: "asset/resource",
+      },
+      {
+        test: /\.ico$/,
+        use: "null-loader"
       },
     ],
   },

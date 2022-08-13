@@ -12,6 +12,8 @@ import { Provider } from 'react-redux';
 import createStore, {authApiService} from '@/store';
 import {renderObject} from "@/utils/renderObject";
 import {setSSRMode} from "@/store/slices";
+import leaderBoardApiService from "@/store/apiServices/leaderboard";
+import {Roles} from "@/enums";
 
 const ssrMiddleware = async (req: Request, res: Response) => {
   let scriptBundleName = '';
@@ -25,7 +27,6 @@ const ssrMiddleware = async (req: Request, res: Response) => {
   }
 
   const location = req.path;
-  console.log(req.path, req.url)
 
   const indexHTML = fs.readFileSync(
     path.resolve(
@@ -43,22 +44,25 @@ const ssrMiddleware = async (req: Request, res: Response) => {
 
   store.dispatch(setSSRMode())
 
-  console.log(scriptBundleName)
-
   delete require.cache[
     require.resolve("../../dist/server/app.ssr.bundle.js")
   ];
 
-
-
   // eslint-disable-next-line
   const App = require("../../dist/server/app.ssr.bundle.js").default;
 
-  store.dispatch(authApiService.endpoints.getUserInfo.initiate())
+  await store.dispatch(authApiService.endpoints.getUserInfo.initiate());
+
+  let state = store.getState();
+  if (state.auth.role === Roles.user) {
+    await store.dispatch(leaderBoardApiService.endpoints.getScoreEntries.initiate({
+      ratingFieldName: "score",
+      cursor: state.leaderBoard.cursorPosition,
+      limit: state.leaderBoard.step,
+    }))
+  }
 
   await Promise.all(authApiService.util.getRunningOperationPromises());
-
-
 
   const reactHTML = renderToString((
     <Provider store={store}>
@@ -68,18 +72,21 @@ const ssrMiddleware = async (req: Request, res: Response) => {
     </Provider>
       ))
 
-  const state = store.getState();
+  state = store.getState();
 
   const result = indexHTML.replace(
     '<div id="root"></div>',
     `
       <div id="root">${reactHTML}</div>
       ${scriptBundleName
-          ? ''// `<script defer="defer" src="${scriptBundleName}"></script>`
+          ? `<script defer="defer" src="${scriptBundleName}"></script>`
           : ''
       }
       <script>window.__INITIAL_STATE__ = ${renderObject(JSON.stringify(state))}</script>
     `
+  ).replace(
+    '<!--style ref plugin place-->',
+    `<link type="text/css" rel="stylesheet" href="/main.css">`
   );
   res.send(result);
 };

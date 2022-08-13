@@ -10,10 +10,10 @@ import App from "@/components/App";
 
 import createStore from "./store";
 import {setClientMode} from "@/store/slices";
-/* import { ServiceWorkersService } from "@/services/service-workers-service";
+import { ServiceWorkersService } from "@/services/service-workers-service";
 
 ServiceWorkersService.start();
-*/
+
 // @ts-ignore
 const initialState = window.__INITIAL_STATE__;
 // @ts-ignore

@@ -8,6 +8,11 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const WorkboxPlugin = require('workbox-webpack-plugin');
 require('dotenv').config();
+const host = process.env.HOST;
+function urlComparison({_, url}) {
+  console.log(host);
+  return url.hostname === new URL(host).hostname
+};
 
 module.exports = merge(common, {
   target: "web",
@@ -103,7 +108,7 @@ module.exports = merge(common, {
       skipWaiting: true,
       navigateFallback: 'index.html',
       runtimeCaching: [{
-        urlPattern: ({_, url}) => url.hostname === new URL(process.env.HOST).hostname,
+        urlPattern: urlComparison,
         handler: "NetworkFirst",
         options: {
           cacheName: 'requests',
