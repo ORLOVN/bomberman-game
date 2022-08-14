@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-import {sequelize} from '../../database';
+import {sequelize} from '../../../database';
 import {ModelAttributes} from 'sequelize';
 import {Model} from 'sequelize-typescript';
 
@@ -38,7 +38,7 @@ const topicModel: ModelAttributes<Model, ITopic> = {
     allowNull: false,
   },
   createdAt: {
-    type: Sequelize.TIMESTAMP,
+    type: Sequelize.DATE,
     defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
     allowNull: false,
   },

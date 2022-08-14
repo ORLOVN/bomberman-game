@@ -1,12 +1,12 @@
 import { Router } from "express";
 import {
-    // themesRoutes,
+    themesRoutes,
     forumRoutes
 } from "./routes";
 
 const router: Router = Router();
 
-// themesRoutes(router);
+themesRoutes(router);
 forumRoutes(router);
 
 export default router;
