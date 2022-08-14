@@ -92,7 +92,7 @@ module.exports = merge(common, {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "../..", "www/index.html"),
-      filename: "initial.html"
+      filename: "index.html"
     }),
     new MiniCssExtractPlugin({
       filename: "[name].[contenthash].css",
@@ -101,7 +101,6 @@ module.exports = merge(common, {
     new WorkboxPlugin.GenerateSW({
       clientsClaim: true,
       skipWaiting: true,
-      navigateFallback: 'index.html',
       runtimeCaching: [{
         urlPattern: ({_, url}) => {
         console.log(self.location.host);
@@ -113,7 +112,8 @@ module.exports = merge(common, {
         options: {
           cacheName: 'requests',
         },
-      }]
+      }],
+      exclude: ['index.html']
     }),
     new webpack.DefinePlugin({
       PRODUCTION: JSON.stringify(true),

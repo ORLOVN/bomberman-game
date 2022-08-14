@@ -33,7 +33,7 @@ const ssrMiddleware = async (req: Request, res: Response) => {
       __dirname,
       process.env.NODE_ENV === 'development'
         ? "../../www/index.html"
-        : "./initial.html"
+        : "./index.html"
     ),
     {
       encoding: 'utf-8'
