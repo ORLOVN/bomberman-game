@@ -42,7 +42,7 @@ export default function CreateTopic() {
                             })
                             .catch(
                                 (error: FetchBaseQueryError) => NotificationService
-                                    .notifyError((error.data as ErrorResponse).reason)
+                                    .notifyError((error.data as ErrorResponse).reason || 'An error occured!')
                             )
                             .finally(() => setSubmitting(false));
                     }
