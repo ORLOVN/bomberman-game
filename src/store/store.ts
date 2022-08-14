@@ -1,12 +1,13 @@
 import { Request } from "express";
 import { configureStore } from "@reduxjs/toolkit";
+import AbortController from 'abort-controller';
 import { authApiService, profileApiService } from "./apiServices";
 import { unauthenticatedMiddleware } from "./middlewares";
 import {authSlice, gameSlice, ssrModeSlice} from "./slices";
 import leaderBoardApiService from "@/store/apiServices/leaderboard";
-import leaderBoardSlice from "@/store/slices/leaderBoardSlice";
+import leaderBoardSlice from "@/store/slices/leaderBoardSlice"
 
-
+global.AbortController = global.AbortController || AbortController;
 
 const createStore = (
   preloadedState: any = undefined,

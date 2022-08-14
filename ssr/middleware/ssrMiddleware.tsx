@@ -9,13 +9,13 @@ import fs from 'fs';
 import path from 'path';
 
 import { Provider } from 'react-redux';
-import createStore, {authApiService} from '@/store';
 import {renderObject} from "@/utils/renderObject";
-import {setSSRMode} from "@/store/slices";
-import leaderBoardApiService from "@/store/apiServices/leaderboard";
-import {Roles} from "@/enums";
+import storeStuffing from "./storeStuffing";
 
 const ssrMiddleware = async (req: Request, res: Response) => {
+
+  const store = await storeStuffing(req)
+
   let scriptBundleName = '';
 
   if (process.env.NODE_ENV === 'development') {
@@ -33,16 +33,12 @@ const ssrMiddleware = async (req: Request, res: Response) => {
       __dirname,
       process.env.NODE_ENV === 'development'
         ? "../../www/index.html"
-        : "./index.html"
+        : "./initial.html"
     ),
     {
       encoding: 'utf-8'
     }
   );
-
-  const store = createStore(undefined, req);
-
-  store.dispatch(setSSRMode())
 
   delete require.cache[
     require.resolve("../../dist/server/app.ssr.bundle.js")
@@ -50,19 +46,6 @@ const ssrMiddleware = async (req: Request, res: Response) => {
 
   // eslint-disable-next-line
   const App = require("../../dist/server/app.ssr.bundle.js").default;
-
-  await store.dispatch(authApiService.endpoints.getUserInfo.initiate());
-
-  let state = store.getState();
-  if (state.auth.role === Roles.user) {
-    await store.dispatch(leaderBoardApiService.endpoints.getScoreEntries.initiate({
-      ratingFieldName: "score",
-      cursor: state.leaderBoard.cursorPosition,
-      limit: state.leaderBoard.step,
-    }))
-  }
-
-  await Promise.all(authApiService.util.getRunningOperationPromises());
 
   const reactHTML = renderToString((
     <Provider store={store}>
@@ -72,7 +55,7 @@ const ssrMiddleware = async (req: Request, res: Response) => {
     </Provider>
       ))
 
-  state = store.getState();
+  const state = store.getState();
 
   const result = indexHTML.replace(
     '<div id="root"></div>',
@@ -88,6 +71,7 @@ const ssrMiddleware = async (req: Request, res: Response) => {
     '<!--style ref plugin place-->',
     `<link type="text/css" rel="stylesheet" href="/main.css">`
   );
+
   res.send(result);
 };
 

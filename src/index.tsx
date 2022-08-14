@@ -19,7 +19,9 @@ const initialState = window.__INITIAL_STATE__;
 // @ts-ignore
 delete window.__INITIAL_STATE__;
 
-const store = createStore(JSON.parse(initialState));
+if (!initialState) console.log('Initial state is not passed from SSR')
+
+const store = initialState ? createStore(JSON.parse(initialState)) : createStore();
 
 store.dispatch(setClientMode())
 

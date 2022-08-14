@@ -1,5 +1,6 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import fetch from "isomorphic-fetch";
+import { createApi } from "../utils";
 import {
   ScoreEntries,
   ScoreRequestData,

@@ -1,6 +1,7 @@
-import { fetchBaseQuery, createApi } from '@reduxjs/toolkit/query/react';
+import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 import fetch from 'isomorphic-fetch';
+import { createApi } from "../utils"
 import { User } from '@/types';
 import { SignUpFormType } from '@/pages/SignUp/types';
 import { SignInRequest } from './types';

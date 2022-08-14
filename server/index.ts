@@ -16,7 +16,9 @@ app.use(`${process.env.PROXY_API_PATH}`, createProxyMiddleware({
     onProxyRes: (proxyRes: IncomingMessage, req: any) => {
       if (proxyRes.headers["set-cookie"]) {
         proxyRes.headers["set-cookie"] = proxyRes.headers["set-cookie"].map((e) => {
-          let processed = e.replace(/Domain\s*=\s*[\w\-._:]+\s*;/gmi, `Domain=${req.hostname};`);
+          let processed = e.replace(/Domain\s*=\s*[\w\-._:]+\s*;/gmi, `Domain=${
+            new URL(process.env.HOST || req.origin).hostname
+          };`);
           if (process.env.PROXY_COOKIE_SECURE !== '1') {
             processed = processed
               .replace(/secure\s*;/gmi, "")
