@@ -36,6 +36,8 @@ export default function App() {
       <Route index element={<HomePage />} />
       <Route path={`/${RoutePaths.signIn}`} element={
         <SSRNavigate to={RoutePaths.home} toComponent={HomePage} replace />} />
+      <Route path={`/${RoutePaths.signUp}`} element={
+        <SSRNavigate to={RoutePaths.home} toComponent={HomePage} replace />} />
       <Route path={RoutePaths.game} element={<GameBootstrap />} />
       <Route path={RoutePaths.profile} element={<ProfilePage />} />
       <Route path={RoutePaths.leaderboard} element={<LeaderboardPage />} />
