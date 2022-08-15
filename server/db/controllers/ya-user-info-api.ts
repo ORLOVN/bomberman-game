@@ -6,7 +6,7 @@ const yaUserInfoService = new YaUserInfoService();
 export default class YaUserInfoAPI {
     static getInfo(
         yaId: number,
-        cookie: string
+        cookie: Record<string, string>
     ): Promise<YaUserInfoResponse | never> {
         return yaUserInfoService
             .withOptions(getRequestHeaders(cookie))
@@ -27,12 +27,17 @@ function isErrorResponse(
     return Boolean(response?.reason);
 }
 
-function getRequestHeaders(cookie: string): RequestInit {
+function getRequestHeaders(cookie:  Record<string, string>): RequestInit {
+    const cookieStr = Object.entries(cookie).reduce((result, [key, val]) => {
+        return `${result}; ${key}=${val}`
+    }, '').slice(2);
+
+    console.log('cookieStr', cookieStr);
     return {
         mode: 'cors',
         credentials: 'include',
         headers: {
-            cookie
+            Cookie: cookieStr
         }
     };
 }

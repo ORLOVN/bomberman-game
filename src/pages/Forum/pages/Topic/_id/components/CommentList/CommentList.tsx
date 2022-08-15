@@ -9,8 +9,10 @@ import { CommentsProps } from './types';
 
 export default function CommentList({
     comments,
-    isLoading,
-    isNested = false
+    commentsAmount,
+    isLoadingComments,
+    isNested = false,
+    refetch
 }: CommentsProps) {
     return (
         <>
@@ -20,7 +22,7 @@ export default function CommentList({
                         <Divider mb={3} />
                         <Heading as='h5' size='md'>
                             Comments (
-                                {comments.length}
+                                {commentsAmount}
                             )
                         </Heading>
                         <Divider mb={8} mt={3} />
@@ -37,6 +39,9 @@ export default function CommentList({
                             date={date}
                             message={body}
                             avatar={avatar || ''}
+                            refetch={refetch}
+                            isLoadingComments={isLoadingComments}
+                            commentsAmount={commentsAmount}
                             {
                                 ...(
                                     hasNestedComments(rest) && (
@@ -51,7 +56,7 @@ export default function CommentList({
                 )
             }
             {
-                isLoading && (
+                isLoadingComments && (
                     <Flex justifyContent="center" >
                         <CircularProgress
                             isIndeterminate

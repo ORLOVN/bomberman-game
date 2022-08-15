@@ -3,12 +3,17 @@ import { Avatar, Box, Button, Divider, Flex, Icon, Text } from '@chakra-ui/react
 
 import { FaAngleDown, FaAngleUp, FaReply } from 'react-icons/fa';
 
+import { FormikState } from 'formik';
+import { useParams } from 'react-router-dom';
+
 import FormatDate from '@/components/FormatDate';
 
 import Textarea, { SendMessageFormType } from '../Textarea';
 import CommentList from '../CommentList';
 
 import { CommentProps } from './types';
+import { useAppSelector } from '@/hooks';
+import { forumApiService } from '@/store';
 
 export default function Comment({
     id,
@@ -16,23 +21,52 @@ export default function Comment({
     date,
     message,
     avatar,
-    comments
+    comments,
+    refetch,
+    isLoadingComments,
+    commentsAmount,
 }: CommentProps) {
-    const [isLoadingComments, setLoadingComments] = useState(false);
     const [showComments, setShowComments] = useState(false);
     const [showTextarea, setShowTextarea] = useState(false);
 
+    const [showLoading, setShowLoading] = useState(false);
+
+    if (!isLoadingComments) {
+        setShowLoading(false);
+    }
+
+    const user = useAppSelector((state) => state.auth.user);
+    const { id: topicId } = useParams();
+
+    const [createCommentHanlder] = forumApiService.useCreateCommentMutation();
+
     const sendCommentHandler = (
         setSubmitting: (isSubmitting: boolean) => void,
+        resetForm: (nextState?: Partial<FormikState<any>>) => void,
         values: SendMessageFormType,
     ) => {
         setSubmitting(true);
-        setLoadingComments(true);
 
         setTimeout(() => {
             console.log(values, 'comment id:', id);
             setSubmitting(false);
-            setLoadingComments(false);
+            const data = {
+                yaId: user.id,
+                topicId: topicId!,
+                parentCommentId: id,
+                body: values.body,
+            };
+            createCommentHanlder(data)
+                .unwrap()
+                .then()
+                .finally(
+                    () => {
+                        setShowLoading(true);
+                        refetch();
+                        resetForm();
+                        setSubmitting(false);
+                    }
+                )
         }, 1000);
     };
 
@@ -81,8 +115,10 @@ export default function Comment({
                 showComments && comments && (
                     <CommentList
                         isNested
+                        commentsAmount={commentsAmount}
+                        refetch={refetch}
                         comments={comments}
-                        isLoading={isLoadingComments}
+                        isLoadingComments={isLoadingComments && showLoading}
                     />
                 )
             }

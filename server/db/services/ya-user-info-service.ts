@@ -6,8 +6,7 @@ import { ErrorResponse } from '../http/types';
 import { User } from '@/types';
 
 export type YaUserInfoResponse = User;
-
-const yaUserInfoHttpInstance =  new Http(`${process.env.YANDEX_API_HOST}/api/v2/user`);
+const yaUserInfoHttpInstance =  new Http(`${process.env.API_URL}/user`);
 
 export class YaUserInfoService extends BaseApi {
     public find(yaId: number): Promise<YaUserInfoResponse | ErrorResponse> {

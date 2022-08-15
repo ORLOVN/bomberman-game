@@ -27,7 +27,7 @@ export default function Textarea({ onSubmit }: Props) {
                     initialValues={{ body: '' } as SendMessageFormType}
                     validationSchema={SendMessageSchema}
                     onSubmit={
-                        (values, { setSubmitting }) => onSubmit(setSubmitting, values)
+                        (values, { setSubmitting, resetForm }) => onSubmit(setSubmitting, resetForm, values)
                     }
                 >
                 {

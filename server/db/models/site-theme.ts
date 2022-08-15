@@ -1,9 +1,9 @@
-import {ModelAttributes} from 'sequelize';
+import Sequelize, {ModelAttributes} from 'sequelize';
 
-const Sequelize = require('sequelize');
-import {sequelize} from '../../database';
 import {Model} from 'sequelize-typescript';
 import {ETheme} from './enum';
+
+import {sequelize} from '../../database';
 
 interface ISiteTheme {
   id: number,

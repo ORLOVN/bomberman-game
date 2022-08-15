@@ -1,6 +1,7 @@
 import AuthError from './auth-error-service';
 import { Methods, IFormData } from './types';
 import queryStringify from './utils';
+import fetch from 'isomorphic-fetch';
 
 export default class Http {
     private readonly baseUrl: string;

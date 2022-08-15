@@ -5,7 +5,8 @@ export const forumRoutes = (router: Router) => {
   const forumRouter: Router = Router();
 
   forumRouter
-    .post('/create-topic', [], ForumAPI.createTopic);
+    .post('/create-topic', [], ForumAPI.createTopic)
+    .get('/topics', [], ForumAPI.findAllTopics);
 
   router.use('/my-api/v1/forum', forumRouter);
 };

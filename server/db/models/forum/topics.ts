@@ -1,33 +1,24 @@
-const Sequelize = require('sequelize');
-import {sequelize} from '../../../database';
-import {ModelAttributes} from 'sequelize';
+import Sequelize, {ModelAttributes} from 'sequelize';
 import {Model} from 'sequelize-typescript';
 
+import {sequelize} from '../../../database';
+
 interface ITopic {
-  id: number,
-  topicId: string,
+  id: string,
   yaId: number,
   title: string,
-  body: string,
-  createdAt: Date
+  body: string
 }
 
 const topicModel: ModelAttributes<Model, ITopic> = {
   id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
-    primaryKey: true
-  },
-  topicId: {
     type: Sequelize.UUID,
     defaultValue: Sequelize.UUIDV4,
-    allowNull: false,
+    primaryKey: true,
   },
   yaId: {
     type: Sequelize.INTEGER,
     allowNull: false,
-    unique: true,
   },
   title: {
     type: Sequelize.STRING,
@@ -37,13 +28,6 @@ const topicModel: ModelAttributes<Model, ITopic> = {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  createdAt: {
-    type: Sequelize.DATE,
-    defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
-    allowNull: false,
-  },
 }
 
-export const Topics = sequelize.define('topics', topicModel, {
-  timestamps: false,
-});
+export const Topics = sequelize.define('topics', topicModel);

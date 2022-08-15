@@ -1,7 +1,7 @@
-const Sequelize = require('sequelize');
 import {Model} from 'sequelize-typescript';
-import {ModelAttributes} from 'sequelize';
+import Sequelize, {ModelAttributes} from 'sequelize';
 import { Topics } from './topics';
+
 import {sequelize} from '../../../database';
 
 interface IComment {
@@ -10,8 +10,7 @@ interface IComment {
   commentId: string,
   parentCommentId: null | string,
   yaId: number,
-  body: string,
-  createdAt: Date
+  body: string
 }
 
 const commentModel: ModelAttributes<Model, IComment> = {
@@ -47,13 +46,6 @@ const commentModel: ModelAttributes<Model, IComment> = {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  createdAt: {
-    type: Sequelize.TIMESTAMP,
-    defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
-    allowNull: false,
-  },
 }
 
-export const Comments = sequelize.define('topics', commentModel, {
-  timestamps: false,
-});
+export const Comments = sequelize.define('topics', commentModel);

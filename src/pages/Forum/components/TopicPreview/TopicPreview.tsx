@@ -8,14 +8,14 @@ import styles from './TopicPreview.module.scss';
 import FormatDate from '@/components/FormatDate';
 
 type Props = {
-    id: number;
+    id: string;
     title: string;
     body: string;
     avatar: string | null;
     author: string;
     date: number;
     commentsAmount: number;
-    goToTopic: (id: number) => void
+    goToTopic: (id: string) => void
 };
 
 export default function TopicPreview({

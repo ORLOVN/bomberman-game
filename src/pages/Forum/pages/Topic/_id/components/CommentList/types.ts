@@ -2,6 +2,8 @@ import { Message } from '@/types';
 
 export type CommentsProps = {
     comments: (Message | Omit<Message, 'comments'>)[];
-    isLoading: boolean;
+    commentsAmount: number;
+    isLoadingComments: boolean;
     isNested?: boolean;
+    refetch: () => void;
 }

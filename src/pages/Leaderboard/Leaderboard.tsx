@@ -61,7 +61,7 @@ export default function Leaderboard() {
             <Tr key={data.id}>
               <Td w="2%">
                 <Avatar
-                  src={`${process.env.HOST}/resources${data.avatar}`}
+                  src={`${process.env.API_URL}/resources${data.avatar}`}
                   name={data.name}
                 />
               </Td>

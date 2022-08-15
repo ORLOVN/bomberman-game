@@ -3,11 +3,13 @@
 // import {ETheme} from '../models/enum';
 import {Request, Response} from 'express';
 // import YaUserInfoAPI from "./ya-user-info-api";
+import { User } from '@/types';
 // import { User } from "@/types";
-import { ForumTopicService } from "../services/forum-topic-service";
 // import { ForumCommentService } from "../services/forum-comment-service";
 // import { Topics } from "../models/forum/topics";
 import { Error } from "sequelize/types";
+import { ForumTopicService } from "../services/forum-topic-service";
+import YaUserInfoAPI from './ya-user-info-api';
 
 const forumTopicService = new ForumTopicService();
 // const forumCommentService = new ForumCommentService();
@@ -121,6 +123,178 @@ export class ForumAPI {
   //   });
   // }
 
+  public static findAllTopics = async (
+    request: Request,
+    response: Response
+  ) => {
+    return forumTopicService.findAll()
+      // @ts-ignore
+      .then(async (res) => {
+        // @ts-ignore
+        console.log('topics', res);
+        // @ts-ignore
+        const topics = !res.length ? [] : res.map(t => t.dataValues);
+        // .map(t => ({
+        //   ...t,
+        //   createdAt: `${t.createdAt}`,
+        //   updatedAt: `${t.updatedAt}`,
+        // }));
+        console.log('topics', topics);
+        // @ts-ignore
+        const yaIds: number[] = topics.reduce((acc, topic) => {
+          if (!acc.includes(topic.yaId)) {
+            acc.push(topic.yaId)
+          }
+          return acc;
+        }, []);
+
+        console.log('yaIds', yaIds);
+
+        try {
+          const testUser = await YaUserInfoAPI.getInfo(
+            911,
+            request.cookies
+          );
+          console.log('testUser', testUser);
+        } catch (error) {
+          // @ts-ignore
+          console.log('EErrroro:', error.message);
+        }
+
+        const yaUsers = await Promise.all(
+          yaIds.map(
+            yaId => YaUserInfoAPI.getInfo(
+              yaId,
+              request.cookies
+            )
+          )
+        );
+
+        console.log('yaUsers', yaUsers);
+
+        const yaUsersMap = yaUsers.reduce((result, yaUser) => {
+          result[`${yaUser.id}`] = yaUser;
+          return result
+        }, {} as Record<string, User>);
+
+        console.log('users map!', yaUsersMap);
+
+        // @ts-ignore
+        return response.status(200).json(topics.map(t => ({
+          id: t.id,
+          author: yaUsersMap[`${t.yaId}`].first_name,
+          avatar: yaUsersMap[`${t.yaId}`].avatar,
+          date: t.createdAt,
+          body: t.body,
+          title: t.title,
+          comments: [],
+          commentsAmount: 123,
+        })) || [])
+      })
+      .catch((error: Error) => response.status(400)
+        .json({
+          error: {
+            message: `Error occured while fetching topics: ${error.message}`
+          }
+        })
+      )
+
+    // let yaUser: Awaited<ReturnType<typeof YaUserInfoAPI.getInfo>>;
+
+    // try {
+    //   yaUser = await YaUserInfoAPI.getInfo(
+    //     topic.yaId,
+    //     request.headers.cookie as string
+    //   );
+    // } catch (error) {
+    //   return response
+    //     .status(404)
+    //     .json({error: { message: `Error while user fetch: ${error}`}})
+    // }
+
+    // let commentsRaw;
+
+    // try {
+    //   commentsRaw = await forumCommentService.find(request.params.topicId);
+    // } catch (error) {
+    //   return response
+    //     .status(404)
+    //     .json({error: { message: `Error while comments fetch: ${error}`}});
+    // }
+
+    // const rootComments = [];
+    // const childComments = [];
+
+    // const commentAuthors: number[] = [];
+
+    // commentsRaw
+    //   .forEach(c => {
+    //     if (!commentAuthors.includes(c.yaId)) {
+    //       commentAuthors.push(c.yaId);
+    //     }
+    //   })
+
+    // const fetchedAuthors = await Promise.all(
+    //   commentAuthors.map(authorYaId => YaUserInfoAPI.getInfo(
+    //     authorYaId,
+    //     request.headers.cookie as string
+    //   ))
+    // );
+      
+    // const formatComment = (comment) => {
+    //   const author = fetchedAuthors.find(author => author.id === comment.yaId);
+    //   return {
+    //     id: comment.commentId,
+    //     parentCommentId: comment.parentCommentId,
+    //     topicId: comment.topicId,
+    //     author: author?.first_name,
+    //     avatar: author?.avatar,
+    //     date: comment.createdAt,
+    //     body: comment.body,
+    //   }
+    // }
+
+    // commentsRaw
+    //   .forEach((c) => {
+    //     (
+    //       c.parentCommentId === null
+    //         ? rootComments
+    //         : childComments
+    //     ).push(formatComment(c));
+    //   })
+
+    // try {
+    //   childComments.forEach(
+    //     cc => {
+    //       const rootComment = rootComments.find(
+    //         (c) => c.id === cc.parentCommentId
+    //       );
+
+    //       if (!rootComment.comments) {
+    //         rootComment.comments = [];
+    //       }
+
+    //       rootComment.comments.push(cc);
+    //     }
+    //   );
+    // } catch (error) {
+    //   return response
+    //     .status(404)
+    //     .json({error: { message: `Error while creating comment structure: ${error}`}})
+    // }
+
+    // return response.status(200).json({
+    //   id: topic.topicId,
+    //   author: yaUser.first_name,
+    //   avatar: yaUser.avatar,
+    //   date: topic.createdAt,
+    //   title: topic.title,
+    //   body: topic.body,
+    //   comments: rootComments,
+    //   commentsAmount: commentsRaw.length
+    // });
+  }
+
   public static createTopic = async (request: Request, response: Response) => {
     const {
       yaId,
@@ -132,7 +306,7 @@ export class ForumAPI {
       yaId,
       title,
       body
-    }).then(() => response.status(200))
+    }).then(() => response.status(200).json())
       .catch((error: Error) => response.status(400)
         .json({
           error: {
