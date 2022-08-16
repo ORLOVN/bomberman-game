@@ -28,11 +28,12 @@ function isErrorResponse(
 }
 
 function getRequestHeaders(cookie:  Record<string, string>): RequestInit {
-    const cookieStr = Object.entries(cookie).reduce((result, [key, val]) => {
-        return `${result}; ${key}=${val}`
-    }, '').slice(2);
+    const cookieStr = Object.entries(cookie)
+        .reduce((result, [key, val]) => {
+            return `${result}; ${key}=${val}`
+        }, '')
+        .slice(2);
 
-    console.log('cookieStr', cookieStr);
     return {
         mode: 'cors',
         credentials: 'include',

@@ -51,7 +51,10 @@ export default function TopicPreview({
                 alignItems="center"
             >
                 <Flex alignItems="center">
-                    <Avatar name={author} src={avatar || ''} />
+                    <Avatar
+                        name={author}
+                        src={avatar ? `${process.env.HOST}${process.env.PROXY_API_PATH}/resources${avatar}` : ''}
+                    />
                     <Text fontSize='xs' ml={4}>Posted by</Text>
                     <Heading
                         as='h4' size='xs'

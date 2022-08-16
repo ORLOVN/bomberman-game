@@ -6,7 +6,9 @@ export const forumRoutes = (router: Router) => {
 
   forumRouter
     .post('/create-topic', [], ForumAPI.createTopic)
-    .get('/topics', [], ForumAPI.findAllTopics);
+    .get('/topics', [], ForumAPI.findAllTopics)
+    .get('/topics/:topicId', [], ForumAPI.findTopic)
+    .post('/create-comment', [], ForumAPI.createComment);
 
   router.use('/my-api/v1/forum', forumRouter);
 };

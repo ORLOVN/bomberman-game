@@ -1,13 +1,13 @@
-import { forumApiService } from "@/store";
 import { Box, Button, Heading, List, Flex, CircularProgress } from "@chakra-ui/react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { forumApiService } from "@/store";
 import TopicPreview from "./components/TopicPreview";
 
 export default function Forum() {
   const navigate = useNavigate();
 
-  const {data: topicList, isFetching} = forumApiService.useGetTopicsQuery();
+  const {data: topicList, isFetching} = forumApiService.useGetTopicsQuery(undefined, { refetchOnMountOrArgChange: true });
 
   const goToTopic = (id: string) => navigate(`/forum/topic/${id}`);
 
@@ -31,29 +31,43 @@ export default function Forum() {
             </Flex>
           : <List spacing={3}>
               {
-                topicList!.map(
-                  ({
-                    id,
-                    author,
-                    avatar,
-                    date,
-                    title,
-                    body,
-                    commentsAmount
-                  }) => (
-                    <TopicPreview
-                      key={id}
-                      id={id}
-                      author={author}
-                      avatar={avatar}
-                      date={date}
-                      title={title}
-                      body={body}
-                      commentsAmount={commentsAmount}
-                      goToTopic={goToTopic}
-                    />
+                !topicList!.length
+                  ? (
+                    <Box
+                      mt={12}
+                      p={6}
+                    >
+                      <Heading as='h5' size='sm' textAlign="center">
+                        No topics yet :)
+                      </Heading>
+                    </Box>
                   )
-                )
+                  : topicList!
+                      .slice()
+                      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                      .map(
+                        ({
+                          id,
+                          author,
+                          avatar,
+                          date,
+                          title,
+                          body,
+                          commentsAmount
+                        }) => (
+                          <TopicPreview
+                            key={id}
+                            id={id}
+                            author={author}
+                            avatar={avatar}
+                            date={date}
+                            title={title}
+                            body={body}
+                            commentsAmount={commentsAmount}
+                            goToTopic={goToTopic}
+                          />
+                        )
+                      )
               }
           </List>
       }

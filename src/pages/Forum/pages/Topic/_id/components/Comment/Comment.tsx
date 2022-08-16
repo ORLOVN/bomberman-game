@@ -6,14 +6,18 @@ import { FaAngleDown, FaAngleUp, FaReply } from 'react-icons/fa';
 import { FormikState } from 'formik';
 import { useParams } from 'react-router-dom';
 
+import { useAppSelector } from '@/hooks';
+import { forumApiService } from '@/store';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
+import { ErrorResponse } from '@/types';
+
 import FormatDate from '@/components/FormatDate';
+import { NotificationService } from '@/components/ErrorHandler';
 
 import Textarea, { SendMessageFormType } from '../Textarea';
 import CommentList from '../CommentList';
 
 import { CommentProps } from './types';
-import { useAppSelector } from '@/hooks';
-import { forumApiService } from '@/store';
 
 export default function Comment({
     id,
@@ -31,8 +35,11 @@ export default function Comment({
 
     const [showLoading, setShowLoading] = useState(false);
 
-    if (!isLoadingComments) {
+    if (!isLoadingComments && showLoading) {
         setShowLoading(false);
+        if (!showComments) {
+            setShowComments(true);
+        }
     }
 
     const user = useAppSelector((state) => state.auth.user);
@@ -47,27 +54,29 @@ export default function Comment({
     ) => {
         setSubmitting(true);
 
-        setTimeout(() => {
-            console.log(values, 'comment id:', id);
-            setSubmitting(false);
-            const data = {
-                yaId: user.id,
-                topicId: topicId!,
-                parentCommentId: id,
-                body: values.body,
-            };
-            createCommentHanlder(data)
-                .unwrap()
-                .then()
-                .finally(
-                    () => {
-                        setShowLoading(true);
-                        refetch();
-                        resetForm();
-                        setSubmitting(false);
-                    }
-                )
-        }, 1000);
+        const data = {
+            yaId: user.id,
+            topicId: topicId!,
+            parentCommentId: id,
+            body: values.body,
+        };
+
+        createCommentHanlder(data)
+            .unwrap()
+            .then(() => {
+                setShowLoading(true);
+                refetch();
+                resetForm();
+            })
+            .catch(
+                (error: FetchBaseQueryError) => NotificationService
+                    .notifyError((error.data as ErrorResponse).reason || 'An error occured!')
+            )
+            .finally(
+                () => {
+                    setSubmitting(false);
+                }
+            )
     };
 
     const replyContainer = comments && (
@@ -135,11 +144,11 @@ export default function Comment({
             >
                 <Avatar
                     name={author}
-                    src={avatar}
+                    src={avatar ? `${process.env.HOST}${process.env.PROXY_API_PATH}/resources${avatar}` : ''}
                 />
                 <Divider orientation='vertical' />
             </Flex>
-            <Box mb={2}>
+            <Box mb={2} flex="1">
                 <Text my={1} fontSize='sm' fontWeight="bold">
                     {author}
                 </Text>

@@ -1,165 +1,135 @@
-// import { ThemeService } from "../services/theme-service";
-// import { IFindThemeRequest } from "../types";
-// import {ETheme} from '../models/enum';
 import {Request, Response} from 'express';
-// import YaUserInfoAPI from "./ya-user-info-api";
 import { User } from '@/types';
-// import { User } from "@/types";
-// import { ForumCommentService } from "../services/forum-comment-service";
-// import { Topics } from "../models/forum/topics";
+import { ForumCommentService } from "../services/forum-comment-service";
 import { Error } from "sequelize/types";
 import { ForumTopicService } from "../services/forum-topic-service";
 import YaUserInfoAPI from './ya-user-info-api';
+import { ICreateCommentRequest, IFindTopicRequest } from '../types';
+import { IComment } from '../models/forum/comments';
 
 const forumTopicService = new ForumTopicService();
-// const forumCommentService = new ForumCommentService();
+const forumCommentService = new ForumCommentService();
+
+interface ITransformedComment {
+  id: string;
+  topicId: string;
+  parentCommentId: string | null;
+  author: string;
+  avatar: string;
+  body: string;
+  date: string;
+}
 
 export class ForumAPI {
-  // public static findTopic = async (
-  //   request: Request<IFindThemeRequest>,
-  //   response: Response
-  // ) => {
-  //   const topic = await forumTopicService.find(request.params.topicId);
+  public static findTopic = async (
+    request: Request<IFindTopicRequest>,
+    response: Response
+  ) => {
+    return forumTopicService.find(request.params.topicId)
+      .then(async (topic) => {
+        if (!topic) {
+          return response
+            .status(404)
+            .json({error: { message: 'The topic is not found'}})
+        }
+        const yaUser = await YaUserInfoAPI.getInfo(
+          topic.yaId,
+          request.cookies
+        );
 
-  //   if (!topic) {
-  //     return response
-  //       .status(404)
-  //       .json({error: { message: 'The topic is not found'}})
-  //   }
+        const comments = (await forumCommentService.findByTopicId(request.params.topicId))
+          .map(t => t.dataValues);
 
-  //   let yaUser: Awaited<ReturnType<typeof YaUserInfoAPI.getInfo>>;
+        const yaIds = comments.reduce((acc, comment) => {
+          if (!acc.includes(comment.yaId)) {
+            acc.push(comment.yaId)
+          }
+          return acc;
+        }, [] as number[]);
 
-  //   try {
-  //     yaUser = await YaUserInfoAPI.getInfo(
-  //       topic.yaId,
-  //       request.headers.cookie as string
-  //     );
-  //   } catch (error) {
-  //     return response
-  //       .status(404)
-  //       .json({error: { message: `Error while user fetch: ${error}`}})
-  //   }
+        const yaUsers = await Promise.all(
+          yaIds.map(authorYaId => YaUserInfoAPI.getInfo(
+            authorYaId,
+            request.cookies
+          ))
+        );
 
-  //   let commentsRaw;
+        const yaUsersMap = yaUsers.reduce((result, yaUser) => {
+          result[`${yaUser.id}`] = yaUser;
+          return result
+        }, {} as Record<string, User>);
 
-  //   try {
-  //     commentsRaw = await forumCommentService.find(request.params.topicId);
-  //   } catch (error) {
-  //     return response
-  //       .status(404)
-  //       .json({error: { message: `Error while comments fetch: ${error}`}});
-  //   }
+        const formatComment = (comment: IComment & {createdAt: string, updatedAt: string}): ITransformedComment => ({
+          id: comment.id,
+          topicId: comment.topicId,
+          parentCommentId: comment.parentCommentId,
+          author: yaUsersMap[`${comment.yaId}`].first_name,
+          avatar: yaUsersMap[`${comment.yaId}`].avatar,
+          body: comment.body,
+          date: comment.createdAt,
+        });
 
-  //   const rootComments = [];
-  //   const childComments = [];
+        const rootComments:
+          (ReturnType<typeof formatComment>
+            & {comments?: ReturnType<typeof formatComment>[]})[] = [];
 
-  //   const commentAuthors: number[] = [];
+        const childComments: (ReturnType<typeof formatComment>)[] = [];
 
-  //   commentsRaw
-  //     .forEach(c => {
-  //       if (!commentAuthors.includes(c.yaId)) {
-  //         commentAuthors.push(c.yaId);
-  //       }
-  //     })
+        comments
+          .forEach((c) => {
+            (c.parentCommentId === null ? rootComments : childComments).push(formatComment(c));
+          });
 
-  //   const fetchedAuthors = await Promise.all(
-  //     commentAuthors.map(authorYaId => YaUserInfoAPI.getInfo(
-  //       authorYaId,
-  //       request.headers.cookie as string
-  //     ))
-  //   );
-      
-  //   const formatComment = (comment) => {
-  //     const author = fetchedAuthors.find(author => author.id === comment.yaId);
-  //     return {
-  //       id: comment.commentId,
-  //       parentCommentId: comment.parentCommentId,
-  //       topicId: comment.topicId,
-  //       author: author?.first_name,
-  //       avatar: author?.avatar,
-  //       date: comment.createdAt,
-  //       body: comment.body,
-  //     }
-  //   }
+        rootComments.forEach(rootComment => {
+          rootComment.comments = [];
+        });
+        
+        childComments.forEach(
+          cc => {
+            const rootComment = rootComments.find(
+              (c) => c.id === cc.parentCommentId
+            );
 
-  //   commentsRaw
-  //     .forEach((c) => {
-  //       (
-  //         c.parentCommentId === null
-  //           ? rootComments
-  //           : childComments
-  //       ).push(formatComment(c));
-  //     })
+            rootComment && rootComment.comments!.push(cc);
+          }
+        );
 
-  //   try {
-  //     childComments.forEach(
-  //       cc => {
-  //         const rootComment = rootComments.find(
-  //           (c) => c.id === cc.parentCommentId
-  //         );
 
-  //         if (!rootComment.comments) {
-  //           rootComment.comments = [];
-  //         }
+        return response.status(200).json({
+          id: topic.id,
+          author: yaUser.first_name,
+          avatar: yaUser.avatar,
+          date: topic.createdAt,
+          title: topic.title,
+          body: topic.body,
+          comments: rootComments,
+          commentsAmount: comments.length
+        });
 
-  //         rootComment.comments.push(cc);
-  //       }
-  //     );
-  //   } catch (error) {
-  //     return response
-  //       .status(404)
-  //       .json({error: { message: `Error while creating comment structure: ${error}`}})
-  //   }
-
-  //   return response.status(200).json({
-  //     id: topic.topicId,
-  //     author: yaUser.first_name,
-  //     avatar: yaUser.avatar,
-  //     date: topic.createdAt,
-  //     title: topic.title,
-  //     body: topic.body,
-  //     comments: rootComments,
-  //     commentsAmount: commentsRaw.length
-  //   });
-  // }
+      })
+      .catch((error: Error) => response.status(400)
+        .json({
+          error: {
+            message: `Error occured while fetching topic: ${error.message}`
+          }
+        })
+      );
+  }
 
   public static findAllTopics = async (
     request: Request,
     response: Response
   ) => {
     return forumTopicService.findAll()
-      // @ts-ignore
       .then(async (res) => {
-        // @ts-ignore
-        console.log('topics', res);
-        // @ts-ignore
-        const topics = !res.length ? [] : res.map(t => t.dataValues);
-        // .map(t => ({
-        //   ...t,
-        //   createdAt: `${t.createdAt}`,
-        //   updatedAt: `${t.updatedAt}`,
-        // }));
-        console.log('topics', topics);
-        // @ts-ignore
-        const yaIds: number[] = topics.reduce((acc, topic) => {
+        const topics = res.map(t => t.dataValues);
+
+        const yaIds = topics.reduce((acc, topic) => {
           if (!acc.includes(topic.yaId)) {
             acc.push(topic.yaId)
           }
           return acc;
-        }, []);
-
-        console.log('yaIds', yaIds);
-
-        try {
-          const testUser = await YaUserInfoAPI.getInfo(
-            911,
-            request.cookies
-          );
-          console.log('testUser', testUser);
-        } catch (error) {
-          // @ts-ignore
-          console.log('EErrroro:', error.message);
-        }
+        }, [] as number[]);
 
         const yaUsers = await Promise.all(
           yaIds.map(
@@ -170,16 +140,13 @@ export class ForumAPI {
           )
         );
 
-        console.log('yaUsers', yaUsers);
-
         const yaUsersMap = yaUsers.reduce((result, yaUser) => {
           result[`${yaUser.id}`] = yaUser;
           return result
         }, {} as Record<string, User>);
 
-        console.log('users map!', yaUsersMap);
+        let comments = await forumCommentService.findAll();
 
-        // @ts-ignore
         return response.status(200).json(topics.map(t => ({
           id: t.id,
           author: yaUsersMap[`${t.yaId}`].first_name,
@@ -187,9 +154,8 @@ export class ForumAPI {
           date: t.createdAt,
           body: t.body,
           title: t.title,
-          comments: [],
-          commentsAmount: 123,
-        })) || [])
+          commentsAmount: comments.length,
+        })))
       })
       .catch((error: Error) => response.status(400)
         .json({
@@ -198,101 +164,6 @@ export class ForumAPI {
           }
         })
       )
-
-    // let yaUser: Awaited<ReturnType<typeof YaUserInfoAPI.getInfo>>;
-
-    // try {
-    //   yaUser = await YaUserInfoAPI.getInfo(
-    //     topic.yaId,
-    //     request.headers.cookie as string
-    //   );
-    // } catch (error) {
-    //   return response
-    //     .status(404)
-    //     .json({error: { message: `Error while user fetch: ${error}`}})
-    // }
-
-    // let commentsRaw;
-
-    // try {
-    //   commentsRaw = await forumCommentService.find(request.params.topicId);
-    // } catch (error) {
-    //   return response
-    //     .status(404)
-    //     .json({error: { message: `Error while comments fetch: ${error}`}});
-    // }
-
-    // const rootComments = [];
-    // const childComments = [];
-
-    // const commentAuthors: number[] = [];
-
-    // commentsRaw
-    //   .forEach(c => {
-    //     if (!commentAuthors.includes(c.yaId)) {
-    //       commentAuthors.push(c.yaId);
-    //     }
-    //   })
-
-    // const fetchedAuthors = await Promise.all(
-    //   commentAuthors.map(authorYaId => YaUserInfoAPI.getInfo(
-    //     authorYaId,
-    //     request.headers.cookie as string
-    //   ))
-    // );
-      
-    // const formatComment = (comment) => {
-    //   const author = fetchedAuthors.find(author => author.id === comment.yaId);
-    //   return {
-    //     id: comment.commentId,
-    //     parentCommentId: comment.parentCommentId,
-    //     topicId: comment.topicId,
-    //     author: author?.first_name,
-    //     avatar: author?.avatar,
-    //     date: comment.createdAt,
-    //     body: comment.body,
-    //   }
-    // }
-
-    // commentsRaw
-    //   .forEach((c) => {
-    //     (
-    //       c.parentCommentId === null
-    //         ? rootComments
-    //         : childComments
-    //     ).push(formatComment(c));
-    //   })
-
-    // try {
-    //   childComments.forEach(
-    //     cc => {
-    //       const rootComment = rootComments.find(
-    //         (c) => c.id === cc.parentCommentId
-    //       );
-
-    //       if (!rootComment.comments) {
-    //         rootComment.comments = [];
-    //       }
-
-    //       rootComment.comments.push(cc);
-    //     }
-    //   );
-    // } catch (error) {
-    //   return response
-    //     .status(404)
-    //     .json({error: { message: `Error while creating comment structure: ${error}`}})
-    // }
-
-    // return response.status(200).json({
-    //   id: topic.topicId,
-    //   author: yaUser.first_name,
-    //   avatar: yaUser.avatar,
-    //   date: topic.createdAt,
-    //   title: topic.title,
-    //   body: topic.body,
-    //   comments: rootComments,
-    //   commentsAmount: commentsRaw.length
-    // });
   }
 
   public static createTopic = async (request: Request, response: Response) => {
@@ -314,5 +185,24 @@ export class ForumAPI {
           }
         })
       )
+  }
+
+  public static createComment = async (request: Request<ICreateCommentRequest>, response: Response) => {
+    const {topicId, parentCommentId, yaId, body} = request.body;
+
+    return forumCommentService.create({
+        yaId,
+        body,
+        parentCommentId,
+        topicId,
+      })
+      .then(() => response.status(200).json())
+      .catch((error: Error) => response.status(400)
+          .json({
+            error: {
+              message: `Error occured while creating comment: ${error.message}`
+            }
+          })
+        );
   }
 }

@@ -3,7 +3,7 @@ import {Model} from 'sequelize-typescript';
 
 import {sequelize} from '../../../database';
 
-interface ITopic {
+export interface ITopic {
   id: string,
   yaId: number,
   title: string,

@@ -29,7 +29,7 @@ export default function Topic() {
         refetch,
     } = forumApiService.useGetTopicQuery(topicId!);
 
-    if (!isLoadingComments) {
+    if (!isLoadingComments && showLoading) {
         setShowLoading(false);
     }
 
@@ -40,26 +40,24 @@ export default function Topic() {
     ) => {
         setSubmitting(true);
 
-        setTimeout(() => {
-            console.log(values, 'topic id', topicId);
-            const payload = {
-                yaId: user.id,
-                topicId: topicId!,
-                parentCommentId: null,
-                body: values.body,
-            };
-            createCommentHanlder(payload)
-                .unwrap()
-                .then()
-                .finally(
-                    () => {
-                        setShowLoading(true);
-                        refetch();
-                        resetForm();
-                        setSubmitting(false);
-                    }
-                )
-        }, 1000);
+        const payload = {
+            yaId: user.id,
+            topicId: topicId!,
+            parentCommentId: null,
+            body: values.body,
+        };
+
+        createCommentHanlder(payload)
+            .unwrap()
+            .then()
+            .finally(
+                () => {
+                    setShowLoading(true);
+                    refetch();
+                    resetForm();
+                    setSubmitting(false);
+                }
+            )
     };
 
     const { author, avatar, title, body, date, comments, commentsAmount } = data || {};

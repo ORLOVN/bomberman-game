@@ -4,10 +4,9 @@ import { Topics } from './topics';
 
 import {sequelize} from '../../../database';
 
-interface IComment {
-  id: number,
+export interface IComment {
+  id: string,
   topicId: string,
-  commentId: string,
   parentCommentId: null | string,
   yaId: number,
   body: string
@@ -15,37 +14,31 @@ interface IComment {
 
 const commentModel: ModelAttributes<Model, IComment> = {
   id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
-    primaryKey: true
-  },
-  topicId: {
-    type: Sequelize.STRING,
-    references: {
-      model: Topics,
-      key: 'topicId',
-    }
-  },
-  commentId: {
     type: Sequelize.UUID,
     defaultValue: Sequelize.UUIDV4,
+    primaryKey: true,
+  },
+  yaId: {
+    type: Sequelize.INTEGER,
     allowNull: false,
+  },
+  body: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  topicId: {
+    type: Sequelize.UUID,
+    references: {
+      model: Topics,
+      key: 'id',
+    },
+    onDelete: 'CASCADE',
   },
   parentCommentId: {
     type: Sequelize.STRING,
     defaultValue: null,
     allowNull: true,
   },
-  yaId: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-    unique: true,
-  },
-  body: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
 }
 
-export const Comments = sequelize.define('topics', commentModel);
+export const Comments = sequelize.define('comments', commentModel);
