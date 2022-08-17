@@ -10,7 +10,7 @@ import { TEAM_NAME } from "@/constants/common";
 const leaderBoardApiService = createApi({
   reducerPath: "leaderBoardApiService",
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.HOST}/leaderboard`,
+    baseUrl: `${process.env.HOST}${process.env.PROXY_API_PATH}/leaderboard`,
     credentials: "include",
     fetchFn: fetch,
   }),
