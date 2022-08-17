@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  node_backend:
+    container_name: node_server
+    build:
+      context: .
+    ports:
+      - "8080:3000"
+    environment:
+      - PGDATABASE=postgres_db
+      - PGUSER=user
+      - PGPASSWORD=12345
+      - PGHOST=node_db
+    depends_on:
+      - node_db
+  node_db:
+    container_name: node_db
+    image: "postgres:12"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=postgres_db
+    volumes:
+      - nps_data:/var/lib/postgresql/data
+
+volumes:
+  nps_data: {}

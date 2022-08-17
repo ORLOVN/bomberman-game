@@ -2,9 +2,10 @@ import { Request } from "express";
 import { configureStore } from "@reduxjs/toolkit";
 import { authApiService, profileApiService } from "./apiServices";
 import { unauthenticatedMiddleware } from "./middlewares";
-import {authSlice, gameSlice, ssrModeSlice} from "./slices";
+import {authSlice, gameSlice, ssrModeSlice, themeSlice} from "./slices";
 import leaderBoardApiService from "@/store/apiServices/leaderboard";
-import leaderBoardSlice from "@/store/slices/leaderBoardSlice"
+import leaderBoardSlice from "@/store/slices/leaderBoardSlice";
+import themeApiService from "@/store/apiServices/theme";
 
 const createStore = (
   preloadedState: any = undefined,
@@ -12,7 +13,9 @@ const createStore = (
 ) => configureStore({
     reducer: {
       [authSlice.name]: authSlice.reducer,
+      [themeSlice.name]: themeSlice.reducer,
       [authApiService.reducerPath]: authApiService.reducer,
+      [themeApiService.reducerPath]: themeApiService.reducer,
       [profileApiService.reducerPath]: profileApiService.reducer,
       [gameSlice.name]: gameSlice.reducer,
       [leaderBoardApiService.reducerPath]: leaderBoardApiService.reducer,
@@ -27,6 +30,7 @@ const createStore = (
       }}).concat(
         unauthenticatedMiddleware,
         authApiService.middleware,
+        themeApiService.middleware,
         profileApiService.middleware,
         leaderBoardApiService.middleware
       ),

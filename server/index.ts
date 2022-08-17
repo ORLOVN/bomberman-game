@@ -1,7 +1,12 @@
 import {IncomingMessage} from "http";
 import express from 'express';
-
 import middleware from '../ssr';
+import express from "express";
+import { sequelize } from "./database";
+import middleware from "../ssr";
+import router from "./db/routes/router";
+import { SiteTheme } from "./db/models/site-theme";
+import {ETheme} from './db/models/enum';
 
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
@@ -32,14 +37,38 @@ app.use(`${process.env.PROXY_API_PATH}`, createProxyMiddleware({
 );
 
 app.use(express.static(__dirname, {index: false}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true}));
+
+app.use(router);
+
+app.use(express.static(__dirname));
 
 app.get('/*', middleware);
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  // eslint-disable-next-line
-  console.log(`Listening on port ${PORT}...`);
-});
+(async () =>{
+  try {
+    await sequelize.sync({ force: true });
+
+    console.log("Connection has been established successfully.");
+
+    await SiteTheme.bulkCreate([
+      {
+        theme: ETheme.LIGHT
+      },
+      {
+        theme: ETheme.DARK
+      }
+    ]);
+
+    app.listen(PORT, () => {
+      console.log(`Listening on port ${PORT}...`);
+    });
+  } catch (error) {
+    console.error("Unable to connect to the database: ", error);
+  }
+})()
 
 

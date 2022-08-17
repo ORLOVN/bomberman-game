@@ -13,17 +13,17 @@ export default function ScoringPanel() {
   return (
     <Flex className={styles.panel}>
       <Center flex="1">
-        <Text className={styles.panel__text}>
+        <Text className='panel__text'>
           <strong>TIME</strong> {leftTimeSecond}
         </Text>
       </Center>
       <Center flex="1">
-        <Text className={styles.panel__text}>
+        <Text className='panel__text'>
           <strong>SCORE</strong> {score}
         </Text>
       </Center>
       <Center flex="1">
-        <Text className={styles.panel__text}>
+        <Text className='panel__text'>
           <strong>LEFT</strong> {leftLives}
         </Text>
       </Center>

@@ -11,6 +11,11 @@ export {
 } from "./gameSlice";
 
 export {
+  default as themeSlice,
+  switchTheme
+} from "./themeSlice";
+
+export {
   default as leaderBoardSlice,
   setNext
 } from "./leaderBoardSlice";
