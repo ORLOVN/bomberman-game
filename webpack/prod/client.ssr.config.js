@@ -98,22 +98,9 @@ module.exports = merge(common, {
       filename: "[name].[contenthash].css",
       chunkFilename: "[id].[contenthash].css",
     }),
-    new WorkboxPlugin.GenerateSW({
-      clientsClaim: true,
-      skipWaiting: true,
-      runtimeCaching: [{
-        urlPattern: ({_, url}) => {
-        console.log(self.location.host);
-        console.log(self.location.hostname);
-
-        return url.hostname === self.location.hostname
-      },
-        handler: "NetworkFirst",
-        options: {
-          cacheName: 'requests',
-        },
-      }],
-      exclude: ['index.html']
+    new WorkboxPlugin.InjectManifest({
+      swSrc: "./src/services/sw.ts",
+      swDest: "service-worker.js",
     }),
     new webpack.DefinePlugin({
       PRODUCTION: JSON.stringify(true),
