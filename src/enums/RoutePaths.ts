@@ -8,6 +8,7 @@ enum RoutePaths {
     topicId = "topic/:id",
     game = "game",
     leaderboard = "leaderboard",
+    verificationCode = "verification_code",
 }
 
 export default RoutePaths;

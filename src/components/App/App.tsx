@@ -17,6 +17,7 @@ import { Roles, RoutePaths } from "@/enums";
 import UserLayout from "@/layouts/UserLayout";
 import { authApiService } from "@/store";
 import GameBootstrap from '@/components/GameBootstrap';
+import VerificationCodePage from "@/pages/VerificationCode";
 
 export default function App() {
   const { isLoading } = authApiService.useGetUserInfoQuery();
@@ -46,6 +47,7 @@ export default function App() {
                   >
                     <Route path={`/${RoutePaths.signIn}`} element={<SignInPage />} />
                     <Route path={`/${RoutePaths.signUp}`} element={<SignUpPage />} />
+                    <Route path={`/${RoutePaths.verificationCode}`} element={<VerificationCodePage />} />
                     <Route path="*" element={<Navigate to={`/${RoutePaths.signIn}`} replace />} />
                   </Route>
 
