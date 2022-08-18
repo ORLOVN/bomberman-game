@@ -27,7 +27,6 @@ const userModel: ModelAttributes<Model, IUser> = {
   theme: {
     type: Sequelize.STRING,
     allowNull: false,
-    unique: true,
     references: {
       model: SiteTheme,
       key: 'theme',
