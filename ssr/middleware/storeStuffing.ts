@@ -1,5 +1,5 @@
 import {Request} from "express";
-import createStore, {authApiService} from "@/store";
+import createStore, {authApiService, themeApiService} from "@/store";
 import {Roles} from "@/enums";
 import leaderBoardApiService from "@/store/apiServices/leaderboard";
 import {setSSRMode} from "@/store/slices";
@@ -15,6 +15,7 @@ const storeStuffing = async (req: Request) => {
   const state = store.getState();
 
   if (state.auth.role === Roles.user) {
+    await store.dispatch(themeApiService.endpoints.getUserTheme.initiate(state.auth.user.id));
     await store.dispatch(leaderBoardApiService.endpoints.getScoreEntries.initiate({
       ratingFieldName: "score",
       cursor: state.leaderBoard.cursorPosition,

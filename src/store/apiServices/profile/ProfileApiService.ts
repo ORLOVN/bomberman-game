@@ -8,10 +8,12 @@ import { PasswordEditFormType } from '@/pages/Profile/components/PasswordEditFor
 import { UpdateUserResponse } from './types';
 import {prepareHeaders} from "@/utils/prepareHeaders";
 
+const origin = SCRIPT_ENV === "server" ? `http://localhost:${process.env.PORT}` : '';
+
 const profileApiService = createApi({
     reducerPath: 'profileApiService',
     baseQuery: fetchBaseQuery({
-        baseUrl: `${process.env.HOST}${process.env.PROXY_API_PATH}/user`,
+        baseUrl: `${origin}${process.env.PROXY_API_PATH}/user`,
         credentials: 'include',
         fetchFn: fetch,
         prepareHeaders,

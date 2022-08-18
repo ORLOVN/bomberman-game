@@ -2,10 +2,12 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import fetch from "isomorphic-fetch";
 import Theme from '@/enums/Theme';
 
+const origin = SCRIPT_ENV === "server" ? `http://localhost:${process.env.PORT}` : '';
+
 const themeApiService = createApi({
   reducerPath: "themeApiService",
   baseQuery: fetchBaseQuery({
-    baseUrl: `/my-api/v1`,
+    baseUrl: `${origin}/my-api/v1`,
     fetchFn: fetch,
   }),
   tagTypes: ["Theme"],

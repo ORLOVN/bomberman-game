@@ -7,10 +7,12 @@ import { SignUpFormType } from '@/pages/SignUp/types';
 import { SignInRequest } from './types';
 import {prepareHeaders} from "@/utils/prepareHeaders";
 
+const origin = SCRIPT_ENV === "server" ? `http://localhost:${process.env.PORT}` : '';
+
 const authApiService = createApi({
     reducerPath: 'authApiService',
     baseQuery: fetchBaseQuery({
-        baseUrl: `${process.env.HOST}${process.env.PROXY_API_PATH}/auth`,
+        baseUrl: `${origin}${process.env.PROXY_API_PATH}/auth`,
         credentials: 'include',
         fetchFn: fetch,
         prepareHeaders,

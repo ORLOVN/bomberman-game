@@ -9,10 +9,12 @@ import {
 import { TEAM_NAME } from "@/constants/common";
 import {prepareHeaders} from "@/utils/prepareHeaders";
 
+const origin = SCRIPT_ENV === "server" ? `http://localhost:${process.env.PORT}` : '';
+
 const leaderBoardApiService = createApi({
   reducerPath: "leaderBoardApiService",
   baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.HOST}${process.env.PROXY_API_PATH}/leaderboard`,
+    baseUrl: `${origin}${process.env.PROXY_API_PATH}/leaderboard`,
     credentials: "include",
     fetchFn: fetch,
     prepareHeaders

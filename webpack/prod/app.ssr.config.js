@@ -81,6 +81,7 @@ module.exports = merge(common, {
     new MiniCssExtractPlugin(),
     new webpack.DefinePlugin({
       PRODUCTION: JSON.stringify(true),
+      SCRIPT_ENV: "'server'",
     }),
   ],
   externals: [nodeExternals()]

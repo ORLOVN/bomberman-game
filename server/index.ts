@@ -1,6 +1,4 @@
 import {IncomingMessage} from "http";
-import express from 'express';
-import middleware from '../ssr';
 import express from "express";
 import { sequelize } from "./database";
 import middleware from "../ssr";
@@ -12,6 +10,9 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const app = express();
 
+// @ts-ignore
+globalThis.url_location  = `http://localhost:${process.env.PORT}`;
+
 app.use(`${process.env.PROXY_API_PATH}`, createProxyMiddleware({
     target: process.env.API_URL,
     changeOrigin: true,
@@ -22,7 +23,7 @@ app.use(`${process.env.PROXY_API_PATH}`, createProxyMiddleware({
       if (proxyRes.headers["set-cookie"]) {
         proxyRes.headers["set-cookie"] = proxyRes.headers["set-cookie"].map((e) => {
           let processed = e.replace(/Domain\s*=\s*[\w\-._:]+\s*;/gmi, `Domain=${
-            new URL(process.env.HOST || req.origin).hostname
+            req.hostname
           };`);
           if (process.env.PROXY_COOKIE_SECURE !== '1') {
             processed = processed
@@ -36,13 +37,14 @@ app.use(`${process.env.PROXY_API_PATH}`, createProxyMiddleware({
   })
 );
 
+
 app.use(express.static(__dirname, {index: false}));
+
 app.use(express.json());
+
 app.use(express.urlencoded({ extended: true}));
 
 app.use(router);
-
-app.use(express.static(__dirname));
 
 app.get('/*', middleware);
 

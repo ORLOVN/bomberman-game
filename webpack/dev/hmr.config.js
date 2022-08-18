@@ -7,6 +7,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 const ReactRefreshPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const ReactRefreshTypescript = require('react-refresh-typescript');
+require('dotenv').config();
 
 module.exports = merge(common, {
   target: "web",
@@ -101,6 +102,7 @@ module.exports = merge(common, {
   plugins: [
     new webpack.DefinePlugin({
       PRODUCTION: JSON.stringify(false),
+      SCRIPT_ENV: "'client'",
     }),
     new webpack.HotModuleReplacementPlugin(),
     new ReactRefreshPlugin({

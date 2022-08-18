@@ -104,6 +104,7 @@ module.exports = merge(common, {
     }),
     new webpack.DefinePlugin({
       PRODUCTION: JSON.stringify(true),
+      SCRIPT_ENV: "'client'",
     })
   ]
 });
