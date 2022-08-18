@@ -9,6 +9,7 @@ enum RoutePaths {
     game = "game",
     leaderboard = "leaderboard",
     error404 = "error404",
+    verificationCode = "verification_code",
 }
 
 export default RoutePaths;

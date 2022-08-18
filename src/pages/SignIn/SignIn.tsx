@@ -3,7 +3,10 @@ import React from "react";
 import {
   Box,
   Button,
+  Divider,
+  Flex,
   Input,
+  Text,
 } from "@chakra-ui/react";
 
 import {Form, Formik, FormikHelpers} from "formik";
@@ -20,6 +23,7 @@ import {SignInFormType} from "./types";
 
 import { authApiService } from "@/store";
 import { ErrorResponse } from "@/types";
+import YaOAuthBtn from "./components/YaOAuthBtn/YaOAuthBtn";
 
 export default function SignIn() {
   const [ signIn ] = authApiService.useSignInMutation();
@@ -61,15 +65,23 @@ export default function SignIn() {
                   component={secure ? PasswordInput : Input}
                 />
               ))}
-              <Button
-                mt={4}
-                type="submit"
-                colorScheme="teal"
-                isLoading={isSubmitting}
-                disabled={!dirty || (dirty && !isValid) || isSubmitting}
-              >
-                Sign in
-              </Button>
+              <Flex direction="column" mt={12}>
+                <Button
+                  borderRadius={12}
+                  type="submit"
+                  colorScheme="teal"
+                  isLoading={isSubmitting}
+                  disabled={!dirty || (dirty && !isValid) || isSubmitting}
+                >
+                  Sign in
+                </Button>
+                <Flex direction="row" alignItems="center" p={4}>
+                  <Divider borderColor="gray.300" />
+                  <Text mx={4} color="gray.500">or</Text>
+                  <Divider borderColor="gray.300" />
+                </Flex>
+                <YaOAuthBtn />
+              </Flex>
             </Form>
           )
         }

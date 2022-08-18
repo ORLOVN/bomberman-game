@@ -19,6 +19,7 @@ import GameBootstrap from '@/components/GameBootstrap';
 import SSRNavigate from "@/components/SSRNavigate";
 import {useAppSelector} from "@/hooks";
 import Error404 from "@/pages/Error404";
+import VerificationCodePage from "@/pages/VerificationCode";
 
 export default function App() {
   const { isLoading } = authApiService.endpoints.getUserInfo.useQueryState(undefined);
@@ -53,6 +54,7 @@ export default function App() {
       <Route path={`/${RoutePaths.signIn}`} element={<SignInPage />} />
       <Route index element={<SignInPage />} />
       <Route path={`/${RoutePaths.signUp}`} element={<SignUpPage />} />
+      <Route path={`/${RoutePaths.verificationCode}`} element={<VerificationCodePage />} />
       <Route path="*" element={
         <SSRNavigate to={RoutePaths.signIn} toComponent={SignInPage} replace />} />
     </Route>
