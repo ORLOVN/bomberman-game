@@ -1,6 +1,6 @@
 import { BaseRESTService } from "./base-rest-service";
-import { User } from "./models/user";
-import { ETheme } from "./models/enum";
+import { User } from "../models/user";
+import { ETheme } from "../models/enum";
 
 export class ThemeService implements BaseRESTService {
   public find = async (yaId: number) => User.findOne({ where: { yaId } });

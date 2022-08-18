@@ -1,8 +1,8 @@
-import { ThemeService } from "../theme-service";
+import {Request, Response} from 'express';
+import { ThemeService } from "../services/theme-service";
 import { IFindThemeRequest } from "../types";
 import { User } from "../models/user";
 import {ETheme} from '../models/enum';
-import {Request, Response} from 'express';
 
 const themeService = new ThemeService();
 

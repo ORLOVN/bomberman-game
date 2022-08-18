@@ -3,37 +3,64 @@ import { useParams } from 'react-router-dom';
 
 import { Box, CircularProgress, Flex } from '@chakra-ui/react';
 
+import { FormikState } from 'formik';
+
 import Header from './components/Header';
 import CommentList from './components/CommentList';
 import Textarea from './components/Textarea';
 
 import { SendMessageFormType } from './components/Textarea/types';
-import { mock } from './constants';
 
-import { Topic as TopicType } from '@/types';
+import { useAppSelector } from '@/hooks';
+import { forumApiService } from '@/store';
 
 export default function Topic() {
-    const [isLoadingMain] = useState(false);
-    const [isLoadingComments, setLoadingComments] = useState(false);
-    const [data] = useState<TopicType>(mock);
+    const user = useAppSelector((state) => state.auth.user);
+    const [createCommentHanlder] = forumApiService.useCreateCommentMutation();
 
+    const [showLoading, setShowLoading] = useState(false);
+    
     const { id: topicId } = useParams();
+
+    const {
+        data,
+        isLoading: isLoadingMain,
+        isFetching: isLoadingComments,
+        refetch,
+    } = forumApiService.useGetTopicQuery(topicId!);
+
+    if (!isLoadingComments && showLoading) {
+        setShowLoading(false);
+    }
 
     const sendCommentHandler = (
         setSubmitting: (isSubmitting: boolean) => void,
+        resetForm: (nextState?: Partial<FormikState<any>>) => void,
         values: SendMessageFormType,
     ) => {
         setSubmitting(true);
-        setLoadingComments(true);
 
-        setTimeout(() => {
-            console.log(values, 'topic id', topicId);
-            setSubmitting(false);
-            setLoadingComments(false);
-        }, 1000);
+        const payload = {
+            yaId: user.id,
+            topicId: topicId!,
+            parentCommentId: null,
+            body: values.body,
+        };
+
+        createCommentHanlder(payload)
+            .unwrap()
+            .then()
+            .finally(
+                () => {
+                    setShowLoading(true);
+                    refetch();
+                    resetForm();
+                    setSubmitting(false);
+                }
+            )
     };
 
-    const { author, avatar, title, body, date, comments } = data;
+    const { author, avatar, title, body, date, comments, commentsAmount } = data || {};
 
     return (
         <Box mt={4} w={1000} px="6" py="5">
@@ -44,15 +71,17 @@ export default function Topic() {
                         </Flex>
                     : <>
                         <Header
-                            author={author}
+                            author={author!}
                             avatar={avatar || ''}
-                            title={title}
-                            body={body}
-                            date={date}
+                            title={title!}
+                            body={body!}
+                            date={date!}
                         />
                         <CommentList
-                            comments={comments}
-                            isLoading={isLoadingComments}
+                            comments={comments!}
+                            commentsAmount={commentsAmount!}
+                            isLoadingComments={isLoadingComments && showLoading}
+                            refetch={refetch}
                         />
                         <Textarea onSubmit={sendCommentHandler} />
                     </>

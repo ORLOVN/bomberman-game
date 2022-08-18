@@ -23,7 +23,7 @@ const authApiService = createApi({
             query: () => ({
                 url: '/user'
             }),
-            providesTags: ['Auth'],
+            providesTags: ['Auth']
         }),
         signIn: build.mutation<void, SignInRequest>({
             query: (credentials) => ({

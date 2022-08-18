@@ -1,10 +1,10 @@
-import {SiteTheme} from './site-theme';
+import Sequelize, {ModelAttributes} from 'sequelize';
 
-const Sequelize = require('sequelize');
-import {sequelize} from '../../database';
-import {ModelAttributes} from 'sequelize';
 import {Model} from 'sequelize-typescript';
+import {SiteTheme} from './site-theme';
 import {ETheme} from './enum';
+
+import {sequelize} from '../../database';
 
 interface IUser {
   id: number,

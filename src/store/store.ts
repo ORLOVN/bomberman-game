@@ -1,11 +1,22 @@
 import { Request } from "express";
 import { configureStore } from "@reduxjs/toolkit";
-import { authApiService, profileApiService } from "./apiServices";
+import {
+  authApiService,
+  profileApiService,
+  forumApiService,
+  themeApiService,
+  leaderBoardApiService,
+} from "./apiServices";
+
 import { unauthenticatedMiddleware } from "./middlewares";
-import {authSlice, gameSlice, ssrModeSlice, themeSlice} from "./slices";
-import leaderBoardApiService from "@/store/apiServices/leaderboard";
-import leaderBoardSlice from "@/store/slices/leaderBoardSlice";
-import themeApiService from "@/store/apiServices/theme";
+
+import {
+  authSlice,
+  gameSlice,
+  themeSlice,
+  leaderBoardSlice,
+  ssrModeSlice
+} from "./slices";
 
 const createStore = (
   preloadedState: any = undefined,
@@ -17,6 +28,7 @@ const createStore = (
       [authApiService.reducerPath]: authApiService.reducer,
       [themeApiService.reducerPath]: themeApiService.reducer,
       [profileApiService.reducerPath]: profileApiService.reducer,
+      [forumApiService.reducerPath]: forumApiService.reducer,
       [gameSlice.name]: gameSlice.reducer,
       [leaderBoardApiService.reducerPath]: leaderBoardApiService.reducer,
       [leaderBoardSlice.name]: leaderBoardSlice.reducer,
@@ -32,7 +44,8 @@ const createStore = (
         authApiService.middleware,
         themeApiService.middleware,
         profileApiService.middleware,
-        leaderBoardApiService.middleware
+        leaderBoardApiService.middleware,
+        forumApiService.middleware,
       ),
      preloadedState,
 });

@@ -8,14 +8,14 @@ import styles from './TopicPreview.module.scss';
 import FormatDate from '@/components/FormatDate';
 
 type Props = {
-    id: number;
+    id: string;
     title: string;
     body: string;
     avatar: string | null;
     author: string;
     date: number;
     commentsAmount: number;
-    goToTopic: (id: number) => void
+    goToTopic: (id: string) => void
 };
 
 export default function TopicPreview({
@@ -51,7 +51,10 @@ export default function TopicPreview({
                 alignItems="center"
             >
                 <Flex alignItems="center">
-                    <Avatar name={author} src={avatar || ''} />
+                    <Avatar
+                        name={author}
+                        src={avatar ? `${process.env.HOST}${process.env.PROXY_API_PATH}/resources${avatar}` : ''}
+                    />
                     <Text fontSize='xs' ml={4}>Posted by</Text>
                     <Heading
                         as='h4' size='xs'
