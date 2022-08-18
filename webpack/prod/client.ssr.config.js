@@ -102,7 +102,7 @@ module.exports = merge(common, {
       skipWaiting: true,
       navigateFallback: 'index.html',
       runtimeCaching: [{
-        urlPattern: ({_, url}) => url.hostname === self.location.hostname,
+        urlPattern: ({req, url}) => url.hostname === self.location.hostname || req.destination === 'document',
         handler: "NetworkFirst",
         options: {
           cacheName: 'requests',

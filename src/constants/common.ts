@@ -1,1 +1,1 @@
-export const TEAM_NAME = "Novosib1"
+export const TEAM_NAME = "Novosib"
