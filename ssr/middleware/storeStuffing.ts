@@ -12,7 +12,7 @@ const storeStuffing = async (req: Request) => {
 
   await store.dispatch(authApiService.endpoints.getUserInfo.initiate());
 
-  const state = await store.getState();
+  const state = store.getState();
 
   if (state.auth.role === Roles.user) {
     await store.dispatch(themeApiService.endpoints.getUserTheme.initiate(state.auth.user.id));
