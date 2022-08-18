@@ -2,12 +2,11 @@ import { Button, Image } from "@chakra-ui/react";
 import React from "react";
 
 import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
-import styles from './YaOAuthBtn.module.scss';
+import styles from "./YaOAuthBtn.module.scss";
 
-import YaLogo from '@/assets/images/yandex_logo.png';
+import YaLogo from "@/assets/images/yandex_logo.png";
 import { useAppSelector } from "@/hooks";
 import Theme from "@/enums/Theme";
-import { RoutePaths } from "@/enums";
 import { authApiService } from "@/store";
 import { NotificationService } from "@/components/ErrorHandler";
 import { ErrorResponse } from "@/types";
@@ -18,9 +17,9 @@ export default function YaOAuthBtn() {
     const [getOauthClientId] = authApiService.useLazyGetOauthClientIdQuery();
 
     const isDark = theme === Theme.DARK;
-    
+
     const clickHandler = () => {
-        const REDIRECT_URI = `${window.location.origin}/${RoutePaths.verificationCode}`;
+        const REDIRECT_URI = `${window.location.origin}`;
 
         getOauthClientId(REDIRECT_URI)
         .unwrap()
@@ -32,7 +31,7 @@ export default function YaOAuthBtn() {
                 }&redirect_uri=${
                     REDIRECT_URI
                 }
-            `; 
+            `;
         })
         .catch(
             (error: FetchBaseQueryError) => {
@@ -53,7 +52,7 @@ export default function YaOAuthBtn() {
                     mr={3}
                     borderRadius="full"
                     alt="Sign in with Yandex ID"
-                    
+
                 />
             }
             borderRadius={12}
