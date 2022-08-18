@@ -53,7 +53,7 @@ export default function TopicPreview({
                 <Flex alignItems="center">
                     <Avatar
                         name={author}
-                        src={avatar ? `${process.env.HOST}${process.env.PROXY_API_PATH}/resources${avatar}` : ''}
+                        src={avatar ? `${process.env.PROXY_API_PATH}/resources${avatar}` : ''}
                     />
                     <Text fontSize='xs' ml={4}>Posted by</Text>
                     <Heading
@@ -62,7 +62,7 @@ export default function TopicPreview({
                     >
                         { author }
                     </Heading>
-                    
+
                 </Flex>
                 <Flex alignItems="center">
                     <Text fontSize='xs' mr={4}>

@@ -2,14 +2,18 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import fetch from "isomorphic-fetch";
 import { CreateCommentRequest, CreateTopicRequest } from "./types";
 import { Topic } from "@/types";
+import {prepareHeaders} from "@/utils/prepareHeaders";
+
+const origin = SCRIPT_ENV === "server" ? `http://localhost:${process.env.PORT}` : '';
 
 const forumApiService = createApi({
   reducerPath: "forumApiService",
   baseQuery: fetchBaseQuery({
-    baseUrl: `/my-api/v1/forum`,
+    baseUrl: `${origin}/my-api/v1/forum`,
     fetchFn: fetch,
+    prepareHeaders,
   }),
-  tagTypes: ['Topic'],
+  tagTypes: ['Topic', 'TopicList'],
   endpoints: (build) => ({
     createTopic: build.mutation<void, CreateTopicRequest>({
       query: (data) => ({
@@ -22,14 +26,14 @@ const forumApiService = createApi({
                 : response.json()
         ),
       }),
-      invalidatesTags: ['Topic']
+      invalidatesTags: ['Topic', 'TopicList']
     }),
     getTopics: build.query<Topic[], void>({
       query: () => ({
         url: '/topics',
       }),
       providesTags: (result) => result
-        ? result.map(({ id }) => ({ type: 'Topic', id }))
+        ? [...result.map(({ id }) => ({ type: 'Topic' as const, id })), 'TopicList']
         : ['Topic'],
     }),
     getTopic: build.query<Topic, string>({

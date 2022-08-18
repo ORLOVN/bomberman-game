@@ -1,13 +1,13 @@
 import { Box, Button, Heading, List, Flex, CircularProgress } from "@chakra-ui/react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { forumApiService } from "@/store";
+import {forumApiService} from "@/store";
 import TopicPreview from "./components/TopicPreview";
 
 export default function Forum() {
   const navigate = useNavigate();
 
-  const {data: topicList, isFetching} = forumApiService.useGetTopicsQuery(undefined, { refetchOnMountOrArgChange: true });
+  const {data: topicList, isFetching} = forumApiService.useGetTopicsQuery();
 
   const goToTopic = (id: string) => navigate(`/forum/topic/${id}`);
 
@@ -30,8 +30,8 @@ export default function Forum() {
               <CircularProgress isIndeterminate color='teal.300' />
             </Flex>
           : <List spacing={3}>
-              {
-                !topicList!.length
+              { topicList ?
+                !(topicList.length)
                   ? (
                     <Box
                       mt={12}
@@ -42,7 +42,7 @@ export default function Forum() {
                       </Heading>
                     </Box>
                   )
-                  : topicList!
+                  : topicList
                       .slice()
                       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
                       .map(
@@ -68,6 +68,7 @@ export default function Forum() {
                           />
                         )
                       )
+                : ''
               }
           </List>
       }

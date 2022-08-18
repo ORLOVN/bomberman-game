@@ -21,7 +21,7 @@ export default function Header({
             <Flex mt={8} mb={2} alignItems="center">
                 <Avatar
                     name={author}
-                    src={avatar ? `${process.env.HOST}${process.env.PROXY_API_PATH}/resources${avatar}` : ''}
+                    src={avatar ? `${process.env.PROXY_API_PATH}/resources${avatar}` : ''}
                 />
                 <Box ml={4}>
                     <Heading as='h5' size='sm' mb={1}>

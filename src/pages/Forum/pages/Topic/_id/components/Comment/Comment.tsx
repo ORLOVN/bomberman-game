@@ -91,7 +91,7 @@ export default function Comment({
                 <Icon mr={2} as={FaReply} />
                 Reply
             </Text>
-            
+
         </Box>
     );
 
@@ -144,7 +144,7 @@ export default function Comment({
             >
                 <Avatar
                     name={author}
-                    src={avatar ? `${process.env.HOST}${process.env.PROXY_API_PATH}/resources${avatar}` : ''}
+                    src={avatar ? `${process.env.PROXY_API_PATH}/resources${avatar}` : ''}
                 />
                 <Divider orientation='vertical' />
             </Flex>

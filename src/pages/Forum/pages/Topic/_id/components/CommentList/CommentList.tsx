@@ -30,7 +30,7 @@ export default function CommentList({
                 )
             }
             {
-                comments.map(
+              (comments || []).map(
                     ({id, author, date, body, avatar, ...rest}) => (
                         <Comment
                             key={id}

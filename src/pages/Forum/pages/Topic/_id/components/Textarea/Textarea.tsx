@@ -30,7 +30,7 @@ export default function Textarea({ onSubmit }: Props) {
                 name="You"
                 src={
                     user.avatar
-                        ? `${process.env.HOST}${process.env.PROXY_API_PATH}/resources${user.avatar}`
+                        ? `${process.env.PROXY_API_PATH}/resources${user.avatar}`
                         : ''
                 }
             />
