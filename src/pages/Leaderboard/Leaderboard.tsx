@@ -62,7 +62,11 @@ export default function Leaderboard() {
             <Tr key={data.id}>
               <Td w="2%">
                 <Avatar
-                  src={`${process.env.PROXY_API_PATH}/resources${data.avatar}`}
+                  src={
+                    /[a-zA-Z0-9_ \-%]*\.(jpg|png|jpeg|gif|svg)/.test(data.avatar || '')
+                      ? `${process.env.PROXY_API_PATH}/resources${data.avatar}`
+                      : ''
+                  }
                   name={data.name}
                 />
               </Td>

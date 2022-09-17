@@ -12,8 +12,12 @@
 .dark {
   background-color: #000000;
 
-  a, p:not(.panel__text), label, input, h1, h2, h3, h4, td {
+  a, p:not(.panel__text), label, input, textarea, h1, h2, h3, h4, h5, td {
     color: #ffffff;
+  }
+
+  svg {
+    fill: #fff;
   }
 }
 
