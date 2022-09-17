@@ -4,7 +4,6 @@ import fetch from 'isomorphic-fetch';
 import { createApi } from "../utils"
 import { User } from '@/types';
 import { SignUpFormType } from '@/pages/SignUp/types';
-import { SignInRequest } from './types';
 import {prepareHeaders} from "@/utils/prepareHeaders";
 import { getOauthClientIdResponse, OauthYandexRequest, SignInRequest } from './types';
 
