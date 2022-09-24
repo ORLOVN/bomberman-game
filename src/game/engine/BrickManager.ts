@@ -1,6 +1,6 @@
 import { Brick } from "@/game/components/Brick";
 import { IEntity } from "@/game/engine/interfaces/IEntity";
-import {TILE_SIZE} from '@/game/constants/gameConstants';
+import { TILE_SIZE } from "@/game/constants/gameConstants";
 
 class BrickManager {
   public addCurbBricks(
@@ -20,7 +20,10 @@ class BrickManager {
           x === tileCountX - 1
         ) {
           addEntity(
-            new Brick(TILE_SIZE / 2 + x * TILE_SIZE, TILE_SIZE / 2 + y * TILE_SIZE)
+            new Brick(
+              TILE_SIZE / 2 + x * TILE_SIZE,
+              TILE_SIZE / 2 + y * TILE_SIZE
+            )
           );
         }
       }

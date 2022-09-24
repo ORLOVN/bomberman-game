@@ -1,1 +1,1 @@
-export { default } from './TopicPreview';
+export { default } from "./TopicPreview";

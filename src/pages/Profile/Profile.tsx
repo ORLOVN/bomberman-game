@@ -1,5 +1,14 @@
 import React from "react";
-import { Box, Icon, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Icon,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
+} from "@chakra-ui/react";
 import { FaKey, FaUserEdit } from "react-icons/fa";
 
 import ProfileEditForm from "./components/ProfileEditForm";
@@ -8,7 +17,7 @@ import PasswordEditForm from "./components/PasswordEditForm";
 import { useAppSelector } from "@/hooks";
 
 export default function Profile() {
-  const user = useAppSelector(state => state.auth.user);
+  const user = useAppSelector((state) => state.auth.user);
 
   return (
     <Box w={1000}>

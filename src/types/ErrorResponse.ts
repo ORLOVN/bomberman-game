@@ -1,3 +1,3 @@
 export type ErrorResponse = {
-    reason: string;
+  reason: string;
 };

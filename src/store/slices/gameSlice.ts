@@ -20,32 +20,35 @@ const gameSlice = createSlice({
       state.showPanel = showPanelFlag;
     },
     reduceLeftLives(state) {
-      return {...state, leftLives: state.leftLives - 1};
+      return { ...state, leftLives: state.leftLives - 1 };
     },
     resetNumberOfLives(state) {
-      return {...state, leftLives:INITIAL_LEFT_LIVES};
+      return { ...state, leftLives: INITIAL_LEFT_LIVES };
     },
     addScore(state, { payload: scoreType }: PayloadAction<EScoreTypes>) {
       switch (scoreType) {
         case EScoreTypes.EBLOCK:
-          return {...state, score: state.score + 100};
+          return { ...state, score: state.score + 100 };
         case EScoreTypes.CREEP:
-          return {...state, score: state.score + 500};
+          return { ...state, score: state.score + 500 };
         default:
           return state;
       }
     },
     resetScore(state) {
-      return {...state, score:INITIAL_SCORE};
+      return { ...state, score: INITIAL_SCORE };
     },
-    addTime(state, { payload: leftTimeSecond }: PayloadAction<number | undefined>) {
+    addTime(
+      state,
+      { payload: leftTimeSecond }: PayloadAction<number | undefined>
+    ) {
       if (leftTimeSecond) {
-        return {...state, leftTimeSecond}
+        return { ...state, leftTimeSecond };
       }
-        return {...state, leftTimeSecond: state.leftTimeSecond-1};
+      return { ...state, leftTimeSecond: state.leftTimeSecond - 1 };
     },
     resetTime(state) {
-      return {...state, leftTimeSecond: INITIAL_lEFT_TIME_SECOND}
+      return { ...state, leftTimeSecond: INITIAL_lEFT_TIME_SECOND };
     },
   },
 });

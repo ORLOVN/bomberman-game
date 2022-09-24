@@ -27,7 +27,6 @@ export class Player implements IEntity {
   private currentSprite?: ISprite;
   private dieSprite?: ISprite;
 
-
   private xPos = 64 + 64 / 2;
   private yPos = 64 + 64 / 2;
   private width = 64;
@@ -78,9 +77,8 @@ export class Player implements IEntity {
       undefined,
       false
     ).addOnAnimationEnd(() => {
-      this.unsubscribe()
+      this.unsubscribe();
     });
-
   }
 
   public render(
@@ -98,7 +96,7 @@ export class Player implements IEntity {
       this.xPos,
       this.yPos,
       this.width,
-      this.height,
+      this.height
     );
   }
 
@@ -107,10 +105,9 @@ export class Player implements IEntity {
     this.currentSprite = this.dieSprite;
   }
 
-
   private updatePositions(keyListener: KeyListener, delta: number): void {
     if (!this.sprites) {
-      return
+      return;
     }
     this.xVel = 0;
     this.yVel = 0;
@@ -164,7 +161,7 @@ export class Player implements IEntity {
   public unsubscribe(): void {
     entityManager.removeEntity(this.id);
     this.collisionBox.remove();
-    this.onDie?.()
+    this.onDie?.();
   }
 
   private collisionDetected(metCollidable: Collidable, collision: ICollision) {
@@ -183,11 +180,13 @@ export class Player implements IEntity {
       this.xVel = collision.xOffset === 0 ? this.xVel : 0;
       this.yVel = collision.yOffset === 0 ? this.yVel : 0;
     }
-
   }
 
   private collisionStarted(metCollidable: Collidable) {
-    if (metCollidable.type === EntityTypes.flame || metCollidable.type === EntityTypes.enemy) {
+    if (
+      metCollidable.type === EntityTypes.flame ||
+      metCollidable.type === EntityTypes.enemy
+    ) {
       this.die();
     }
   }

@@ -31,9 +31,7 @@
     "import/no-extraneous-dependencies": [
       "error",
       {
-        "devDependencies": [
-            "ssr/**/*.ts"
-        ]
+        "devDependencies": ["ssr/**/*.ts"]
       }
     ],
     "@typescript-eslint/no-empty-function": 0,
@@ -42,7 +40,6 @@
     "import/no-cycle": 0,
     "no-plusplus": 0,
     "no-underscore-dangle": 0
-
   },
   "env": {
     "browser": true,

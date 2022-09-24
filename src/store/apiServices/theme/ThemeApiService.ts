@@ -1,8 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import fetch from "isomorphic-fetch";
-import Theme from '@/enums/Theme';
+import Theme from "@/enums/Theme";
 
-const origin = SCRIPT_ENV === "server" ? `http://localhost:${process.env.PORT}` : '';
+const origin =
+  SCRIPT_ENV === "server" ? `http://localhost:${process.env.PORT}` : "";
 
 const themeApiService = createApi({
   reducerPath: "themeApiService",
@@ -18,7 +19,7 @@ const themeApiService = createApi({
       }),
       providesTags: ["Theme"],
     }),
-    switchTheme: build.mutation<{theme: Theme}, number>({
+    switchTheme: build.mutation<{ theme: Theme }, number>({
       query: (yaId) => ({
         url: "/theme",
         method: "PUT",

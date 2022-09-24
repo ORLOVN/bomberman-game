@@ -1,15 +1,15 @@
-import Sequelize, {ModelAttributes} from 'sequelize';
+import Sequelize, { ModelAttributes } from "sequelize";
 
-import {Model} from 'sequelize-typescript';
-import {SiteTheme} from './site-theme';
-import {ETheme} from './enum';
+import { Model } from "sequelize-typescript";
+import { SiteTheme } from "./site-theme";
+import { ETheme } from "./enum";
 
-import {sequelize} from '../../database';
+import { sequelize } from "../../database";
 
 interface IUser {
-  id: number,
-  yaId: number,
-  theme: ETheme
+  id: number;
+  yaId: number;
+  theme: ETheme;
 }
 
 const userModel: ModelAttributes<Model, IUser> = {
@@ -17,7 +17,7 @@ const userModel: ModelAttributes<Model, IUser> = {
     type: Sequelize.INTEGER,
     autoIncrement: true,
     allowNull: false,
-    primaryKey: true
+    primaryKey: true,
   },
   yaId: {
     type: Sequelize.INTEGER,
@@ -29,9 +29,9 @@ const userModel: ModelAttributes<Model, IUser> = {
     allowNull: false,
     references: {
       model: SiteTheme,
-      key: 'theme',
-    }
+      key: "theme",
+    },
   },
-}
+};
 
-export const User = sequelize.define('users', userModel);
+export const User = sequelize.define("users", userModel);

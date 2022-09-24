@@ -1,1 +1,1 @@
-export { default } from './GameBootstrap';
+export { default } from "./GameBootstrap";

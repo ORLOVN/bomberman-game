@@ -1,5 +1,5 @@
-import {IEntity, IEntityWithType} from "@/game/engine/interfaces/IEntity";
-import EntityTypes from '@/game/engine/enums/EntityTypes';
+import { IEntity, IEntityWithType } from "@/game/engine/interfaces/IEntity";
+import EntityTypes from "@/game/engine/enums/EntityTypes";
 import { KeyListener } from "@/game/engine/KeyListener";
 import eventBus from "@/game/engine/EventBus";
 
@@ -7,7 +7,7 @@ class EntityManager {
   private entities: IEntity[] = [];
 
   constructor() {
-    eventBus.on('enemy-died', this.checkAllEnemiesDead.bind(this))
+    eventBus.on("enemy-died", this.checkAllEnemiesDead.bind(this));
   }
 
   public addEntity(entity: IEntity): void {
@@ -19,7 +19,9 @@ class EntityManager {
   }
 
   public getEntityByType(type: EntityTypes): IEntity | undefined {
-    return this.entities.find(entity => (entity as IEntityWithType).type === type);
+    return this.entities.find(
+      (entity) => (entity as IEntityWithType).type === type
+    );
   }
 
   public setupEntities(): Promise<void[]> {
@@ -32,8 +34,8 @@ class EntityManager {
   }
 
   private checkAllEnemiesDead() {
-    if (!this.entities.some(e => e?.type === EntityTypes.enemy)) {
-      eventBus.emit('levelCleared');
+    if (!this.entities.some((e) => e?.type === EntityTypes.enemy)) {
+      eventBus.emit("levelCleared");
     }
   }
 

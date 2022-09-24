@@ -6,7 +6,7 @@ import pictureFont from "@/assets/images/sprites/font.png";
 import { loadImageFromUrl } from "@/game/utils";
 import { PictureText } from "@/game/components/PictureText";
 import { KeyListener } from "@/game/engine/KeyListener";
-import {IControl} from "@/game/engine/interfaces/IControl";
+import { IControl } from "@/game/engine/interfaces/IControl";
 
 export class PreStageScreen implements IEntity {
   public readonly id = Symbol("id");
@@ -40,11 +40,7 @@ export class PreStageScreen implements IEntity {
       130,
       this.context
     );
-    this.controls.push(
-      this.readyLabel,
-      this.stageLabel,
-      this.stageNumberLabel
-    )
+    this.controls.push(this.readyLabel, this.stageLabel, this.stageNumberLabel);
   }
 
   private onDelayExpires() {}

@@ -1,13 +1,13 @@
-import Sequelize, {ModelAttributes} from 'sequelize';
+import Sequelize, { ModelAttributes } from "sequelize";
 
-import {Model} from 'sequelize-typescript';
-import {ETheme} from './enum';
+import { Model } from "sequelize-typescript";
+import { ETheme } from "./enum";
 
-import {sequelize} from '../../database';
+import { sequelize } from "../../database";
 
 interface ISiteTheme {
-  id: number,
-  theme: ETheme
+  id: number;
+  theme: ETheme;
 }
 
 const siteThemeModel: ModelAttributes<Model, ISiteTheme> = {
@@ -15,13 +15,13 @@ const siteThemeModel: ModelAttributes<Model, ISiteTheme> = {
     type: Sequelize.INTEGER,
     autoIncrement: true,
     allowNull: false,
-    primaryKey: true
+    primaryKey: true,
   },
   theme: {
     type: Sequelize.STRING,
     allowNull: false,
     unique: true,
   },
-}
+};
 
-export const SiteTheme = sequelize.define('siteTheme', siteThemeModel);
+export const SiteTheme = sequelize.define("siteTheme", siteThemeModel);

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Box } from "@chakra-ui/react";
 import { useStore } from "react-redux";
 import { isRefCurrent } from "@/game/utils";
@@ -11,16 +11,15 @@ import ScoringPanel from "@/components/ScoringPanel/ScoringPanel";
 import createStore from "@/store";
 import eventBus from "@/game/engine/EventBus";
 
-
 export default function GameBootstrap() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isGamePanelShown = useAppSelector((store) => store.game.showPanel);
   const store: ReturnType<typeof createStore> = useStore();
   const navigate = useNavigate();
 
-  eventBus.on('goToLeaderboard', () => {
-    navigate('/leaderboard')
-  })
+  eventBus.on("goToLeaderboard", () => {
+    navigate("/leaderboard");
+  });
 
   useEffect(() => {
     if (!isRefCurrent(canvasRef)) {

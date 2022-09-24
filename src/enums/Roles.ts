@@ -1,6 +1,6 @@
 enum Roles {
   guest = "guest",
-  user = "user"
+  user = "user",
 }
 
 export default Roles;

@@ -1,13 +1,13 @@
-import Sequelize, {ModelAttributes} from 'sequelize';
-import {Model} from 'sequelize-typescript';
+import Sequelize, { ModelAttributes } from "sequelize";
+import { Model } from "sequelize-typescript";
 
-import {sequelize} from '../../../database';
+import { sequelize } from "../../../database";
 
 export interface ITopic {
-  id: string,
-  yaId: number,
-  title: string,
-  body: string
+  id: string;
+  yaId: number;
+  title: string;
+  body: string;
 }
 
 const topicModel: ModelAttributes<Model, ITopic> = {
@@ -28,6 +28,6 @@ const topicModel: ModelAttributes<Model, ITopic> = {
     type: Sequelize.STRING,
     allowNull: false,
   },
-}
+};
 
-export const Topics = sequelize.define('topics', topicModel);
+export const Topics = sequelize.define("topics", topicModel);

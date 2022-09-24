@@ -1,1 +1,1 @@
-export { default } from './ForumApiService';
+export { default } from "./ForumApiService";

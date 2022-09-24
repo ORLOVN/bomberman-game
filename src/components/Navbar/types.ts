@@ -1,5 +1,5 @@
-import {Route} from '@/types';
+import { Route } from "@/types";
 
 export type IProps = {
   routes: Route[];
-}
+};

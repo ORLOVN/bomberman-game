@@ -1,5 +1,5 @@
 import React from "react";
-import { hydrateRoot } from 'react-dom/client';
+import { hydrateRoot } from "react-dom/client";
 
 import { BrowserRouter } from "react-router-dom";
 
@@ -9,7 +9,7 @@ import { Provider } from "react-redux";
 import App from "@/components/App";
 
 import createStore from "./store";
-import {setClientMode} from "@/store/slices";
+import { setClientMode } from "@/store/slices";
 import { ServiceWorkersService } from "@/services/service-workers-service";
 
 ServiceWorkersService.start();
@@ -19,17 +19,19 @@ const initialState = window.__INITIAL_STATE__;
 // @ts-ignore
 delete window.__INITIAL_STATE__;
 
-if (!initialState) console.log('Initial state is not passed from SSR')
+if (!initialState) console.log("Initial state is not passed from SSR");
 
-const store = initialState ? createStore(JSON.parse(initialState)) : createStore();
+const store = initialState
+  ? createStore(JSON.parse(initialState))
+  : createStore();
 
-store.dispatch(setClientMode())
+store.dispatch(setClientMode());
 
 hydrateRoot(
   document.getElementById("root") as HTMLElement,
   <Provider store={store}>
     <BrowserRouter>
-        <App />
+      <App />
     </BrowserRouter>
   </Provider>
 );

@@ -1,8 +1,8 @@
-import {ETheme} from './models/enum';
+import { ETheme } from "./models/enum";
 
 export interface IFindThemeRequest {
   yaId: number;
-  theme: ETheme
+  theme: ETheme;
 }
 
 export interface IFindTopicRequest {

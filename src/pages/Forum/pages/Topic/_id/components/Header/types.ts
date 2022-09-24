@@ -1,6 +1,6 @@
 import { Topic } from "@/types";
 
 export type HeaderProps = Omit<
-    Topic,
-    'comments' | 'id' | 'avatar' | 'commentsAmount'
-> & { avatar: string }
+  Topic,
+  "comments" | "id" | "avatar" | "commentsAmount"
+> & { avatar: string };

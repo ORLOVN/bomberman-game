@@ -1,5 +1,22 @@
 # Bomberman game
 
+Diploma project for study programme Midle front-end developer by Yandex Praktikum
+
+Presentation ref: https://docs.google.com/presentation/d/1aq9TzsLVxcxsI6jMX7NcWGCHUgUKYvxNuZTcb-ao4mo/edit?usp=sharing
+
+## Stack of technology utilized
+* Webpack
+* React
+* Eslint, Prettier
+* UI - Chakra
+* Forms - fromik & yup
+* Redux Toolkit
+* API - RTK Query
+* Service worker
+* SSR + hmr
+* Docker
+* PostgresQL
+
 
 ## Scripts
 * `docker-compose up` - for running the app with Postgres DB

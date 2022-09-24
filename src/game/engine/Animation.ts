@@ -61,10 +61,10 @@ export class Animation implements ISprite {
 
     if (this.msInCurrentFrame >= this.msPerFrame) {
       this.msInCurrentFrame -= this.msPerFrame;
-      if (this.currentFrameIndex < this.frames.length-1) {
+      if (this.currentFrameIndex < this.frames.length - 1) {
         this.currentFrameIndex += 1;
       }
-      if (this.currentFrameIndex >= this.frames.length-1) {
+      if (this.currentFrameIndex >= this.frames.length - 1) {
         if (this.isLooping) {
           this.currentFrameIndex = 0;
         }

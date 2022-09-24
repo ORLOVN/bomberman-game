@@ -15,13 +15,14 @@ import {
   gameSlice,
   themeSlice,
   leaderBoardSlice,
-  ssrModeSlice
+  ssrModeSlice,
 } from "./slices";
 
 const createStore = (
   preloadedState: any = undefined,
   ssrRequest: Request | undefined = undefined
-) => configureStore({
+) =>
+  configureStore({
     reducer: {
       [authSlice.name]: authSlice.reducer,
       [themeSlice.name]: themeSlice.reducer,
@@ -34,20 +35,22 @@ const createStore = (
       [leaderBoardSlice.name]: leaderBoardSlice.reducer,
       [ssrModeSlice.name]: ssrModeSlice.reducer,
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-      thunk: {
-        extraArgument: {
-          request: ssrRequest,
-        }
-      }}).concat(
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        thunk: {
+          extraArgument: {
+            request: ssrRequest,
+          },
+        },
+      }).concat(
         unauthenticatedMiddleware,
         authApiService.middleware,
         themeApiService.middleware,
         profileApiService.middleware,
         leaderBoardApiService.middleware,
-        forumApiService.middleware,
+        forumApiService.middleware
       ),
-     preloadedState,
-});
+    preloadedState,
+  });
 
 export default createStore;

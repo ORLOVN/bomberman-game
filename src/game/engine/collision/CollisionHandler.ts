@@ -84,7 +84,6 @@ export class CollisionHandler {
     { xPos, yPos, width, height }: ICollisionGeometry,
     color: string = "blue"
   ) {
-
     ctx.save();
     ctx.translate(xPos, yPos);
     ctx.beginPath();
@@ -96,14 +95,13 @@ export class CollisionHandler {
     ctx.fillStyle = color;
     ctx.fill();
     ctx.restore();
-
   }
 
   public render(context: CanvasRenderingContext2D) {
     if (!developmentOptions.showCollisionEntities) return;
     this.collidables.forEach((collidable) => {
-      this.drawCollisionBox(context, collidable.getGeometry())
-    })
+      this.drawCollisionBox(context, collidable.getGeometry());
+    });
     this.context = context;
   }
 
@@ -114,7 +112,11 @@ export class CollisionHandler {
     const currentGeometry = currentEntity.getGeometry();
     const relevantGeometry = relevantEntity.getGeometry();
 
-    if (developmentOptions.showCollisionEntities && currentEntity.type === "probe" && this.context) {
+    if (
+      developmentOptions.showCollisionEntities &&
+      currentEntity.type === "probe" &&
+      this.context
+    ) {
       this.drawCollisionBox(this.context, currentGeometry, "red");
     }
 

@@ -25,6 +25,12 @@
     },
     "typeRoots": ["node_modules/@types"]
   },
-  "include": ["src", "server", "ssr", "node_modules/@types", "declarations/index.d.ts"],
-  "exclude": ["**/*.js"],
+  "include": [
+    "src",
+    "server",
+    "ssr",
+    "node_modules/@types",
+    "declarations/index.d.ts"
+  ],
+  "exclude": ["**/*.js"]
 }

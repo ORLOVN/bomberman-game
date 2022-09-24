@@ -7,9 +7,10 @@ import {
   ScoreEntryPostData,
 } from "@/store/apiServices/leaderboard/types";
 import { TEAM_NAME } from "@/constants/common";
-import {prepareHeaders} from "@/utils/prepareHeaders";
+import { prepareHeaders } from "@/utils/prepareHeaders";
 
-const origin = SCRIPT_ENV === "server" ? `http://localhost:${process.env.PORT}` : '';
+const origin =
+  SCRIPT_ENV === "server" ? `http://localhost:${process.env.PORT}` : "";
 
 const leaderBoardApiService = createApi({
   reducerPath: "leaderBoardApiService",
@@ -17,7 +18,7 @@ const leaderBoardApiService = createApi({
     baseUrl: `${origin}${process.env.PROXY_API_PATH}/leaderboard`,
     credentials: "include",
     fetchFn: fetch,
-    prepareHeaders
+    prepareHeaders,
   }),
   tagTypes: ["LeaderBoard"],
   endpoints: (build) => ({

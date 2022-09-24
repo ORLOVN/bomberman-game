@@ -13,10 +13,10 @@ import { ICollision } from "@/game/engine/collision/interfaces/ICollision";
 import { ICollisionGeometry } from "@/game/engine/collision/interfaces/ICollisionGeometry";
 import EntityTypes from "@/game/engine/enums/EntityTypes";
 import { Collidable } from "@/game/engine/collision/Collidable";
-import {TILE_SIZE} from "@/game/constants/gameConstants";
-import {Direction} from "@/game/types";
-import {gameManager} from '@/game/engine/GameManager/GameManager';
-import {EScoreTypes} from '@/game/engine/GameManager/types';
+import { TILE_SIZE } from "@/game/constants/gameConstants";
+import { Direction } from "@/game/types";
+import { gameManager } from "@/game/engine/GameManager/GameManager";
+import { EScoreTypes } from "@/game/engine/GameManager/types";
 import eventBus from "../engine/EventBus";
 
 export class CreepEnemy implements IEntity {
@@ -26,7 +26,6 @@ export class CreepEnemy implements IEntity {
 
   private sprites?: ISpritesDirections;
   private currentSprite?: ISprite;
-
 
   private xPos = 64;
   private yPos = 0;
@@ -39,16 +38,16 @@ export class CreepEnemy implements IEntity {
   private speed = 2;
 
   private oppositeDirections: Record<
-    Exclude<Direction, 'all'>,
-    Exclude<Direction, 'all'>
+    Exclude<Direction, "all">,
+    Exclude<Direction, "all">
   > = {
-    up: 'forward',
-    forward: 'up',
-    left: 'right',
-    right: 'left'
+    up: "forward",
+    forward: "up",
+    left: "right",
+    right: "left",
   };
 
-  private direction: Exclude<Direction, 'all'> | undefined;
+  private direction: Exclude<Direction, "all"> | undefined;
 
   private collisionBox: Collidable = new Collidable(this, EntityTypes.enemy)
     .addGetGeometry(this.getCollisionGeometry.bind(this))
@@ -101,7 +100,7 @@ export class CreepEnemy implements IEntity {
     entityManager.removeEntity(this.id);
     this.collisionBox.remove();
     gameManager.addScore(EScoreTypes.CREEP);
-    eventBus.emit('enemy-died');
+    eventBus.emit("enemy-died");
   }
 
   private getCollisionGeometry(): ICollisionGeometry {
@@ -142,24 +141,30 @@ export class CreepEnemy implements IEntity {
   }
 
   private chooseDirection() {
-    const directions = Object.keys(this.oppositeDirections) as Exclude<Direction, 'all'>[];
-    const possibleDirections = directions.filter(d => this.checkDirection(d));
+    const directions = Object.keys(this.oppositeDirections) as Exclude<
+      Direction,
+      "all"
+    >[];
+    const possibleDirections = directions.filter((d) => this.checkDirection(d));
 
     if (!this.direction) {
       this.direction = this.getRandomDirection(possibleDirections);
     } else {
       const oppositeDirection = this.oppositeDirections[this.direction];
 
-      const highPriorityDirections = possibleDirections.filter(d => d !== oppositeDirection);
+      const highPriorityDirections = possibleDirections.filter(
+        (d) => d !== oppositeDirection
+      );
 
-      this.direction = (this.getRandomDirection(highPriorityDirections) || oppositeDirection);
+      this.direction =
+        this.getRandomDirection(highPriorityDirections) || oppositeDirection;
     }
 
     this.setCurrentSprite();
     this.setVelocity(this.direction);
   }
 
-  private checkDirection(dir: Exclude<Direction, 'all'>) {
+  private checkDirection(dir: Exclude<Direction, "all">) {
     this.setVelocity(dir);
 
     this.collisionBox.checkCollisions();
@@ -167,21 +172,21 @@ export class CreepEnemy implements IEntity {
     return Boolean(this.xVel || this.yVel);
   }
 
-  private setVelocity(dir: Exclude<Direction, 'all'>) {
+  private setVelocity(dir: Exclude<Direction, "all">) {
     switch (dir) {
-      case 'up':
+      case "up":
         this.xVel = 0;
         this.yVel = -this.speed;
         break;
-      case 'right':
+      case "right":
         this.xVel = this.speed;
         this.yVel = 0;
         break;
-      case 'forward':
+      case "forward":
         this.xVel = 0;
         this.yVel = this.speed;
         break;
-      case 'left':
+      case "left":
         this.xVel = -this.speed;
         this.yVel = 0;
         break;
@@ -194,16 +199,16 @@ export class CreepEnemy implements IEntity {
 
   private setCurrentSprite() {
     switch (this.direction) {
-      case 'up':
+      case "up":
         this.currentSprite = this.sprites?.backward;
         break;
-      case 'right':
+      case "right":
         this.currentSprite = this.sprites?.right;
         break;
-      case 'forward':
+      case "forward":
         this.currentSprite = this.sprites?.forward;
         break;
-      case 'left':
+      case "left":
         this.currentSprite = this.sprites?.left;
         break;
       default:
@@ -212,15 +217,14 @@ export class CreepEnemy implements IEntity {
     }
   }
 
-  private getRandomDirection(dirs: Exclude<Direction, 'all'>[]) {
+  private getRandomDirection(dirs: Exclude<Direction, "all">[]) {
     return dirs[Math.floor(Math.random() * dirs.length)];
   }
 
-  private get isOnTileCenter():boolean {
+  private get isOnTileCenter(): boolean {
     return Boolean(
-      !((this.xPos - TILE_SIZE / 2) % TILE_SIZE) 
-      && !((this.yPos - TILE_SIZE / 2) % TILE_SIZE)
+      !((this.xPos - TILE_SIZE / 2) % TILE_SIZE) &&
+        !((this.yPos - TILE_SIZE / 2) % TILE_SIZE)
     );
   }
 }
-

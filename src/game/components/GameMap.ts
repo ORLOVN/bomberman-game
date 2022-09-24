@@ -22,7 +22,7 @@ export class GameMap implements IEntity {
 
   public render(context: CanvasRenderingContext2D): void {
     if (!this.tileImage) {
-      return
+      return;
     }
     const tileCountX = Math.ceil(this.width / this.tileSize);
     const tileCountY = Math.ceil(this.height / this.tileSize);

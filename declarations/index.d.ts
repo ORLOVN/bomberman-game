@@ -8,4 +8,3 @@ declare module "*.svg";
 declare module "*.scss";
 declare module "date-format";
 declare module "@gatsbyjs/webpack-hot-middleware";
-

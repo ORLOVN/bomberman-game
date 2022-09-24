@@ -7,7 +7,7 @@ import { BiPalette } from "react-icons/bi";
 
 import Navbar from "@/components/Navbar/Navbar";
 
-import {authApiService, themeApiService} from "@/store";
+import { authApiService, themeApiService } from "@/store";
 import { routes } from "./constants";
 import { useAppSelector } from "@/hooks";
 

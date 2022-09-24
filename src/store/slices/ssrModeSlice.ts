@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState: {
-  isSSR: boolean
+  isSSR: boolean;
 } = {
-  isSSR: false
+  isSSR: false,
 };
 
 const ssrModeSlice = createSlice({
@@ -16,7 +16,7 @@ const ssrModeSlice = createSlice({
     setClientMode(state) {
       state.isSSR = false;
     },
-  }
+  },
 });
 export const { setSSRMode, setClientMode } = ssrModeSlice.actions;
 export default ssrModeSlice;

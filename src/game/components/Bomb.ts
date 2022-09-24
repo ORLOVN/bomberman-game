@@ -10,7 +10,7 @@ import { ICollisionGeometry } from "@/game/engine/collision/interfaces/ICollisio
 import { TILE_SIZE } from "@/game/constants/gameConstants";
 import { Collidable } from "@/game/engine/collision/Collidable";
 import { entityFactory } from "@/game";
-import {BlinkManager} from '@/game/engine/BlinkManager';
+import { BlinkManager } from "@/game/engine/BlinkManager";
 
 type Resources =
   | {

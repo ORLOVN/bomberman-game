@@ -1,8 +1,5 @@
 import { Router } from "express";
-import {
-    themesRoutes,
-    forumRoutes
-} from "./routes";
+import { themesRoutes, forumRoutes } from "./routes";
 
 const router: Router = Router();
 

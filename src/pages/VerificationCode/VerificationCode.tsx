@@ -7,29 +7,23 @@ import { ErrorResponse } from "@/types";
 import { RoutePaths } from "@/enums";
 
 export default function Home() {
-  const [ searchParams ] = useSearchParams();
-  const [ oauthYandexVerify ] = authApiService.useOauthVerifyMutation();
+  const [searchParams] = useSearchParams();
+  const [oauthYandexVerify] = authApiService.useOauthVerifyMutation();
   const navigate = useNavigate();
 
   const REDIRECT_URI = `${window.location.origin}/${RoutePaths.verificationCode}`;
 
-
   useEffect(() => {
     oauthYandexVerify({
-      code: searchParams.get('code')!,
-      redirect_uri: REDIRECT_URI
+      code: searchParams.get("code")!,
+      redirect_uri: REDIRECT_URI,
     })
-    .unwrap()
-    .catch(
-      (error: FetchBaseQueryError) => {
-        NotificationService
-          .notifyError((error.data as ErrorResponse).reason);
+      .unwrap()
+      .catch((error: FetchBaseQueryError) => {
+        NotificationService.notifyError((error.data as ErrorResponse).reason);
 
-          navigate('/sign-in');
-      }
-    );
+        navigate("/sign-in");
+      });
   }, []);
-  return (
-    <div>Verification is processing... Just a moment :)</div>
-  );
+  return <div>Verification is processing... Just a moment :)</div>;
 }

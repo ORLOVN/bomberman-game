@@ -10,17 +10,12 @@ export {
   resetTime,
 } from "./gameSlice";
 
-export {
-  default as themeSlice,
-  switchTheme
-} from "./themeSlice";
+export { default as themeSlice, switchTheme } from "./themeSlice";
 
-export {
-  default as leaderBoardSlice,
-  setNext
-} from "./leaderBoardSlice";
+export { default as leaderBoardSlice, setNext } from "./leaderBoardSlice";
 
 export {
   default as ssrModeSlice,
-  setSSRMode, setClientMode
+  setSSRMode,
+  setClientMode,
 } from "./ssrModeSlice";

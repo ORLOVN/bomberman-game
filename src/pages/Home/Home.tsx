@@ -1,7 +1,7 @@
 import { Flex } from "@chakra-ui/react";
 import React from "react";
 
-import styles from './Home.module.scss';
+import styles from "./Home.module.scss";
 
 export default function Home() {
   return (

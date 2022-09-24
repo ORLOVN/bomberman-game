@@ -1,15 +1,15 @@
-import {Model} from 'sequelize-typescript';
-import Sequelize, {ModelAttributes} from 'sequelize';
-import { Topics } from './topics';
+import { Model } from "sequelize-typescript";
+import Sequelize, { ModelAttributes } from "sequelize";
+import { Topics } from "./topics";
 
-import {sequelize} from '../../../database';
+import { sequelize } from "../../../database";
 
 export interface IComment {
-  id: string,
-  topicId: string,
-  parentCommentId: null | string,
-  yaId: number,
-  body: string
+  id: string;
+  topicId: string;
+  parentCommentId: null | string;
+  yaId: number;
+  body: string;
 }
 
 const commentModel: ModelAttributes<Model, IComment> = {
@@ -30,15 +30,15 @@ const commentModel: ModelAttributes<Model, IComment> = {
     type: Sequelize.UUID,
     references: {
       model: Topics,
-      key: 'id',
+      key: "id",
     },
-    onDelete: 'CASCADE',
+    onDelete: "CASCADE",
   },
   parentCommentId: {
     type: Sequelize.STRING,
     defaultValue: null,
     allowNull: true,
   },
-}
+};
 
-export const Comments = sequelize.define('comments', commentModel);
+export const Comments = sequelize.define("comments", commentModel);

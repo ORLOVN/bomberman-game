@@ -1,4 +1,4 @@
-enum AuthPathsEnum  {
+enum AuthPathsEnum {
   signIn = "auth/signin",
   logOut = "auth/logout",
   signUp = "auth/signup",
